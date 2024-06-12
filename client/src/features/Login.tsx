@@ -7,9 +7,9 @@ export default function Login() {
     return (
         <div className="bg-gray-100">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-3xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-4xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="flex">
-                        <div className="w-full p-6 space-y-6 md:space-y-6 sm:p-8">
+                        <div className="w-full p-6 space-y-6 md:space-y-6 sm:p-8 md:p-10 lg:p-12">
                             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Sign in to your account
                             </h1>
@@ -68,7 +68,7 @@ export default function Login() {
                             </form>
                         </div>
 
-                        <div className="hidden md:flex w-full text-white p-6 bg-primary rounded-r-lg">
+                        <div className="hidden md:flex w-full text-white bg-primary rounded-r-lg p-10 lg:p-12">
                             a
                         </div>
                     </div>
