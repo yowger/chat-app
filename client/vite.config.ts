@@ -5,13 +5,13 @@ import react from "@vitejs/plugin-react"
 // https://vitejs.dev/config/
 
 // @ts-ignore
-const root = resolve(__dirname, "src")
+const root = resolve(__dirname, "./src")
 
 export default defineConfig({
     plugins: [react()],
     resolve: {
         alias: {
-            "@": resolve(root, "@"),
+            "@": root,
         },
     },
 })
