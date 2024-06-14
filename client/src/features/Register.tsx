@@ -1,5 +1,5 @@
-import { Button } from "@/components/Button"
-import { Input } from "@/components/Input"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
 
 import googleIcon from "@/assets/svg/googleIcon.svg"
 
@@ -13,6 +13,15 @@ export default function Register() {
                             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Sign up
                             </h1>
+
+                            <Button className="w-full" variant="outline">
+                                <img src={googleIcon} className="mr-1.5" />
+                                Sign up with Google
+                            </Button>
+
+                            <p className="line-text text-center text-gray-500 dark:text-gray-400">
+                                or
+                            </p>
 
                             <form className="space-y-6 md:space-y-6" action="#">
                                 <div>
@@ -49,26 +58,13 @@ export default function Register() {
                                     />
                                 </div>
 
-                                <div className="space-y-4">
-                                    <Button
-                                        type="submit"
-                                        variant="default"
-                                        className="w-full"
-                                    >
-                                        Create account
-                                    </Button>
-
-                                    <Button
-                                        className="w-full"
-                                        variant="outline"
-                                    >
-                                        <img
-                                            src={googleIcon}
-                                            className="mr-1.5"
-                                        />
-                                        Sign up with Google
-                                    </Button>
-                                </div>
+                                <Button
+                                    type="submit"
+                                    variant="default"
+                                    className="w-full"
+                                >
+                                    Create account
+                                </Button>
 
                                 <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
                                     Already have an account?{" "}
