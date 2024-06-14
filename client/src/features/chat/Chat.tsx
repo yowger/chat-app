@@ -5,6 +5,7 @@ import ChatBubbleAvatar from "@/features/chat/components/chatBubble/ChatBubbleAv
 import ChatBubbleContent from "@/features/chat/components/chatBubble/ChatBubbleContent"
 import ChatBubbleHeader from "@/features/chat/components/chatBubble/ChatBubbleHeader"
 import ChatBubbleActions from "@/features/chat/components/chatBubble/ChatBubbleActions"
+import { ChatBubbleProvider } from "./components/chatBubble/context/ChatBubbleContext"
 
 const menuItems = [
     { label: "Reply", onClick: () => console.log("Reply clicked") },
@@ -15,7 +16,9 @@ const menuItems = [
 export default function Chat() {
     return (
         <div className="flex">
-            <aside className="flex-none w-16 md:w-80 bg-gray-200 h-screen">side</aside>
+            <aside className="flex-none w-16 md:w-80 bg-gray-200 h-screen">
+                side
+            </aside>
             <main className="flex-1 md:flex h-screen relative">
                 <section className="px-6 bg-red-200 absolute h-16 w-full flex justify-between items-center">
                     <div className="flex items-center gap-4">
@@ -37,41 +40,47 @@ export default function Chat() {
                 <main className="flex-1 flex h-screen relative">
                     <div className="mt-16 flex flex-col w-full lg:w-[70%] bg-gray-300">
                         <div className="space-y-4 p-6">
-                            <ChatBubbleWrapper>
-                                <ChatBubbleAvatar
-                                    src="https://picsum.photos/200/300"
-                                    alt="John Doe"
-                                />
-                                <ChatBubbleContent>
-                                    <ChatBubbleHeader
-                                        name="Bonnie Green"
-                                        time="11:46"
+                            <ChatBubbleProvider reverse={false}>
+                                <ChatBubbleWrapper>
+                                    <ChatBubbleAvatar
+                                        src="https://picsum.photos/200/300"
+                                        alt="John Doe"
                                     />
-                                    <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
-                                        That's awesome. I think our users will
-                                        really appreciate the improvements.
-                                    </p>
-                                </ChatBubbleContent>
-                                <ChatBubbleActions items={menuItems} />
-                            </ChatBubbleWrapper>
+                                    <ChatBubbleContent>
+                                        <ChatBubbleHeader
+                                            name="Bonnie Green"
+                                            time="11:46"
+                                        />
+                                        <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
+                                            That's awesome. I think our users
+                                            will really appreciate the
+                                            improvements.
+                                        </p>
+                                    </ChatBubbleContent>
+                                    <ChatBubbleActions items={menuItems} />
+                                </ChatBubbleWrapper>
+                            </ChatBubbleProvider>
 
-                            <ChatBubbleWrapper reverse={true}>
-                                <ChatBubbleAvatar
-                                    src="https://picsum.photos/200/300"
-                                    alt="John Doe"
-                                />
-                                <ChatBubbleContent>
-                                    <ChatBubbleHeader
-                                        name="Bonnie Green"
-                                        time="11:46"
+                            <ChatBubbleProvider reverse={true}>
+                                <ChatBubbleWrapper>
+                                    <ChatBubbleAvatar
+                                        src="https://picsum.photos/200/300"
+                                        alt="John Doe"
                                     />
-                                    <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
-                                        That's awesome. I think our users will
-                                        really appreciate the improvements.
-                                    </p>
-                                </ChatBubbleContent>
-                                <ChatBubbleActions items={menuItems} />
-                            </ChatBubbleWrapper>
+                                    <ChatBubbleContent>
+                                        <ChatBubbleHeader
+                                            name="Bonnie Green"
+                                            time="11:46"
+                                        />
+                                        <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
+                                            That's awesome. I think our users
+                                            will really appreciate the
+                                            improvements.
+                                        </p>
+                                    </ChatBubbleContent>
+                                    <ChatBubbleActions items={menuItems} />
+                                </ChatBubbleWrapper>
+                            </ChatBubbleProvider>
                         </div>
                     </div>
 
