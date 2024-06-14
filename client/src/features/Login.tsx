@@ -68,9 +68,7 @@ export default function Login() {
                             </form>
                         </div>
 
-                        <div className="hidden md:flex w-full text-white bg-primary rounded-r-lg p-10 lg:p-12">
-                            a
-                        </div>
+                        <div className="hidden md:flex w-full text-white bg-primary rounded-r-lg p-10 lg:p-12"></div>
                     </div>
                 </div>
             </div>

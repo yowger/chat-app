@@ -68,12 +68,12 @@
         }
 
         .line-text::before {
-            right: 1.25em;
+            right: 1em;
             margin-left: -50%;
         }
 
         .line-text::after {
-            left: 1.25em;
+            left: 1em;
             margin-right: -50%;
         }
     }
