@@ -1,4 +1,4 @@
-import Chat from "@/features/chat/Chat"
+import Chat from "@/features/chat/pages/Chat"
 
 import { RouteObject } from "react-router-dom"
 
