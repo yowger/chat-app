@@ -7,7 +7,7 @@ import { ChatBubbleProvider } from "../components/chatBubble/context/ChatBubbleC
 
 import ChatInput from "../components/ChatInput"
 import ChatHeader from "../components/ChatHeader"
-import ChatSidebar from "../components/ChatSidebar"
+import ChatSidebar from "../components/chatSidebar/ChatSidebar"
 
 const menuItems = [
     { label: "Reply", onClick: () => console.log("Reply clicked") },
@@ -47,21 +47,27 @@ export default function Chat() {
                                 </ChatBubbleWrapper>
                             </ChatBubbleProvider>
 
+                            <p className="text-sm text-gray-500 flex justify-center">
+                                Jun 4, 2024
+                            </p>
+
                             <ChatBubbleProvider reverse={true}>
                                 <ChatBubbleWrapper>
-                                    <ChatBubbleAvatar
+                                    {/* <ChatBubbleAvatar
                                         src="https://picsum.photos/200/300"
                                         alt="John Doe"
-                                    />
+                                    /> */}
                                     <ChatBubbleContent>
                                         <ChatBubbleHeader
                                             name="Bonnie Green"
                                             time="11:46"
                                         />
                                         <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
-                                            That's awesome. I think our users
-                                            will really appreciate the
-                                            improvements.
+                                            Lorem ipsum, dolor sit amet
+                                            consectetur adipisicing elit.
+                                            Voluptate commodi, velit impedit
+                                            earum accusantium incidunt sunt
+                                            dolorum expedita vero cum. Quod
                                         </p>
                                     </ChatBubbleContent>
                                     <ChatBubbleActions items={menuItems} />
