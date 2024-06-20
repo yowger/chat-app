@@ -8,6 +8,8 @@ import {
 
 import { useChatBubbleContext } from "./hooks/useChatBubbleContext"
 
+import type { FC } from "react"
+
 interface MenuItem {
     label: string
     href?: string
@@ -18,7 +20,7 @@ interface ChatBubbleActionsProps {
     items: MenuItem[]
 }
 
-const ChatBubbleActions = ({ items }: ChatBubbleActionsProps) => {
+const ChatBubbleActions: FC<ChatBubbleActionsProps> = ({ items }) => {
     const { reverse } = useChatBubbleContext()
 
     return (

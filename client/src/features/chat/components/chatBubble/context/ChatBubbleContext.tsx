@@ -1,6 +1,6 @@
 import { createContext } from "react"
 
-import type { ReactNode } from "react"
+import type { FC, PropsWithChildren } from "react"
 
 export interface ChatBubbleContext {
     reverse?: boolean
@@ -10,15 +10,14 @@ export const ChatBubbleContext = createContext<ChatBubbleContext | undefined>(
     undefined
 )
 
-interface ChatBubbleProviderProps {
+interface ChatBubbleProviderProps extends PropsWithChildren {
     reverse?: boolean
-    children: ReactNode
 }
 
-export const ChatBubbleProvider = ({
+export const ChatBubbleProvider: FC<ChatBubbleProviderProps> = ({
     reverse = false,
     children,
-}: ChatBubbleProviderProps) => (
+}) => (
     <ChatBubbleContext.Provider value={{ reverse }}>
         {children}
     </ChatBubbleContext.Provider>

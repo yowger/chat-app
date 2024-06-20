@@ -1,8 +1,8 @@
-import ChatBubbleWrapper from "@/features/chat/components/chatBubble/ChatBubbleWrapper"
-import ChatBubbleAvatar from "@/features/chat/components/chatBubble/ChatBubbleAvatar"
-import ChatBubbleContent from "@/features/chat/components/chatBubble/ChatBubbleContent"
-import ChatBubbleHeader from "@/features/chat/components/chatBubble/ChatBubbleHeader"
-import ChatBubbleActions from "@/features/chat/components/chatBubble/ChatBubbleActions"
+import ChatBubbleContainerProps from "@/features/chat/components/chatBubble/Container"
+import ChatBubbleAvatar from "@/features/chat/components/chatBubble/Avatar"
+import ChatBubbleContent from "@/features/chat/components/chatBubble/Content"
+import ChatBubbleHeader from "@/features/chat/components/chatBubble/Header"
+import ChatBubbleActions from "@/features/chat/components/chatBubble/Actions"
 import { ChatBubbleProvider } from "../components/chatBubble/context/ChatBubbleContext"
 
 import ChatInput from "../components/ChatInput"
@@ -27,7 +27,7 @@ export default function Chat() {
                     <div className="mt-16 flex flex-col w-full lg:w-[70%] bg-gray-300 justify-between">
                         <section className="space-y-4 px-4 py-4">
                             <ChatBubbleProvider reverse={false}>
-                                <ChatBubbleWrapper>
+                                <ChatBubbleContainerProps>
                                     <ChatBubbleAvatar
                                         src="https://picsum.photos/200/300"
                                         alt="John Doe"
@@ -44,7 +44,7 @@ export default function Chat() {
                                         </p>
                                     </ChatBubbleContent>
                                     <ChatBubbleActions items={menuItems} />
-                                </ChatBubbleWrapper>
+                                </ChatBubbleContainerProps>
                             </ChatBubbleProvider>
 
                             <p className="text-sm text-gray-500 flex justify-center">
@@ -52,7 +52,7 @@ export default function Chat() {
                             </p>
 
                             <ChatBubbleProvider reverse={true}>
-                                <ChatBubbleWrapper>
+                                <ChatBubbleContainerProps>
                                     {/* <ChatBubbleAvatar
                                         src="https://picsum.photos/200/300"
                                         alt="John Doe"
@@ -71,7 +71,7 @@ export default function Chat() {
                                         </p>
                                     </ChatBubbleContent>
                                     <ChatBubbleActions items={menuItems} />
-                                </ChatBubbleWrapper>
+                                </ChatBubbleContainerProps>
                             </ChatBubbleProvider>
                         </section>
 

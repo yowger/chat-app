@@ -2,13 +2,11 @@ import { mergeStyles } from "@/utils/mergeStyles"
 
 import { useChatBubbleContext } from "./hooks/useChatBubbleContext"
 
-import type { ReactNode } from "react"
+import type { FC, PropsWithChildren } from "react"
 
-interface ChatBubbleWrapperProps {
-    children: ReactNode
-}
+interface ChatBubbleContainerProps extends PropsWithChildren {}
 
-const ChatBubbleWrapper = ({ children }: ChatBubbleWrapperProps) => {
+const ChatBubbleContainer: FC<ChatBubbleContainerProps> = ({ children }) => {
     const { reverse } = useChatBubbleContext()
 
     return (
@@ -23,4 +21,4 @@ const ChatBubbleWrapper = ({ children }: ChatBubbleWrapperProps) => {
     )
 }
 
-export default ChatBubbleWrapper
+export default ChatBubbleContainer

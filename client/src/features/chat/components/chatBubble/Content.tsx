@@ -2,13 +2,11 @@ import { useChatBubbleContext } from "./hooks/useChatBubbleContext"
 
 import { mergeStyles } from "@/utils/mergeStyles"
 
-import type { ReactNode } from "react"
+import type { FC, PropsWithChildren } from "react"
 
-interface ChatBubbleContentProps {
-    children: ReactNode
-}
+interface ChatBubbleContentProps extends PropsWithChildren {}
 
-const ChatBubbleContent = ({ children }: ChatBubbleContentProps) => {
+const ChatBubbleContent: FC<ChatBubbleContentProps> = ({ children }) => {
     const { reverse } = useChatBubbleContext()
 
     return (

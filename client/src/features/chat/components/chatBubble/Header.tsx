@@ -1,9 +1,11 @@
+import type { FC } from "react"
+
 interface ChatBubbleHeaderProps {
     name: string
     time: string
 }
 
-const ChatBubbleHeader = ({ name, time }: ChatBubbleHeaderProps) => (
+const ChatBubbleHeader: FC<ChatBubbleHeaderProps> = ({ name, time }) => (
     <div className="flex items-center space-x-2 rtl:space-x-reverse">
         <span className="text-sm font-semibold text-gray-900 dark:text-white">
             {name}

@@ -1,6 +1,11 @@
 import Avatar, { AvatarProps } from "@/components/ui/Avatar"
 
-const ChatBubbleAvatar = ({ size = "small", ...restProps }: AvatarProps) => {
+import type { FC } from "react"
+
+const ChatBubbleAvatar: FC<AvatarProps> = ({
+    size = "small",
+    ...restProps
+}) => {
     return <Avatar size={size} {...restProps} />
 }
 
