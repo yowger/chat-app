@@ -17,11 +17,12 @@ export default function ChatSidebar() {
                     <IconEdit size={18} />
                 </Button>
             </section>
+
             <section className="space-y-3">
                 <ChatPreviewContainer>
                     <ChatPreviewAvatar
                         src="https://picsum.photos/200/300"
-                        isOnline={true}
+                        isOnline={false}
                     />
                     <ChatPreviewInfo>
                         <ChatPreviewUserName>James Macagba</ChatPreviewUserName>
@@ -41,7 +42,10 @@ export default function ChatSidebar() {
                     <ChatPreviewInfo>
                         <ChatPreviewUserName>Ray Sealana</ChatPreviewUserName>
                         <ChatPreviewMessage>
-                            I love furry.
+                            Lorem, ipsum dolor sit amet consectetur adipisicing
+                            elit. Culpa quod exercitationem odio earum esse
+                            doloremque vero rem fugit sed ad unde, veritatis a
+                            magni ipsum nobis doloribus, corporis non atque!
                         </ChatPreviewMessage>
                     </ChatPreviewInfo>
                 </ChatPreviewContainer>
@@ -54,7 +58,10 @@ export default function ChatSidebar() {
                     <ChatPreviewInfo>
                         <ChatPreviewUserName>Roger Pantil</ChatPreviewUserName>
                         <ChatPreviewMessage>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla id laudantium laboriosam doloremque veritatis cum neque iure nam dolorem nisi! Fuga esse a nisi voluptate laboriosam earum iste id aut?
+                            Lorem ipsum dolor sit, amet consectetur adipisicing
+                            elit. Nulla id laudantium laboriosam doloremque
+                            veritatis cum neque iure nam dolorem nisi! Fuga esse
+                            a nisi voluptate laboriosam earum iste id aut?
                         </ChatPreviewMessage>
                     </ChatPreviewInfo>
                 </ChatPreviewContainer>
