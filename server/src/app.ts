@@ -3,8 +3,11 @@ import cors from "cors"
 import compression from "compression"
 import cookieParser from "cookie-parser"
 
+import corsOptions from "@/config/cors"
+
 const app = express()
 
+app.use(cors(corsOptions))
 app.use(cookieParser())
 app.use(express.json({ limit: "5mb" }))
 app.use(

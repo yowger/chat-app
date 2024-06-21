@@ -2,8 +2,7 @@ import mongoose from "mongoose"
 
 import type { Error as MongoError } from "mongoose"
 
-import config from "@/config"
-console.log("🚀 ~ config:", config)
+import config from "@/config/env"
 
 const connectDb = async (): Promise<void> => {
     mongoose.connect(config.database)
