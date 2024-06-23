@@ -9,6 +9,7 @@ import {
 export const privateFields = ["password", "__v"]
 
 @index({ email: 1 })
+@index({ username: 1 })
 @modelOptions({
     schemaOptions: {
         timestamps: true,
@@ -17,8 +18,8 @@ export const privateFields = ["password", "__v"]
         allowMixed: Severity.ALLOW,
     },
 })
-class User {
-    @prop({ required: true })
+export class User {
+    @prop({ required: true, unique: true })
     public username!: string
 
     @prop({ required: true })
@@ -36,4 +37,4 @@ class User {
 
 const UserModel = getModelForClass(User)
 
-export { User, UserModel }
+export default UserModel

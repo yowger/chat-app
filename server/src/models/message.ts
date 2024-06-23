@@ -19,4 +19,6 @@ export class Message {
     public readAt?: Date | null
 }
 
-export const MessageModel = getModelForClass(Message)
+const MessageModel = getModelForClass(Message)
+
+export default MessageModel
