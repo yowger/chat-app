@@ -2,7 +2,7 @@ import { findUserById, findUserByEmail, updateUsername } from "@/services/user"
 
 import type { Request, Response } from "express"
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserByIdHandler = async (req: Request, res: Response) => {
     const user = await findUserById(req.params.id)
     if (user) {
         res.json(user)
@@ -11,7 +11,7 @@ export const getUserById = async (req: Request, res: Response) => {
     }
 }
 
-export const getUserByEmail = async (req: Request, res: Response) => {
+export const getUserByEmailHandler = async (req: Request, res: Response) => {
     const user = await findUserByEmail(req.params.email)
     if (user) {
         res.json(user)
@@ -20,7 +20,7 @@ export const getUserByEmail = async (req: Request, res: Response) => {
     }
 }
 
-export const updateUserUsername = async (req: Request, res: Response) => {
+export const updateUsernameHandler = async (req: Request, res: Response) => {
     const updatedUser = await updateUsername(req.params.id, req.body.username)
     if (updatedUser) {
         res.json(updatedUser)

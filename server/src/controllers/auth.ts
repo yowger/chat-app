@@ -8,7 +8,7 @@ import { signAccessToken, signRefreshToken } from "@/services/auth"
 
 import type { Request, Response } from "express"
 
-export const register = async (req: Request, res: Response) => {
+export const registerHandler = async (req: Request, res: Response) => {
     const { username, email, password } = req.body
 
     const existingUser = await findUserByEmail(email)
@@ -29,7 +29,7 @@ export const register = async (req: Request, res: Response) => {
     res.status(201).json(createdUser)
 }
 
-export const login = async (req: Request, res: Response) => {
+export const loginHandler = async (req: Request, res: Response) => {
     const { email, password } = req.body
 
     const existingUser = await findUserByEmail(email)
@@ -57,7 +57,7 @@ export const login = async (req: Request, res: Response) => {
     })
 }
 
-export const refreshToken = async (req: Request, res: Response) => {
+export const refreshTokenHandler = async (req: Request, res: Response) => {
     const { refreshToken } = req.cookies
     if (!refreshToken) {
         return res.status(401).json({ message: "Unauthorized" })
@@ -83,7 +83,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     })
 }
 
-export const logOut = async (req: Request, res: Response) => {
+export const logOutHandler = async (req: Request, res: Response) => {
     res.clearCookie("refresh")
 
     res.status(200).json({
