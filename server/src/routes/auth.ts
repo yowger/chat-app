@@ -1,12 +1,19 @@
 import { Router } from "express"
 
-import { login, logOut, refreshToken, register } from "@/controllers/auth"
+import {
+    loginHandler,
+    logOutHandler,
+    refreshTokenHandler,
+    registerHandler,
+} from "@/controllers/auth"
+
+import asyncHandler from "@/middleware/asyncHandler"
 
 const router = Router()
 
-router.post("/register", register)
-router.post("/login", login)
-router.post("/refresh-token", refreshToken)
-router.post("log-out", logOut)
+router.post("/register", asyncHandler(registerHandler))
+router.post("/login", asyncHandler(loginHandler))
+router.post("/refresh-token", asyncHandler(refreshTokenHandler))
+router.post("log-out", asyncHandler(logOutHandler))
 
 export default router

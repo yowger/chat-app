@@ -2,6 +2,8 @@ import cors from "cors"
 
 import config from "@/config/env"
 
+import log from "@/utils/logger"
+
 const allowedOriginsSet = new Set(
     config.allowedOrigins?.split(",").map((origin) => origin.trim()) || []
 )
@@ -12,7 +14,8 @@ const corsOptions: cors.CorsOptions = {
             callback(null, true)
         } else {
             const errorMessage = `Origin '${origin}' not allowed by CORS`
-            console.error("cors_disallowed_origin", errorMessage)
+            log.error("cors disallowed origin", { error: errorMessage })
+
             callback(new Error(errorMessage))
         }
     },

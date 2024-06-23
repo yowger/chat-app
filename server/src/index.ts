@@ -3,6 +3,7 @@ import "module-alias/register"
 import app from "@/app"
 
 import connectDb from "@/utils/connectDb"
+import log from "@/utils/logger"
 
 const startServer = async () => {
     await connectDb()
@@ -13,11 +14,11 @@ const startServer = async () => {
         .listen(port, () => {
             const address = server.address()
             if (typeof address !== "string") {
-                console.log(`server running on port: ${address?.port}`)
+                log.info(`server running on port: ${address?.port}`)
             }
         })
         .on("error", (error) => {
-            console.error(error)
+            log.error("error connecting to server", error)
         })
 }
 

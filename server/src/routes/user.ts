@@ -6,10 +6,12 @@ import {
     updateUsernameHandler,
 } from "@/controllers/user"
 
+import asyncHandler from "@/middleware/asyncHandler"
+
 const router = Router()
 
-router.get("/users/:id", getUserByIdHandler)
-router.get("/users/email/:email", getUserByEmailHandler)
-router.put("/users/:id/username", updateUsernameHandler)
+router.get("/users/:id", asyncHandler(getUserByIdHandler))
+router.get("/users/email/:email", asyncHandler(getUserByEmailHandler))
+router.put("/users/:id/username", asyncHandler(updateUsernameHandler))
 
 export default router
