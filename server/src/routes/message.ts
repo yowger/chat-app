@@ -4,7 +4,7 @@ import {
     findMessageById,
     markMessageAsRead,
     deleteMessage,
-} from "@/services/messageService"
+} from "@/services/message"
 
 const router = Router()
 

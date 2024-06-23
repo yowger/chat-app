@@ -11,4 +11,6 @@ export default {
     nodeEnv: process.env.NODE_ENV,
     database: process.env.DATABASE,
     allowedOrigins: process.env.ALLOWED_ORIGINS,
+    accessTokenKey: process.env.ACCESS_TOKEN_SECRET,
+    refreshTokenKey: process.env.REFRESH_TOKEN_SECRET,
 }

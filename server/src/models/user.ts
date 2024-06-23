@@ -6,6 +6,8 @@ import {
     Severity,
 } from "@typegoose/typegoose"
 
+export const privateFields = ["password", "__v"]
+
 @index({ email: 1 })
 @modelOptions({
     schemaOptions: {
@@ -18,6 +20,9 @@ import {
 class User {
     @prop({ required: true })
     public username!: string
+
+    @prop({ required: true })
+    password: string
 
     @prop({ required: true, unique: true, lowercase: true })
     public email!: string

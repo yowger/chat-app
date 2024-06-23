@@ -4,7 +4,7 @@ import {
     findUserById,
     findUserByEmail,
     updateUsername,
-} from "@/services/userService"
+} from "@/services/user"
 
 const router = Router()
 
