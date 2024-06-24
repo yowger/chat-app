@@ -6,8 +6,6 @@ import {
     Severity,
 } from "@typegoose/typegoose"
 
-export const privateFields = ["password", "__v"]
-
 @index({ email: 1 })
 @index({ username: 1 })
 @modelOptions({

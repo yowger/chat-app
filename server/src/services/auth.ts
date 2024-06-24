@@ -1,14 +1,13 @@
-import { omit } from "lodash"
 import { Types } from "mongoose"
 
 import { signJwt } from "@/utils/jwt"
 
-import { privateFields, User } from "@/models/user"
+import { User } from "@/models/user"
 
 export const signAccessToken = (user: User) => {
-    const payload = omit(user, privateFields)
+    const { password, ...userWithoutPassword } = user
 
-    const accessToken = signJwt(payload, "accessTokenPrivateKey", {
+    const accessToken = signJwt(userWithoutPassword, "accessTokenPrivateKey", {
         expiresIn: "15m",
     })
 

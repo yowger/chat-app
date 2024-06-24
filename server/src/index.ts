@@ -14,7 +14,7 @@ const startServer = async () => {
         .listen(port, () => {
             const address = server.address()
             if (typeof address !== "string") {
-                log.info(`server running on port: ${address?.port}`)
+                log.info("server running on port %d", address?.port)
             }
         })
         .on("error", (error) => {
