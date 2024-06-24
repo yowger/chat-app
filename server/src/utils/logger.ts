@@ -18,7 +18,7 @@ const customFormat = format.combine(
     })
 )
 
-const level = isDevEnv() ? "debug" : "error"
+const level = isDevEnv ? "debug" : "error"
 
 const transports = {
     console: new winston.transports.Console({
