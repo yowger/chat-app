@@ -5,6 +5,8 @@ import {
     deleteMessage,
 } from "@/services/message"
 
+import { HTTP404Error } from "@/handlers/api/apiErrors"
+
 import type { Request, Response } from "express"
 
 export const createMessageHandler = async (req: Request, res: Response) => {
@@ -17,7 +19,7 @@ export const getMessageByIdHandler = async (req: Request, res: Response) => {
     if (message) {
         res.json(message)
     } else {
-        res.status(404).json({ message: "Message not found" })
+        throw new HTTP404Error("Message not found")
     }
 }
 
@@ -26,7 +28,7 @@ export const markMessageAsReadHandler = async (req: Request, res: Response) => {
     if (message) {
         res.json(message)
     } else {
-        res.status(404).json({ message: "Message not found" })
+        throw new HTTP404Error("Message not found")
     }
 }
 

@@ -20,12 +20,13 @@ const customFormat = format.combine(
 
 const level = isDevEnv ? "debug" : "error"
 
-const transports = {
-    console: new winston.transports.Console({
-        level,
-    }),
+const consoleTransport = new winston.transports.Console({
+    level,
+})
+
+const fileTransports = {
     dailyFile: new DailyRotateFile({
-        filename: "logs/combined-%DATE%.log",
+        filename: "logs/app-%DATE%.log",
         datePattern: "YYYY-MM-DD-HH",
         zippedArchive: true,
         maxSize: "20m",
@@ -33,7 +34,7 @@ const transports = {
     }),
     dailyErrorFile: new DailyRotateFile({
         level: "error",
-        filename: "logs/errors-%DATE%.log",
+        filename: "logs/app-error-%DATE%.log",
         datePattern: "YYYY-MM-DD-HH",
         zippedArchive: true,
         maxSize: "20m",
@@ -43,13 +44,16 @@ const transports = {
 
 const log = winston.createLogger({
     format: customFormat,
-    transports: [
-        transports.console,
-        transports.dailyFile,
-        transports.dailyErrorFile,
+    transports: [fileTransports.dailyFile, fileTransports.dailyErrorFile],
+    exceptionHandlers: [
+        fileTransports.dailyFile,
+        fileTransports.dailyErrorFile,
     ],
-    exceptionHandlers: [transports.dailyFile, transports.dailyErrorFile],
     exitOnError: false,
 })
+
+if (isDevEnv) {
+    log.add(consoleTransport)
+}
 
 export default log

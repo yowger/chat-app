@@ -5,8 +5,9 @@ import express from "express"
 
 import corsOptions from "@/config/cors"
 
-import errorLogger from "@/middleware/errorLogger"
-import invalidPathHandler from "@/middleware/invalidPathHandler"
+import errorLoggerHandler from "@/handlers/middleware/errorLoggerHandler"
+import invalidPathHandler from "@/handlers/middleware/invalidPathHandler"
+import errorHandler from "@/handlers/middleware/errorHandler"
 
 import routes from "@/routes"
 
@@ -22,8 +23,8 @@ app.use(compression())
 
 app.use("/api", routes)
 
-app.use(errorLogger)
+app.use(errorLoggerHandler)
 app.use(invalidPathHandler)
-// app.use(errorHandler)
+app.use(errorHandler)
 
 export default app

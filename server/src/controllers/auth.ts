@@ -6,6 +6,12 @@ import { verifyJwt } from "@/utils/jwt"
 import { createUser, findUserByEmail, findUserById } from "@/services/user"
 import { signAccessToken, signRefreshToken } from "@/services/auth"
 
+import {
+    HTTP401Error,
+    HTTP404Error,
+    HTTP409Error,
+} from "@/handlers/api/apiErrors"
+
 import type { Request, Response } from "express"
 
 export const registerHandler = async (req: Request, res: Response) => {
@@ -13,9 +19,7 @@ export const registerHandler = async (req: Request, res: Response) => {
 
     const existingUser = await findUserByEmail(email)
     if (existingUser) {
-        return res
-            .status(409)
-            .json({ message: "User with this email address already exists" })
+        throw new HTTP409Error("User with this email address already exists")
     }
 
     const hashedPassword = await hashPassword(password)
@@ -34,9 +38,7 @@ export const loginHandler = async (req: Request, res: Response) => {
 
     const existingUser = await findUserByEmail(email)
     if (!existingUser) {
-        return res
-            .status(404)
-            .json({ message: "User with this email address already exists" })
+        throw new HTTP404Error("User with this email address already exists")
     }
 
     const isPasswordMatch = await comparePassword(
@@ -44,7 +46,7 @@ export const loginHandler = async (req: Request, res: Response) => {
         existingUser.password
     )
     if (!isPasswordMatch) {
-        return res.status(401).json({ message: "Invalid credentials" })
+        throw new HTTP401Error("Invalid credentials")
     }
 
     const accessToken = signAccessToken(existingUser)
@@ -60,7 +62,7 @@ export const loginHandler = async (req: Request, res: Response) => {
 export const refreshTokenHandler = async (req: Request, res: Response) => {
     const { refreshToken } = req.cookies
     if (!refreshToken) {
-        return res.status(401).json({ message: "Unauthorized" })
+        throw new HTTP401Error("Invalid credentials")
     }
 
     const decodedToken = verifyJwt<{ id: string }>(
@@ -68,12 +70,12 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
         "refreshTokenPrivateKey"
     )
     if (!decodedToken) {
-        return res.status(401).json({ message: "Unauthorized" })
+        throw new HTTP401Error("Invalid credentials")
     }
 
     const user = await findUserById(decodedToken.id)
     if (!user) {
-        return res.status(401).json({ message: "Unauthorized" })
+        throw new HTTP401Error("Invalid credentials")
     }
 
     const accessToken = signAccessToken(user)

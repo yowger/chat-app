@@ -7,7 +7,7 @@ import {
     deleteMessageHandler,
 } from "@/controllers/message"
 
-import asyncHandler from "@/middleware/asyncHandler"
+import asyncHandler from "@/handlers/middleware/asyncHandler"
 
 const router = Router()
 

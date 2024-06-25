@@ -7,7 +7,7 @@ import {
     registerHandler,
 } from "@/controllers/auth"
 
-import asyncHandler from "@/middleware/asyncHandler"
+import asyncHandler from "@/handlers/middleware/asyncHandler"
 
 const router = Router()
 

@@ -1,5 +1,7 @@
 import { findUserById, findUserByEmail, updateUsername } from "@/services/user"
 
+import { HTTP404Error } from "@/handlers/api/apiErrors"
+
 import type { Request, Response } from "express"
 
 export const getUserByIdHandler = async (req: Request, res: Response) => {
@@ -7,7 +9,7 @@ export const getUserByIdHandler = async (req: Request, res: Response) => {
     if (user) {
         res.json(user)
     } else {
-        res.status(404).json({ message: "User not found" })
+        throw new HTTP404Error("User not found")
     }
 }
 
@@ -16,7 +18,7 @@ export const getUserByEmailHandler = async (req: Request, res: Response) => {
     if (user) {
         res.json(user)
     } else {
-        res.status(404).json({ message: "User not found" })
+        throw new HTTP404Error("User not found")
     }
 }
 
@@ -25,6 +27,6 @@ export const updateUsernameHandler = async (req: Request, res: Response) => {
     if (updatedUser) {
         res.json(updatedUser)
     } else {
-        res.status(404).json({ message: "User not found" })
+        throw new HTTP404Error("User not found")
     }
 }
