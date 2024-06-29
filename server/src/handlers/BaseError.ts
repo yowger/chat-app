@@ -1,4 +1,4 @@
-import { httpStatusCodes } from "@/handlers/api/types/httpStatusCode"
+import { httpStatusCodes } from "@/enums/api/httpStatusCode"
 
 class BaseError extends Error {
     public readonly httpStatusCode: httpStatusCodes

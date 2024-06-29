@@ -1,20 +1,31 @@
 import DailyRotateFile from "winston-daily-rotate-file"
 import winston, { format } from "winston"
 
+import { sensitiveKeys } from "@/data/keys"
+
+import { generateId } from "@/utils/generateId"
 import { isDevEnv } from "@/utils/env"
+import { redact } from "@/utils/redact"
 
 const customFormat = format.combine(
     format.errors({ stack: true }),
     format.splat(),
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     format.printf((info) => {
-        const { timestamp, level, message, ...meta } = info
+        const redactedInfo = redact(info, sensitiveKeys)
 
-        const formattedMeta = Object.keys(meta).length
-            ? "\n" + JSON.stringify(meta, null, 2)
-            : ""
+        const { timestamp, level, message, ...data } = redactedInfo
 
-        return `${timestamp} [${level}]: ${message} ${formattedMeta}`
+        const response = {
+            level: level.toUpperCase(),
+            logId: generateId(),
+            timestamp,
+            message,
+            data,
+        }
+        console.log("🚀 ~ format.printf ~ response:", response)
+
+        return JSON.stringify(response, null, 3)
     })
 )
 
@@ -42,7 +53,7 @@ const fileTransports = {
     }),
 }
 
-const log = winston.createLogger({
+const logger = winston.createLogger({
     format: customFormat,
     transports: [fileTransports.dailyFile, fileTransports.dailyErrorFile],
     exceptionHandlers: [
@@ -53,7 +64,7 @@ const log = winston.createLogger({
 })
 
 if (isDevEnv) {
-    log.add(consoleTransport)
+    logger.add(consoleTransport)
 }
 
-export default log
+export default logger

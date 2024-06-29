@@ -1,6 +1,6 @@
 import BaseError from "@/handlers/BaseError"
 
-import { httpStatusCodes } from "@/handlers/api/types/httpStatusCode"
+import { httpStatusCodes } from "@/enums/api/httpStatusCode"
 
 export class HTTP400Error extends BaseError {
     constructor(
