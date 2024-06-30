@@ -26,6 +26,7 @@ const connectDb = async (): Promise<void> => {
             logger.info(
                 "Mongoose default connection disconnected through app termination"
             )
+
             process.exit(0)
         })
     })

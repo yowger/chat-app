@@ -8,7 +8,7 @@ import connectDb from "@/utils/connectDb"
 import logger from "@/utils/logger"
 
 const startServer = async () => {
-    process.on("unhandledRejection", (error) => {
+    process.on("UnhandledRejection", (error) => {
         throw error
     })
 
@@ -28,13 +28,11 @@ const startServer = async () => {
         .listen(port, () => {
             const address = server.address()
             if (typeof address !== "string") {
-                logger.info("server running on port %d", {
-                    port: address?.port,
-                })
+                logger.info("Server started", { port: address?.port })
             }
         })
         .on("error", (error) => {
-            logger.error("error connecting to server", error)
+            logger.error("Error connecting to server", error)
         })
 }
 

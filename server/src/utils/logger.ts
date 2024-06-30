@@ -5,6 +5,7 @@ import { sensitiveKeys } from "@/data/keys"
 
 import { generateId } from "@/utils/generateId"
 import { isDevEnv } from "@/utils/env"
+import { isEmptyObject } from "@/utils/helpers"
 import { redact } from "@/utils/redact"
 
 const customFormat = format.combine(
@@ -16,14 +17,16 @@ const customFormat = format.combine(
 
         const { timestamp, level, message, ...data } = redactedInfo
 
-        const response = {
+        const response: any = {
             level: level.toUpperCase(),
             logId: generateId(),
             timestamp,
             message,
-            data,
         }
-        console.log("🚀 ~ format.printf ~ response:", response)
+
+        if (!isEmptyObject(data)) {
+            response.data = data
+        }
 
         return JSON.stringify(response, null, 3)
     })
