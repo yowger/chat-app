@@ -14,7 +14,7 @@ const connectDb = async (): Promise<void> => {
     })
 
     mongoose.connection.on("error", (error: MongoError) => {
-        logger.error("Mongoose default connection error", { error })
+        logger.error("Mongoose default connection error", error)
     })
 
     mongoose.connection.on("disconnected", () => {
