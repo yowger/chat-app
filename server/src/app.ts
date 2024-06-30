@@ -23,8 +23,8 @@ app.use(compression())
 
 app.use("/api", routes)
 
-app.use(errorLogger)
 app.use(invalidPathHandler)
+app.use(errorLogger)
 app.use(errorHandler)
 
 export default app

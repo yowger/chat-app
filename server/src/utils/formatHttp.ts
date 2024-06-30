@@ -1,6 +1,14 @@
 import { Request, Response } from "express"
 
-export const formatHttp = (req: Request, res: Response, responseBody: any) => {
+interface FormatHttpParams {
+    req: Request
+    res: Response
+    responseBody: any
+}
+
+export const formatHttp = (params: FormatHttpParams) => {
+    const { req, res, responseBody } = params
+
     return {
         request: {
             headers: req.headers,
@@ -21,13 +29,14 @@ export const formatHttp = (req: Request, res: Response, responseBody: any) => {
     }
 }
 
-export const formatHttpWithError = (
-    error: Error,
-    req: Request,
-    res: Response,
-    responseBody: any
-) => {
-    const formattedHttp = formatHttp(req, res, responseBody)
+interface FormatHttpWithErrorParams extends FormatHttpParams {
+    error: Error
+}
+
+export const formatHttpWithError = (params: FormatHttpWithErrorParams) => {
+    const { error, req, res, responseBody } = params
+
+    const formattedHttp = formatHttp({ req, res, responseBody })
 
     return {
         ...formattedHttp,
