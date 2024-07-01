@@ -25,7 +25,9 @@ export default function Register() {
                                 or
                             </p> */}
 
-                            <RegisterForm />
+                            <RegisterForm
+                                onSuccess={() => console.log("nice")}
+                            />
 
                             <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
                                 Already have an account?{" "}

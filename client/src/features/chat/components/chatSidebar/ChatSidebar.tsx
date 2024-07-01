@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/button/Button"
 import { IconEdit } from "@tabler/icons-react"
 
 import ChatPreviewContainer from "../chatPreview/Container"

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/button/Button"
 import { IconSend2 } from "@tabler/icons-react"
 import ReactTextareaAutosize from "react-textarea-autosize"
 

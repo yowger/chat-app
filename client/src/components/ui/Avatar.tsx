@@ -1,9 +1,6 @@
-export interface AvatarProps {
-    src: string
-    alt?: string
-    size?: "small" | "medium" | "large"
-    isOnline?: boolean
-}
+import type { Avatar } from "@/types/avatar"
+
+interface AvatarProps extends Avatar {}
 
 const sizeClasses = {
     small: "w-9 h-9",

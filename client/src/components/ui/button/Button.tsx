@@ -2,37 +2,12 @@ import { forwardRef } from "react"
 import { twMerge } from "tailwind-merge"
 
 import type { ButtonHTMLAttributes } from "react"
-
-const buttonSizes = {
-    small: "small",
-    normal: "normal",
-    large: "large",
-} as const
-
-const buttonVariants = {
-    default: "default",
-    destructive: "destructive",
-    secondary: "secondary",
-    ghost: "ghost",
-    outline: "outline",
-    link: "link",
-} as const
-
-const buttonRoundness = {
-    normal: "normal",
-    full: "full",
-} as const
-
-type TButtonVariant = keyof typeof buttonVariants
-type TButtonSize = keyof typeof buttonSizes
-type TButtonRoundness = keyof typeof buttonRoundness
-
-type ButtonStyles = {
-    base: string
-    size: Record<TButtonSize, string>
-    roundness: Record<TButtonRoundness, string>
-    variant: Record<TButtonVariant, string>
-}
+import type {
+    ButtonRoundness,
+    ButtonSize,
+    ButtonStyles,
+    ButtonVariant,
+} from "./types/button"
 
 const buttonStyles: ButtonStyles = {
     base: "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -58,14 +33,14 @@ const buttonStyles: ButtonStyles = {
     },
 }
 
-export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: TButtonVariant
-    size?: TButtonSize
-    roundness?: TButtonRoundness
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: ButtonVariant
+    size?: ButtonSize
+    roundness?: ButtonRoundness
     children?: React.ReactNode
 }
 
-const Button = forwardRef<HTMLButtonElement, IButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     (
         {
             variant = "default",

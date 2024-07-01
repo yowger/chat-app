@@ -1,30 +1,67 @@
-import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-const RegisterForm = () => {
+import { registerSchema } from "../../schemas/register"
+
+import { Button } from "@/components/ui/button/Button"
+import { FormInput } from "@/components/forms/FormInput"
+import Label from "@/components/ui/Label"
+
+import type { FC } from "react"
+import type { Register } from "../../schemas/register"
+
+interface RegisterFormProps {
+    onSuccess: (data: Register) => void
+}
+
+const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
+    const { control, handleSubmit } = useForm<Register>({
+        resolver: zodResolver(registerSchema),
+    })
+
+    const onSubmit = async (data: Register) => {
+        onSuccess(data)
+    }
+
     return (
-        <form className="space-y-6 md:space-y-6" action="#">
+        <form
+            className="space-y-6 md:space-y-6"
+            onSubmit={handleSubmit(onSubmit)}
+        >
             <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Username
-                </label>
-                <Input type="email" name="email" placeholder="username" />
+                <Label>Username</Label>
+                <FormInput
+                    name="username"
+                    control={control}
+                    placeholder="username"
+                />
             </div>
 
             <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Email
-                </label>
-                <Input name="email" placeholder="email@company.com" />
+                <Label>Email</Label>
+                <FormInput
+                    name="email"
+                    control={control}
+                    placeholder="email@company.com"
+                />
             </div>
             <div>
-                <label
-                    htmlFor="password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                    Password
-                </label>
-                <Input type="password" name="password" placeholder="••••••••" />
+                <Label>Password</Label>
+                <FormInput
+                    type="password"
+                    name="password"
+                    control={control}
+                    placeholder="•••••"
+                />
+            </div>
+            <div>
+                <Label>Confirm Pasword</Label>
+                <FormInput
+                    type="password"
+                    name="confirmPassword"
+                    control={control}
+                    placeholder="•••••"
+                />
             </div>
 
             <Button type="submit" variant="default" className="w-full">
