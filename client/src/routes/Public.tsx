@@ -1,8 +1,8 @@
 import { RouteObject } from "react-router-dom"
 
 import Home from "@/features/Home"
-import Register from "@/features/Register"
-import Login from "@/features/Login"
+import Register from "@/features/auth/pages/Register"
+import Login from "@/features/auth/pages/Login"
 
 const PublicRoutes: RouteObject[] = [
     { path: "/", element: <Home /> },
