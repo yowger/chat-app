@@ -15,7 +15,6 @@ export type LoginData = {
 }
 export type LoginResponse = {
     accessToken: string
-    message: string
 }
 
 export const login = ({ data }: LoginData): Promise<LoginResponse> => {
@@ -31,8 +30,11 @@ export const useLogin = ({ config }: UseLoginOptions = {}) => {
     const { setAuth } = useAuthContext()
 
     return useMutation<LoginResponse, AxiosError, LoginData>({
-        onSuccess: (refreshAuthData) => {
-            setAuth({ accessToken: refreshAuthData.accessToken })
+        onSuccess: (data) => {
+            setAuth({
+                accessToken: data.accessToken,
+                isAuthenticated: true,
+            })
         },
         ...config,
         mutationFn: login,

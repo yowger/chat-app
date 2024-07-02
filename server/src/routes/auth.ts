@@ -13,7 +13,7 @@ const router = Router()
 
 router.post("/register", asyncHandler(registerHandler))
 router.post("/login", asyncHandler(loginHandler))
-router.post("/refresh-token", asyncHandler(refreshTokenHandler))
+router.post("/refresh", asyncHandler(refreshTokenHandler))
 router.post("log-out", asyncHandler(logOutHandler))
 
 export default router

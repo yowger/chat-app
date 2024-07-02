@@ -9,7 +9,7 @@ export default function Register() {
     const navigate = useNavigate()
 
     const redirect = () => {
-        navigate(`/login`, {
+        navigate(`/`, {
             state: {
                 message: {
                     text: "Registration successful. Please login.",
@@ -43,7 +43,7 @@ export default function Register() {
                             <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
                                 Already have an account?{" "}
                                 <Link
-                                    to="/login"
+                                    to="/"
                                     className="font-medium text-primary hover:underline dark:text-primary"
                                 >
                                     Login now

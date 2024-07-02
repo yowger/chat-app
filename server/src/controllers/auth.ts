@@ -51,8 +51,7 @@ export const loginHandler = async (req: Request, res: Response) => {
 
     const accessToken = signAccessToken(existingUser)
     const refreshToken = signRefreshToken(existingUser._id)
-
-    res.cookie("refresh", refreshToken, refreshTokenOptions)
+    res.cookie("refreshToken", refreshToken, refreshTokenOptions)
 
     res.status(200).json({
         accessToken,
@@ -60,7 +59,11 @@ export const loginHandler = async (req: Request, res: Response) => {
 }
 
 export const refreshTokenHandler = async (req: Request, res: Response) => {
+    console.log("refresh")
     const { refreshToken } = req.cookies
+    console.log("🚀 ~ refreshTokenHandler ~ req.cookies:", req.cookies)
+    console.log("🚀 ~ refreshTokenHandler ~ refreshToken:", refreshToken)
+
     if (!refreshToken) {
         throw new HTTP401Error("Invalid credentials")
     }
@@ -86,7 +89,7 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
 }
 
 export const logOutHandler = async (req: Request, res: Response) => {
-    res.clearCookie("refresh")
+    res.clearCookie("refreshToken")
 
     res.status(200).json({
         message: "Logout successful",

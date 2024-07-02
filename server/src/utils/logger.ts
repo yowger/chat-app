@@ -32,7 +32,7 @@ const customFormat = format.combine(
     })
 )
 
-const level = isDevEnv ? "debug" : "error"
+const level = isDevEnv() ? "debug" : "error"
 
 const consoleTransport = new winston.transports.Console({
     level,
@@ -66,7 +66,7 @@ const logger = winston.createLogger({
     exitOnError: false,
 })
 
-if (isDevEnv) {
+if (isDevEnv()) {
     logger.add(consoleTransport)
 }
 

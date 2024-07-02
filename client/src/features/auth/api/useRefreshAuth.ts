@@ -11,9 +11,13 @@ export type RefreshAuthResponse = {
     accessToken: string
 }
 export const refreshAuth = (): Promise<RefreshAuthResponse> => {
-    return axiosPublic.post("/api/refresh", null, {
-        withCredentials: true,
-    })
+    return axiosPublic.post(
+        "/api/refresh",
+        {},
+        {
+            withCredentials: true,
+        }
+    )
 }
 
 type UseRefreshAuthOptions = {
@@ -24,7 +28,18 @@ export const useRefreshAuth = ({ config }: UseRefreshAuthOptions = {}) => {
 
     return useMutation<RefreshAuthResponse, AxiosError>({
         onSuccess: (refreshAuthData) => {
-            setAuth({ accessToken: refreshAuthData.accessToken })
+            console.log(
+                "🚀 ~ useRefreshAuth ~ refreshAuthData:",
+                refreshAuthData
+            )
+            setAuth({
+                accessToken: refreshAuthData.accessToken,
+                isAuthenticated: true,
+            })
+        },
+        onError: (error: AxiosError) => {
+            console.log("error: ", error)
+            setAuth({ accessToken: "", isAuthenticated: false })
         },
         ...config,
         mutationFn: refreshAuth,

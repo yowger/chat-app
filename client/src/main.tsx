@@ -10,15 +10,18 @@ import { AuthContextProvider } from "@/features/auth/context/Auth"
 import App from "@/App"
 
 import "@/index.css"
+import RefreshAuthWrapper from "./features/auth/components/RefreshAuthWrapper"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <AuthContextProvider>
-            <BrowserRouter>
+        <BrowserRouter>
+            <AuthContextProvider>
                 <QueryClientProvider client={queryClient}>
-                    <App />
+                    <RefreshAuthWrapper>
+                        <App />
+                    </RefreshAuthWrapper>
                 </QueryClientProvider>
-            </BrowserRouter>
-        </AuthContextProvider>
+            </AuthContextProvider>
+        </BrowserRouter>
     </React.StrictMode>
 )

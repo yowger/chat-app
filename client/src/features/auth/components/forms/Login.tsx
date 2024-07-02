@@ -14,11 +14,9 @@ import { useLogin } from "../../api/useLogin"
 import type { FC } from "react"
 import type { Login } from "../../schemas/login"
 
-interface RegisterFormProps {
-    onSuccess: (data: Login) => void
-}
+interface RegisterFormProps {}
 
-const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
+const LoginForm: FC<RegisterFormProps> = () => {
     const { mutate, isPending } = useLogin()
     const [errorMessage, setErrorMessage] = useState("")
 
@@ -32,9 +30,6 @@ const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                 data: formData,
             },
             {
-                onSuccess: () => {
-                    onSuccess(formData)
-                },
                 onError: (error) => {
                     const status = error.response?.status
 

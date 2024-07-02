@@ -17,7 +17,7 @@ import {
     },
 })
 export class User {
-    @prop({ required: true, unique: true })
+    @prop({ required: true })
     public username!: string
 
     @prop({ required: true })

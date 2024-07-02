@@ -1,0 +1,1 @@
+delete path vite js plugin for alias
