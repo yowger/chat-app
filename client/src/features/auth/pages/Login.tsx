@@ -1,11 +1,22 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 
+import Label from "@/components/ui/Label"
 import LoginForm from "../components/forms/Login"
 
 // import { Button } from "@/components/ui/Button"
 // import googleIcon from "@/assets/svg/googleIcon.svg"
 
 export default function Login() {
+    const navigate = useNavigate()
+    const location = useLocation()
+    const message = location.state?.message
+
+    const redirect = () => {
+        const origin = location.state?.from.pathname || "/"
+
+        return navigate(origin, { replace: true })
+    }
+
     return (
         <div className="bg-gray-100">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -16,6 +27,18 @@ export default function Login() {
                                 Sign in to your account
                             </h1>
 
+                            {message && (
+                                <Label
+                                    className={
+                                        message.type === "success"
+                                            ? "text-green-700"
+                                            : "text-red-700"
+                                    }
+                                >
+                                    {message.text}
+                                </Label>
+                            )}
+
                             {/* <Button className="w-full" variant="outline">
                                 <img src={googleIcon} className="mr-1.5" />
                                 Log in with Google
@@ -25,7 +48,7 @@ export default function Login() {
                                 or
                             </p> */}
 
-                            <LoginForm onSuccess={() => console.log("nice")} />
+                            <LoginForm onSuccess={redirect} />
 
                             <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet?{" "}

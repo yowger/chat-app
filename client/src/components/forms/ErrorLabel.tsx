@@ -13,7 +13,7 @@ const ErrorLabel: FC<ErrorLabelProps> = ({
         <label
             {...restProps}
             className={mergeStyles(
-                "block mb-2 text-sm font-medium text-red-900",
+                "block mb-2 text-sm font-medium text-red-700",
                 className
             )}
         >

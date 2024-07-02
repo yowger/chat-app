@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import RegisterForm from "../components/forms/Register"
 
@@ -6,6 +6,19 @@ import RegisterForm from "../components/forms/Register"
 // import googleIcon from "@/assets/svg/googleIcon.svg"
 
 export default function Register() {
+    const navigate = useNavigate()
+
+    const redirect = () => {
+        navigate(`/login`, {
+            state: {
+                message: {
+                    text: "Registration successful. Please login.",
+                    type: "success",
+                },
+            },
+        })
+    }
+
     return (
         <div className="bg-gray-100">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -25,9 +38,7 @@ export default function Register() {
                                 or
                             </p> */}
 
-                            <RegisterForm
-                                onSuccess={() => console.log("nice")}
-                            />
+                            <RegisterForm onSuccess={redirect} />
 
                             <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
                                 Already have an account?{" "}

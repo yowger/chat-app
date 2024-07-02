@@ -63,6 +63,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                         name="username"
                         control={control}
                         placeholder="username"
+                        aria-label="username"
                     />
                 </div>
 
@@ -72,6 +73,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                         name="email"
                         control={control}
                         placeholder="email@company.com"
+                        aria-label="email"
                     />
                 </div>
                 <div>
@@ -81,6 +83,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                         name="password"
                         control={control}
                         placeholder="•••••"
+                        aria-label="password"
                     />
                 </div>
                 <div>
@@ -90,6 +93,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                         name="confirmPassword"
                         control={control}
                         placeholder="•••••"
+                        aria-label="confirm password"
                     />
                 </div>
 
