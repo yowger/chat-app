@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -5,7 +6,10 @@ import { loginSchema } from "../../schemas/login"
 
 import { Button } from "@/components/ui/button/Button"
 import { FormInput } from "@/components/forms/FormInput"
+import ErrorLabel from "@/components/forms/ErrorLabel"
 import Label from "@/components/ui/Label"
+
+import { useLogin } from "../../api/useLogin"
 
 import type { FC } from "react"
 import type { Login } from "../../schemas/login"
@@ -15,12 +19,47 @@ interface RegisterFormProps {
 }
 
 const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
-    const { control, handleSubmit } = useForm<Login>({
+    const { mutate, isPending } = useLogin()
+    const [errorMessage, setErrorMessage] = useState("")
+
+    const { control, handleSubmit, setFocus } = useForm<Login>({
         resolver: zodResolver(loginSchema),
     })
 
     const onSubmit = async (data: Login) => {
-        onSuccess(data)
+        mutate(
+            {
+                data: {
+                    email: data.email,
+                    password: data.password,
+                },
+            },
+            {
+                onSuccess: () => {
+                    onSuccess(data)
+                },
+                onError: (error) => {
+                    const status = error.response?.status
+
+                    switch (status) {
+                        case 401:
+                            setFocus("email")
+                            setErrorMessage("Incorrect login credentials")
+                            break
+                        case 404:
+                            setFocus("email")
+                            setErrorMessage(
+                                "The email address you entered is not registered."
+                            )
+                            break
+                        default:
+                            setErrorMessage(
+                                "An unexpected error occurred. Please try again later."
+                            )
+                    }
+                },
+            }
+        )
     }
 
     return (
@@ -44,7 +83,14 @@ const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                     />
                 </div>
 
-                <Button type="submit" variant="default" className="w-full">
+                {errorMessage && <ErrorLabel>{errorMessage}</ErrorLabel>}
+
+                <Button
+                    type="submit"
+                    variant="default"
+                    className="w-full"
+                    disabled={isPending}
+                >
                     Sign in
                 </Button>
             </div>
