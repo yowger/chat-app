@@ -1,28 +1,46 @@
-import { Button } from "@/components/ui/button/Button"
-import { Input } from "@/components/ui/Input"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-const LoginForm = () => {
+import { loginSchema } from "../../schemas/login"
+
+import { Button } from "@/components/ui/button/Button"
+import { FormInput } from "@/components/forms/FormInput"
+import Label from "@/components/ui/Label"
+
+import type { FC } from "react"
+import type { Login } from "../../schemas/login"
+
+interface RegisterFormProps {
+    onSuccess: (data: Login) => void
+}
+
+const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
+    const { control, handleSubmit } = useForm<Login>({
+        resolver: zodResolver(loginSchema),
+    })
+
+    const onSubmit = async (data: Login) => {
+        onSuccess(data)
+    }
+
     return (
-        <form action="#">
+        <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-6 md:space-y-6">
                 <div>
-                    <Input
-                        type="email"
+                    <Label>Email</Label>
+                    <FormInput
                         name="email"
+                        control={control}
                         placeholder="email@company.com"
                     />
                 </div>
                 <div>
-                    <label
-                        htmlFor="password"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                        Password
-                    </label>
-                    <Input
+                    <Label>Password</Label>
+                    <FormInput
                         type="password"
                         name="password"
-                        placeholder="••••••••"
+                        control={control}
+                        placeholder="•••••"
                     />
                 </div>
 

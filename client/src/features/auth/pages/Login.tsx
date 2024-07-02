@@ -25,7 +25,7 @@ export default function Login() {
                                 or
                             </p> */}
 
-                            <LoginForm />
+                            <LoginForm onSuccess={() => console.log("nice")} />
 
                             <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet?{" "}

@@ -24,49 +24,48 @@ const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
     }
 
     return (
-        <form
-            className="space-y-6 md:space-y-6"
-            onSubmit={handleSubmit(onSubmit)}
-        >
-            <div>
-                <Label>Username</Label>
-                <FormInput
-                    name="username"
-                    control={control}
-                    placeholder="username"
-                />
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-6 md:space-y-6">
+                <div>
+                    <Label>Username</Label>
+                    <FormInput
+                        name="username"
+                        control={control}
+                        placeholder="username"
+                    />
+                </div>
 
-            <div>
-                <Label>Email</Label>
-                <FormInput
-                    name="email"
-                    control={control}
-                    placeholder="email@company.com"
-                />
-            </div>
-            <div>
-                <Label>Password</Label>
-                <FormInput
-                    type="password"
-                    name="password"
-                    control={control}
-                    placeholder="•••••"
-                />
-            </div>
-            <div>
-                <Label>Confirm Pasword</Label>
-                <FormInput
-                    type="password"
-                    name="confirmPassword"
-                    control={control}
-                    placeholder="•••••"
-                />
-            </div>
+                <div>
+                    <Label>Email</Label>
+                    <FormInput
+                        name="email"
+                        control={control}
+                        placeholder="email@company.com"
+                    />
+                </div>
+                <div>
+                    <Label>Password</Label>
+                    <FormInput
+                        type="password"
+                        name="password"
+                        control={control}
+                        placeholder="•••••"
+                    />
+                </div>
+                <div>
+                    <Label>Confirm Pasword</Label>
+                    <FormInput
+                        type="password"
+                        name="confirmPassword"
+                        control={control}
+                        placeholder="•••••"
+                    />
+                </div>
 
-            <Button type="submit" variant="default" className="w-full">
-                Create account
-            </Button>
+                <Button type="submit" variant="default" className="w-full">
+                    Create account
+                </Button>
+            </div>
         </form>
     )
 }
