@@ -26,17 +26,14 @@ const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
         resolver: zodResolver(loginSchema),
     })
 
-    const onSubmit = async (data: Login) => {
+    const onSubmit = async (formData: Login) => {
         mutate(
             {
-                data: {
-                    email: data.email,
-                    password: data.password,
-                },
+                data: formData,
             },
             {
                 onSuccess: () => {
-                    onSuccess(data)
+                    onSuccess(formData)
                 },
                 onError: (error) => {
                     const status = error.response?.status
@@ -71,6 +68,7 @@ const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                         name="email"
                         control={control}
                         placeholder="email@company.com"
+                        aria-label="name"
                     />
                 </div>
                 <div>
@@ -80,6 +78,7 @@ const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                         name="password"
                         control={control}
                         placeholder="•••••"
+                        aria-label="email"
                     />
                 </div>
 
@@ -88,8 +87,8 @@ const LoginForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                 <Button
                     type="submit"
                     variant="default"
-                    className="w-full"
                     disabled={isPending}
+                    className="w-full"
                 >
                     Sign in
                 </Button>
