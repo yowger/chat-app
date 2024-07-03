@@ -11,6 +11,7 @@ const errorLogger = (
     next: NextFunction
 ) => {
     const originalSend = res.send
+    const requestStartTime = Date.now()
 
     res.send = function (body: any) {
         const formattedData = formatHttpWithError({
@@ -18,6 +19,7 @@ const errorLogger = (
             req,
             res,
             responseBody: JSON.parse(body),
+            requestStartTime,
         })
 
         if (isOperationalError(error)) {
