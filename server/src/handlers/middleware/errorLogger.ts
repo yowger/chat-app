@@ -13,15 +13,17 @@ const errorLogger = (
     const originalSend = res.send
 
     res.send = function (body: any) {
-        if (!isOperationalError(error)) {
-            const formattedData = formatHttpWithError({
-                error,
-                req,
-                res,
-                responseBody: JSON.parse(body),
-            })
+        const formattedData = formatHttpWithError({
+            error,
+            req,
+            res,
+            responseBody: JSON.parse(body),
+        })
 
-            logger.error("Non-Operational error", formattedData)
+        if (isOperationalError(error)) {
+            logger.log("error", "Operational error", formattedData)
+        } else {
+            logger.log("fatal", "Fatal error", formattedData)
         }
 
         return originalSend.call(this, body)

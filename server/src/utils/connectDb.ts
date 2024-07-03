@@ -10,20 +10,21 @@ const connectDb = async (): Promise<void> => {
     mongoose.connect(config.database)
 
     mongoose.connection.on("connected", () => {
-        logger.info("Mongoose default connection open")
+        logger.log("info", "Mongoose default connection open")
     })
 
     mongoose.connection.on("error", (error: MongoError) => {
-        logger.error("Mongoose default connection error", error)
+        logger.log("fatal", "Mongoose default connection error", error)
     })
 
     mongoose.connection.on("disconnected", () => {
-        logger.info("Mongoose default connection disconnected")
+        logger.log("info", "Mongoose default connection disconnected")
     })
 
     process.on("SIGINT", () => {
         mongoose.connection.close().finally(() => {
-            logger.info(
+            logger.log(
+                "info",
                 "Mongoose default connection disconnected through app termination"
             )
 

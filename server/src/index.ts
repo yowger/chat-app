@@ -13,7 +13,7 @@ const startServer = async () => {
     })
 
     process.on("uncaughtException", (error) => {
-        logger.error("Uncaught exception", error)
+        logger.log("error", "Uncaught exception", error)
 
         if (!isOperationalError) {
             process.exit(1)
@@ -28,11 +28,11 @@ const startServer = async () => {
         .listen(port, () => {
             const address = server.address()
             if (typeof address !== "string") {
-                logger.info("Server started", { port: address?.port })
+                logger.log("info", "Server started", { port: address?.port })
             }
         })
         .on("error", (error) => {
-            logger.error("Error connecting to server", error)
+            logger.log("error", "Error connecting to server", error)
         })
 }
 

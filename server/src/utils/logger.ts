@@ -8,6 +8,15 @@ import { isDevEnv } from "@/utils/env"
 import { isEmptyObject } from "@/utils/helpers"
 import { redact } from "@/utils/redact"
 
+const logLevels = {
+    fatal: 0,
+    error: 1,
+    warn: 2,
+    info: 3,
+    debug: 4,
+    trace: 5,
+}
+
 const customFormat = format.combine(
     format.errors({ stack: true }),
     format.splat(),
@@ -38,31 +47,39 @@ const consoleTransport = new winston.transports.Console({
     level,
 })
 
+const datePattern = "YYYY-MM-DD-HH"
+
 const fileTransports = {
     dailyFile: new DailyRotateFile({
-        filename: "logs/app-%DATE%.log",
-        datePattern: "YYYY-MM-DD-HH",
+        filename: "logs/combined/combined-%DATE%.log",
+        datePattern: datePattern,
+        zippedArchive: true,
+        maxSize: "50m",
+        maxFiles: "7d",
+    }),
+    dailyErrorFile: new DailyRotateFile({
+        level: "error",
+        filename: "logs/errors/error-%DATE%.log",
+        datePattern: datePattern,
         zippedArchive: true,
         maxSize: "20m",
         maxFiles: "14d",
     }),
-    dailyErrorFile: new DailyRotateFile({
-        level: "error",
-        filename: "logs/app-error-%DATE%.log",
-        datePattern: "YYYY-MM-DD-HH",
+    dailyFatalFile: new DailyRotateFile({
+        level: "fatal",
+        filename: "logs/fatal/fatal-%DATE%.log",
+        datePattern: datePattern,
         zippedArchive: true,
-        maxSize: "20m",
-        maxFiles: "14d",
+        maxSize: "10m",
+        maxFiles: "30d",
     }),
 }
 
 const logger = winston.createLogger({
+    levels: logLevels,
     format: customFormat,
-    transports: [fileTransports.dailyFile, fileTransports.dailyErrorFile],
-    exceptionHandlers: [
-        fileTransports.dailyFile,
-        fileTransports.dailyErrorFile,
-    ],
+    transports: [...Object.values(fileTransports)],
+    exceptionHandlers: [...Object.values(fileTransports)],
     exitOnError: false,
 })
 
