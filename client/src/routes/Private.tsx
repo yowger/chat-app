@@ -1,6 +1,7 @@
-import Chat from "@/features/chat/pages/Chat"
-
+import { lazy } from "react"
 import { RouteObject } from "react-router-dom"
+
+const Chat = lazy(() => import("@/features/chat/pages/Chat"))
 
 const PrivateRoutes: RouteObject[] = [{ path: "/", element: <Chat /> }]
 

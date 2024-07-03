@@ -59,10 +59,7 @@ export const loginHandler = async (req: Request, res: Response) => {
 }
 
 export const refreshTokenHandler = async (req: Request, res: Response) => {
-    console.log("refresh")
     const { refreshToken } = req.cookies
-    console.log("🚀 ~ refreshTokenHandler ~ req.cookies:", req.cookies)
-    console.log("🚀 ~ refreshTokenHandler ~ refreshToken:", refreshToken)
 
     if (!refreshToken) {
         throw new HTTP401Error("Invalid credentials")

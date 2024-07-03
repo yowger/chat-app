@@ -1,5 +1,10 @@
 import RootRoutes from "@/routes"
+import AppProvider from "@/providers/App"
 
 export default function App() {
-    return <RootRoutes />
+    return (
+        <AppProvider>
+            <RootRoutes />
+        </AppProvider>
+    )
 }
