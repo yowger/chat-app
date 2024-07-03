@@ -7,9 +7,28 @@ import ChatPreviewInfo from "../chatPreview/Info"
 import ChatPreviewUserName from "../chatPreview/Name"
 import ChatPreviewMessage from "../chatPreview/Message"
 
+import { useLogout } from "@/features/auth/api/useLogout"
+
 export default function ChatSidebar() {
+    const { mutate, isPending } = useLogout()
+
+    const handleLogout = () => {
+        mutate()
+    }
+
     return (
         <aside className="flex-none w-16 md:w-80 bg-gray-200 h-screen p-3 overflow-hidden">
+            <section className="flex justify-between items-center mb-4">
+                profile section
+                <Button
+                    size="small"
+                    onClick={handleLogout}
+                    disabled={isPending}
+                >
+                    Log out
+                </Button>
+            </section>
+
             <section className="flex items-center justify-between mb-2">
                 <h2 className="text-2xl font-bold text-gray-500">Chats</h2>
 

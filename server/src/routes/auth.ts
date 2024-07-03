@@ -14,6 +14,6 @@ const router = Router()
 router.post("/register", asyncHandler(registerHandler))
 router.post("/login", asyncHandler(loginHandler))
 router.post("/refresh", asyncHandler(refreshTokenHandler))
-router.post("log-out", asyncHandler(logOutHandler))
+router.post("/logout", asyncHandler(logOutHandler))
 
 export default router
