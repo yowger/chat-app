@@ -6,4 +6,7 @@ export const sensitiveKeys = [
     /secret/i,
     /token/i,
     /api[-._]?key/i,
-  ];
+    /email/i,
+    /e[-_]?mail/i,
+    /mail/i,
+]
