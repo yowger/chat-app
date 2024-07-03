@@ -1,18 +1,17 @@
-chat app
+current features:
 
-    auth 0 authentication
+Tech used:
+    frontend: React Query, tailwind, 
+    Backend: Express, JWT, socket, redis?, 
 
-    pages - login, register, profile, chat, lobby?
+frontend:
 
-    lobby options - can be  public or private with password(not seen by other users)
+    register and login
+    persisting user
 
-    friend list - add, delete
 
-    searching - by name or email, optional, not be seen by search
-
-    chat - can send text, images? documents? can delete/update messages?
-
-    online function, optional can be turn off
-
-    implement with redis - future patch
+backend:
+    authentication with jwt
+    user registration and login
+    logging with log saving 
 
