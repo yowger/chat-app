@@ -29,8 +29,7 @@ type UseLoginOptions = {
 }
 export const useLogin = ({ config }: UseLoginOptions = {}) => {
     const { setAuth } = useAuthContext()
-
-    const [cookies, setCookies] = useCookies(["is_logged_in"])
+    const [_cookies, setCookies] = useCookies(["is_logged_in"])
 
     return useMutation<LoginResponse, AxiosError, LoginData>({
         onSuccess: (data) => {

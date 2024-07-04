@@ -28,7 +28,8 @@ type UseLogoutOptions = {
 
 export const useLogout = ({ config }: UseLogoutOptions = {}) => {
     const { setAuth } = useAuthContext()
-    const [cookies, setCookies, removeCookie] = useCookies(["is_logged_in"])
+    /* tslint:disable:no-unused-variable */
+    const [_cookies, _setCookies, removeCookie] = useCookies(["is_logged_in"])
 
     return useMutation<LogoutResponse, AxiosError>({
         onSuccess: () => {
