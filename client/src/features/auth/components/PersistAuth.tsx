@@ -16,7 +16,10 @@ const PersistAuth: FC<PersistAuthProps> = ({ children }) => {
 
     useEffect(() => {
         const checkAndRefreshAuth = () => {
-            if (cookies.is_logged_in && !auth.isAuthenticated) {
+            const hasPreviouslyLoggedIn =
+                cookies.is_logged_in && !auth.isAuthenticated
+                
+            if (hasPreviouslyLoggedIn) {
                 mutate()
             }
 

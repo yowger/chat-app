@@ -4,10 +4,12 @@ import { axiosPublic } from "@/lib/axios/public"
 
 import useAuthContext from "@/features/auth/hooks/useAuthContext"
 
+import useEndSession from "../hooks/useEndSession"
+
 import type { AxiosError } from "axios"
 import type { MutateConfig } from "@/lib/query"
 
-export type RefreshAuthResponse = {
+export interface RefreshAuthResponse {
     accessToken: string
 }
 export const refreshAuth = (): Promise<RefreshAuthResponse> => {
@@ -20,11 +22,12 @@ export const refreshAuth = (): Promise<RefreshAuthResponse> => {
     )
 }
 
-type UseRefreshAuthOptions = {
+interface UseRefreshAuthOptions {
     config?: MutateConfig<RefreshAuthResponse>
 }
 export const useRefreshAuth = ({ config }: UseRefreshAuthOptions = {}) => {
     const { setAuth } = useAuthContext()
+    const endSession = useEndSession()
 
     return useMutation<RefreshAuthResponse, AxiosError>({
         onSuccess: (refreshAuthData) => {
@@ -34,7 +37,7 @@ export const useRefreshAuth = ({ config }: UseRefreshAuthOptions = {}) => {
             })
         },
         onError: () => {
-            setAuth({ accessToken: "", isAuthenticated: false })
+            endSession()
         },
         ...config,
         mutationFn: refreshAuth,

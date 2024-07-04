@@ -1,4 +1,6 @@
-import React, { createContext, useState, ReactNode } from "react"
+import React, { createContext, useState } from "react"
+
+import type { ReactNode } from "react"
 
 type AuthContextType = {
     auth: { accessToken: string; isAuthenticated: boolean }

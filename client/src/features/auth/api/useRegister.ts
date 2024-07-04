@@ -12,14 +12,14 @@ export type RegisterData = {
         password: string
     }
 }
-export type RegisterResponse = {
+export interface RegisterResponse {
     message: string
 }
 export const register = ({ data }: RegisterData): Promise<RegisterResponse> => {
     return axiosPublic.post("/api/register", data)
 }
 
-type UseRegisterOptions = {
+interface UseRegisterOptions {
     config?: MutateConfig<RegisterResponse>
 }
 export const useRegister = ({ config }: UseRegisterOptions = {}) => {

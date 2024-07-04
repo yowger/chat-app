@@ -8,13 +8,13 @@ import useAuthContext from "@/features/auth/hooks/useAuthContext"
 import type { AxiosError } from "axios"
 import type { MutateConfig } from "@/lib/query"
 
-export type LoginData = {
+export interface LoginData {
     data: {
         email: string
         password: string
     }
 }
-export type LoginResponse = {
+export interface LoginResponse {
     accessToken: string
 }
 
@@ -24,9 +24,10 @@ export const login = ({ data }: LoginData): Promise<LoginResponse> => {
     })
 }
 
-type UseLoginOptions = {
+interface UseLoginOptions {
     config?: MutateConfig<LoginResponse>
 }
+
 export const useLogin = ({ config }: UseLoginOptions = {}) => {
     const { setAuth } = useAuthContext()
     const [_cookies, setCookies] = useCookies(["is_logged_in"])

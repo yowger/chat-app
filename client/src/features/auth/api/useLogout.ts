@@ -1,12 +1,10 @@
-import { useCookies } from "react-cookie"
 import { useMutation } from "@tanstack/react-query"
 
 import { axiosPublic } from "@/lib/axios/public"
 
-import useAuthContext from "@/features/auth/hooks/useAuthContext"
-
 import type { AxiosError } from "axios"
 import type { MutateConfig } from "@/lib/query"
+import useEndSession from "../hooks/useEndSession"
 
 export type LogoutResponse = {
     message: string
@@ -27,18 +25,11 @@ type UseLogoutOptions = {
 }
 
 export const useLogout = ({ config }: UseLogoutOptions = {}) => {
-    const { setAuth } = useAuthContext()
-    /* tslint:disable:no-unused-variable */
-    const [_cookies, _setCookies, removeCookie] = useCookies(["is_logged_in"])
+    const endSession = useEndSession()
 
     return useMutation<LogoutResponse, AxiosError>({
         onSuccess: () => {
-            removeCookie("is_logged_in")
-
-            setAuth({
-                accessToken: "",
-                isAuthenticated: false,
-            })
+            endSession()
         },
         ...config,
         mutationFn: logout,

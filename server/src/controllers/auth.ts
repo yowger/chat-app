@@ -48,7 +48,6 @@ export const loginHandler = async (req: Request, res: Response) => {
     if (!isPasswordMatch) {
         throw new HTTP401Error("Invalid credentials")
     }
-    console.log("🚀 ~ loginHandler ~ existingUser:", existingUser)
 
     const accessToken = signAccessToken(existingUser._id)
     const refreshToken = signRefreshToken(existingUser._id)
