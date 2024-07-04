@@ -5,7 +5,6 @@ Tech used:
     Backend: Express, JWT, socket, redis?, 
 
 frontend:
-
     register and login
     persisting user
 

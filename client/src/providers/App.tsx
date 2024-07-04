@@ -8,9 +8,10 @@ import { queryClient } from "@/lib/query"
 import { AuthContextProvider } from "@/features/auth/context/Auth"
 
 import { Button } from "@/components/ui/button/Button"
-import RefreshAuthWrapper from "@/features/auth/components/RefreshAuthWrapper"
+import PersistAuth from "@/features/auth/components/PersistAuth"
 
 import type { FC, PropsWithChildren } from "react"
+import { CookiesProvider } from "react-cookie"
 
 const ErrorFallback = () => {
     return (
@@ -37,9 +38,11 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <QueryClientProvider client={queryClient}>
                     <BrowserRouter>
-                        <AuthContextProvider>
-                            <RefreshAuthWrapper>{children}</RefreshAuthWrapper>
-                        </AuthContextProvider>
+                        <CookiesProvider>
+                            <AuthContextProvider>
+                                <PersistAuth>{children}</PersistAuth>
+                            </AuthContextProvider>
+                        </CookiesProvider>
                     </BrowserRouter>
                 </QueryClientProvider>
             </ErrorBoundary>

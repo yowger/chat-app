@@ -1,3 +1,4 @@
+import { useCookies } from "react-cookie"
 import { useMutation } from "@tanstack/react-query"
 
 import { axiosPublic } from "@/lib/axios/public"
@@ -27,9 +28,12 @@ type UseLogoutOptions = {
 
 export const useLogout = ({ config }: UseLogoutOptions = {}) => {
     const { setAuth } = useAuthContext()
+    const [cookies, setCookies, removeCookie] = useCookies(["is_logged_in"])
 
     return useMutation<LogoutResponse, AxiosError>({
         onSuccess: () => {
+            removeCookie("is_logged_in")
+
             setAuth({
                 accessToken: "",
                 isAuthenticated: false,
