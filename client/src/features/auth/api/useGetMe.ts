@@ -12,22 +12,22 @@ export type Profile = {
     updatedAt: Date
 }
 
-export interface useHttpGetProfileResponse extends Profile {}
-
-const useFetchMe = (): Promise<useHttpGetProfileResponse> => {
-    const axiosPrivate = useAxiosPrivate()
-
-    return axiosPrivate.get("/api/users/me")
-}
+export interface getMeResponse extends Profile {}
 
 interface useGetProfileOptions {
     config?: QueryConfig<Profile>
 }
 
 export const useGetMe = ({ config }: useGetProfileOptions = {}) => {
-    return useQuery<Profile, Error, Profile>({
+    const axiosPrivate = useAxiosPrivate()
+
+    const fetchMe = (): Promise<getMeResponse> => {
+        return axiosPrivate.get("/api/users/me")
+    }
+
+    return useQuery<Profile, Error>({
         queryKey: ["profile", "me"],
-        queryFn: useFetchMe,
+        queryFn: fetchMe,
         ...config,
     })
 }

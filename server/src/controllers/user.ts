@@ -16,6 +16,8 @@ export const getUserByIdHandler = async (req: Request, res: Response) => {
 
 export const getMeHandler = async (req: ProtectedRequest, res: Response) => {
     const user = await findUserById(req.userId)
+    console.log("🚀 ~ getMeHandler ~ user:", user)
+    
     if (user) {
         res.json(user)
     } else {

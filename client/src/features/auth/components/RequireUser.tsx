@@ -1,14 +1,15 @@
 import { Outlet } from "react-router-dom"
+
 import { useGetMe } from "../api/useGetMe"
 
 import useEndSession from "../hooks/useEndSession"
 
 const RequireUser = () => {
-    const endSession = useEndSession()
     const { data, isLoading, isError } = useGetMe()
+    const endSession = useEndSession()
 
     if (isLoading) {
-        return <div>is loading...</div>
+        return <div>loading...</div>
     }
 
     if (isError) {
