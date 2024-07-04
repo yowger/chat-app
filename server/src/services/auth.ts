@@ -1,13 +1,9 @@
-import { Types } from "mongoose"
-
 import { signJwt } from "@/utils/jwt"
 
-import { User } from "@/models/user"
+import { Types } from "mongoose"
 
-export const signAccessToken = (user: User) => {
-    const { password, ...userWithoutPassword } = user
-
-    const accessToken = signJwt(userWithoutPassword, "accessTokenPrivateKey", {
+export const signAccessToken = (userId: Types.ObjectId) => {
+    const accessToken = signJwt({ userId }, "accessTokenPrivateKey", {
         expiresIn: "15m",
     })
 

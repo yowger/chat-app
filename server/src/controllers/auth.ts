@@ -48,8 +48,9 @@ export const loginHandler = async (req: Request, res: Response) => {
     if (!isPasswordMatch) {
         throw new HTTP401Error("Invalid credentials")
     }
+    console.log("🚀 ~ loginHandler ~ existingUser:", existingUser)
 
-    const accessToken = signAccessToken(existingUser)
+    const accessToken = signAccessToken(existingUser._id)
     const refreshToken = signRefreshToken(existingUser._id)
     res.cookie("refreshToken", refreshToken, refreshTokenOptions)
 
@@ -78,7 +79,7 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
         throw new HTTP401Error("Invalid credentials")
     }
 
-    const accessToken = signAccessToken(user)
+    const accessToken = signAccessToken(user._id)
 
     res.status(200).json({
         accessToken,

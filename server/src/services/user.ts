@@ -7,7 +7,10 @@ export const createUser = async (input: User) => {
 }
 
 export const findUserById = async (id: string) => {
-    const user = await UserModel.findById(id).lean().exec()
+    const user = await UserModel.findById(id)
+        .select("_id username email createdAt updatedAt")
+        .lean()
+        .exec()
 
     return user
 }
