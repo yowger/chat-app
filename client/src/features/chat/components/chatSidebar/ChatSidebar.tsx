@@ -54,7 +54,7 @@ export default function ChatSidebar() {
                     </Button>
                 </section>
 
-                <section className="pl-1.5 pr-4">
+                <section className="px-1.5">
                     <ContactPreviewContainer>
                         <ContactPreviewAvatar
                             src="https://picsum.photos/200/300"

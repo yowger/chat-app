@@ -1,5 +1,11 @@
+import { IconX } from "@tabler/icons-react"
 import { Input } from "@/components/ui/Input"
-import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react"
+import {
+    Dialog,
+    DialogBackdrop,
+    DialogPanel,
+    DialogTitle,
+} from "@headlessui/react"
 
 import ContactPreviewContainer from "../contactPreview/Container"
 import ContactPreviewAvatar from "../contactPreview/Avatar"
@@ -32,16 +38,31 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                 <div className="flex min-h-full items-center justify-center p-4">
                     <DialogPanel
                         transition
-                        className="w-full max-w-lg rounded-md bg-white py-5 duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+                        className="w-full max-w-lg rounded-md bg-white py-6 duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
                     >
-                        <div className="px-5">
+                        <div className="flex items-center justify-between px-6 mb-6">
+                            <DialogTitle
+                                as="h3"
+                                className="text-lg font-semibold text-gray-800"
+                            >
+                                New Conversation
+                            </DialogTitle>
+
+                            <IconX
+                                size={18}
+                                onClick={onClose}
+                                className="cursor-pointer text-gray-800"
+                            />
+                        </div>
+
+                        <div className="px-6">
                             <Input placeholder="search for people" />
                         </div>
 
-                        <section className="mt-4">
-                            <h3 className="mb-0.5 font-medium px-5">Friends</h3>
+                        <section className="mt-6">
+                            <h3 className="px-6 mb-1 font-medium">Friends</h3>
 
-                            <div className="px-3">
+                            <div className="px-[18px]">
                                 <ContactPreviewContainer>
                                     <ContactPreviewAvatar
                                         src="https://picsum.photos/200/300"
@@ -72,12 +93,10 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                             </div>
                         </section>
 
-                        <section className="mt-4">
-                            <h3 className="mb-0.5 font-medium px-5">
-                                Strangers
-                            </h3>
+                        <section className="mt-6">
+                            <h3 className="px-6 mb-1 font-medium">Strangers</h3>
 
-                            <div className="px-2.5">
+                            <div className="px-[18px]">
                                 <ContactPreviewContainer>
                                     <ContactPreviewAvatar
                                         src="https://picsum.photos/200/300"
