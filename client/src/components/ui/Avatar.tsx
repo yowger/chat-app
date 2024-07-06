@@ -1,6 +1,10 @@
+import { mergeStyles } from "@/utils/mergeStyles"
+
 import type { Avatar } from "@/types/avatar"
 
-interface AvatarProps extends Avatar {}
+interface AvatarProps extends Avatar {
+    className?: string
+}
 
 const sizeClasses = {
     small: "w-9 h-9",
@@ -13,11 +17,16 @@ const Avatar = ({
     alt = "Profile image",
     size = "medium",
     isOnline = false,
+    className,
 }: AvatarProps) => {
     return (
         <div className="relative flex-shrink-0">
             <img
-                className={`rounded-full ${sizeClasses[size]}`}
+                className={mergeStyles(
+                    "rounded-full",
+                    className,
+                    sizeClasses[size]
+                )}
                 src={src}
                 alt={alt}
             />
