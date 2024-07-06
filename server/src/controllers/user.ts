@@ -1,6 +1,11 @@
-import { findUserById, findUserByEmail, updateUsername } from "@/services/user"
+import {
+    findUserById,
+    findUserByEmail,
+    updateUsername,
+    findUsersWithPagination,
+} from "@/services/user"
 
-import { HTTP404Error } from "@/handlers/api/apiErrors"
+import { HTTP400Error, HTTP404Error } from "@/handlers/api/apiErrors"
 
 import type { ProtectedRequest } from "@/types/appRequest"
 import type { Request, Response } from "express"
@@ -14,10 +19,40 @@ export const getUserByIdHandler = async (req: Request, res: Response) => {
     }
 }
 
+export const searchUsersWithPaginationHandler = async (
+    req: Request,
+    res: Response
+) => {
+    const { query } = req.query
+
+    const emptyQuery = query === undefined || (query as String).trim() === ""
+    if (emptyQuery) {
+        return res.json({
+            users: [],
+            totalUsers: 0,
+            totalPages: 0,
+            currentPage: 1,
+        })
+    }
+
+    const page = parseInt(req.query.page as string, 10) || 1
+    const limit = parseInt(req.query.limit as string, 10) || 10
+
+    try {
+        const result = await findUsersWithPagination(
+            query as string,
+            page,
+            limit
+        )
+        res.json(result)
+    } catch (error) {
+        throw new HTTP404Error("Users not found")
+    }
+}
+
 export const getMeHandler = async (req: ProtectedRequest, res: Response) => {
     const user = await findUserById(req.userId)
-    console.log("🚀 ~ getMeHandler ~ user:", user)
-    
+
     if (user) {
         res.json(user)
     } else {
