@@ -12,53 +12,11 @@ import ContactPreviewAvatar from "../contactPreview/Avatar"
 import ContactPreviewInfo from "../contactPreview/Info"
 import ContactPreviewUserName from "../contactPreview/Name"
 
-import type { FC } from "react"
+import { useDebounceValue } from "@/hooks/useDebounceValue"
 
-interface User {
-    id: number
-    name: string
-    avatar: string
-    isOnline: boolean
-    type: "friend" | "stranger"
-}
+import { useSearchUsers } from "../../api/useSearchUsers"
 
-const dummyUsers: User[] = [
-    {
-        id: 1,
-        name: "James Macagba",
-        avatar: "https://picsum.photos/200/300?1",
-        isOnline: false,
-        type: "friend",
-    },
-    {
-        id: 2,
-        name: "John Doe",
-        avatar: "https://picsum.photos/200/300?2",
-        isOnline: true,
-        type: "stranger",
-    },
-    {
-        id: 3,
-        name: "Jane Smith",
-        avatar: "https://picsum.photos/200/300?3",
-        isOnline: false,
-        type: "friend",
-    },
-    {
-        id: 4,
-        name: "Emily Johnson",
-        avatar: "https://picsum.photos/200/300?4",
-        isOnline: true,
-        type: "stranger",
-    },
-    {
-        id: 5,
-        name: "Michael Brown",
-        avatar: "https://picsum.photos/200/300?5",
-        isOnline: true,
-        type: "friend",
-    },
-]
+import type { ChangeEvent, FC } from "react"
 
 interface NewChatProps {
     isOpen: boolean
@@ -66,10 +24,15 @@ interface NewChatProps {
 }
 
 const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
-    if (!isOpen) return null
+    const [searchedUser, setSearchedUser] = useDebounceValue("", 500)
+    const { data, isLoading, isError } = useSearchUsers(searchedUser)
 
-    const friends = dummyUsers.filter((user) => user.type === "friend")
-    const strangers = dummyUsers.filter((user) => user.type === "stranger")
+    const handleSearchUser = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = event.currentTarget.value
+        setSearchedUser(value)
+    }
+
+    if (!isOpen) return null
 
     return (
         <Dialog
@@ -105,50 +68,34 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                         </div>
 
                         <div className="px-6">
-                            <Input placeholder="search for people" />
+                            <Input
+                                onChange={handleSearchUser}
+                                placeholder="search for people"
+                            />
                         </div>
 
                         <section className="mt-6">
                             <h3 className="px-6 mb-1 font-medium">Friends</h3>
 
                             <div className="px-[18px]">
-                                {friends.map((user) => (
-                                    <ContactPreviewContainer key={user.id}>
-                                        <ContactPreviewAvatar
-                                            src={user.avatar}
-                                            isOnline={user.isOnline}
-                                            size="small"
-                                            className="mr-3"
-                                        />
-                                        <ContactPreviewInfo>
-                                            <ContactPreviewUserName className="text-sm">
-                                                {user.name}
-                                            </ContactPreviewUserName>
-                                        </ContactPreviewInfo>
-                                    </ContactPreviewContainer>
-                                ))}
-                            </div>
-                        </section>
-
-                        <section className="mt-6">
-                            <h3 className="px-6 mb-1 font-medium">Strangers</h3>
-
-                            <div className="px-[18px]">
-                                {strangers.map((user) => (
-                                    <ContactPreviewContainer key={user.id}>
-                                        <ContactPreviewAvatar
-                                            src={user.avatar}
-                                            isOnline={user.isOnline}
-                                            size="small"
-                                            className="mr-3"
-                                        />
-                                        <ContactPreviewInfo>
-                                            <ContactPreviewUserName className="text-sm">
-                                                {user.name}
-                                            </ContactPreviewUserName>
-                                        </ContactPreviewInfo>
-                                    </ContactPreviewContainer>
-                                ))}
+                                {isLoading && <p>loading...</p>}
+                                {isError && <p>error loading users</p>}
+                                {data &&
+                                    data.users.map((user) => (
+                                        <ContactPreviewContainer key={user._id}>
+                                            <ContactPreviewAvatar
+                                                src="https://picsum.photos/200/300?1"
+                                                isOnline={false}
+                                                size="small"
+                                                className="mr-3"
+                                            />
+                                            <ContactPreviewInfo>
+                                                <ContactPreviewUserName className="text-sm">
+                                                    {user.username}
+                                                </ContactPreviewUserName>
+                                            </ContactPreviewInfo>
+                                        </ContactPreviewContainer>
+                                    ))}
                             </div>
                         </section>
                     </DialogPanel>

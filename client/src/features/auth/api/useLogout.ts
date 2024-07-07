@@ -2,9 +2,10 @@ import { useMutation } from "@tanstack/react-query"
 
 import { axiosPublic } from "@/lib/axios/public"
 
+import useEndSession from "../hooks/useEndSession"
+
 import type { AxiosError } from "axios"
 import type { MutateConfig } from "@/lib/query"
-import useEndSession from "../hooks/useEndSession"
 
 export type LogoutResponse = {
     message: string

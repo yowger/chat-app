@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom"
 
-import { useGetMe } from "../api/useGetMe"
+import { useGetMe } from "../../chat/api/useGetMe"
 
 import useEndSession from "../hooks/useEndSession"
 

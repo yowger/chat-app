@@ -6,7 +6,9 @@ import { useRefreshAuth } from "@/features/auth/api/useRefreshAuth"
 
 import useAuthContext from "@/features/auth/hooks/useAuthContext"
 
-const useAxiosPrivate = () => {
+import type { AxiosInstance } from "axios"
+
+const useAxiosPrivate = (): AxiosInstance => {
     const { auth } = useAuthContext()
     const refreshAuthMutation = useRefreshAuth()
 
@@ -24,7 +26,7 @@ const useAxiosPrivate = () => {
         )
         const responseInterceptor = axiosPrivate.interceptors.response.use(
             (response) => {
-                return response.data
+                return response
             },
             async (error) => {
                 const getNewAccessToken = async () => {

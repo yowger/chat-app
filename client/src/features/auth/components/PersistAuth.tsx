@@ -18,7 +18,7 @@ const PersistAuth: FC<PersistAuthProps> = ({ children }) => {
         const checkAndRefreshAuth = () => {
             const hasPreviouslyLoggedIn =
                 cookies.is_logged_in && !auth.isAuthenticated
-                
+
             if (hasPreviouslyLoggedIn) {
                 mutate()
             }

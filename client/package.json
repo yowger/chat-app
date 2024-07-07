@@ -16,6 +16,7 @@
     "@tanstack/react-query": "^5.44.0",
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-cookie": "^7.1.4",
     "react-dom": "^18.2.0",
@@ -27,6 +28,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.14.9",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
