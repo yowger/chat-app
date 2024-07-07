@@ -24,8 +24,9 @@ export const searchUsersWithPaginationHandler = async (
     res: Response
 ) => {
     const { query } = req.query
+    console.log("🚀 ~ query:", query)
 
-    const emptyQuery = query === undefined || (query as String).trim() === ""
+    const emptyQuery = query === undefined
     if (emptyQuery) {
         return res.json({
             users: [],
@@ -38,16 +39,9 @@ export const searchUsersWithPaginationHandler = async (
     const page = parseInt(req.query.page as string, 10) || 1
     const limit = parseInt(req.query.limit as string, 10) || 10
 
-    try {
-        const result = await findUsersWithPagination(
-            query as string,
-            page,
-            limit
-        )
-        res.json(result)
-    } catch (error) {
-        throw new HTTP404Error("Users not found")
-    }
+    const result = await findUsersWithPagination(query as string, page, limit)
+    console.log("🚀 ~ result:", result)
+    res.json(result)
 }
 
 export const getMeHandler = async (req: ProtectedRequest, res: Response) => {
