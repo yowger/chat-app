@@ -3,6 +3,7 @@ import { QueryClient } from "@tanstack/react-query"
 import type { AxiosError } from "axios"
 import type {
     DefaultOptions,
+    UndefinedInitialDataInfiniteOptions,
     UseMutationOptions,
     UseQueryOptions,
 } from "@tanstack/react-query"
@@ -23,4 +24,9 @@ export type MutateConfig<Response, TVariables = unknown> = UseMutationOptions<
     AxiosError,
     TVariables,
     unknown
+>
+
+export type InfiniteQueryConfig<T> = Omit<
+    UndefinedInitialDataInfiniteOptions<T>,
+    "queryKey" | "queryFn" | "initialPageParam" | "getNextPageParam"
 >

@@ -1,3 +1,4 @@
+import { Fragment } from "react"
 import { IconX } from "@tabler/icons-react"
 import { Input } from "@/components/ui/Input"
 import {
@@ -16,20 +17,35 @@ import { useDebounceValue } from "@/hooks/useDebounceValue"
 
 import { useSearchUsers } from "../../api/useSearchUsers"
 
-import type { ChangeEvent, FC } from "react"
+import { type ChangeEvent, type FC } from "react"
+import { Button } from "@/components/ui/button/Button"
 
 interface NewChatProps {
     isOpen: boolean
     onClose: () => void
 }
 
+// todo friend/stranger filter
 const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
     const [searchedUser, setSearchedUser] = useDebounceValue("", 500)
-    const { data, isLoading, isError } = useSearchUsers(searchedUser)
+    const {
+        data,
+        isError,
+        isLoading,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useSearchUsers({
+        searchParams: { username: searchedUser },
+    })
 
     const handleSearchUser = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.currentTarget.value
         setSearchedUser(value)
+    }
+
+    const handleViewMore = () => {
+        fetchNextPage()
     }
 
     if (!isOpen) return null
@@ -80,22 +96,41 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                             <div className="px-[18px]">
                                 {isLoading && <p>loading...</p>}
                                 {isError && <p>error loading users</p>}
-                                {data &&
-                                    data.users.map((user) => (
-                                        <ContactPreviewContainer key={user._id}>
-                                            <ContactPreviewAvatar
-                                                src="https://picsum.photos/200/300?1"
-                                                isOnline={false}
-                                                size="small"
-                                                className="mr-3"
-                                            />
-                                            <ContactPreviewInfo>
-                                                <ContactPreviewUserName className="text-sm">
-                                                    {user.username}
-                                                </ContactPreviewUserName>
-                                            </ContactPreviewInfo>
-                                        </ContactPreviewContainer>
-                                    ))}
+                                {data?.pages.map((page, pageIndex) => (
+                                    <Fragment key={pageIndex}>
+                                        {page.users.map((user) => (
+                                            <ContactPreviewContainer
+                                                key={user._id}
+                                            >
+                                                <ContactPreviewAvatar
+                                                    src="https://picsum.photos/200/300?1"
+                                                    isOnline={false}
+                                                    size="small"
+                                                    className="mr-3"
+                                                />
+                                                <ContactPreviewInfo>
+                                                    <ContactPreviewUserName className="text-sm">
+                                                        {user.username}
+                                                    </ContactPreviewUserName>
+                                                </ContactPreviewInfo>
+                                            </ContactPreviewContainer>
+                                        ))}
+                                    </Fragment>
+                                ))}
+
+                                <div>
+                                    {hasNextPage && (
+                                        <Button onClick={handleViewMore}>
+                                            View more
+                                        </Button>
+                                    )}
+                                </div>
+
+                                <div>
+                                    {isFetchingNextPage && (
+                                        <p>Loading more...</p>
+                                    )}
+                                </div>
                             </div>
                         </section>
                     </DialogPanel>
