@@ -6,7 +6,15 @@ import { useRefreshAuth } from "@/features/auth/api/useRefreshAuth"
 
 import useAuthContext from "@/features/auth/hooks/useAuthContext"
 
-import type { AxiosInstance } from "axios"
+import type {
+    AxiosError,
+    AxiosInstance,
+    InternalAxiosRequestConfig,
+} from "axios"
+
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+    _retry?: boolean
+}
 
 const useAxiosPrivate = (): AxiosInstance => {
     const { auth } = useAuthContext()
@@ -24,38 +32,33 @@ const useAxiosPrivate = (): AxiosInstance => {
                 return Promise.reject(error)
             }
         )
+
         const responseInterceptor = axiosPrivate.interceptors.response.use(
             (response) => {
                 return response
             },
-            async (error) => {
+            async (error: AxiosError) => {
                 const getNewAccessToken = async () => {
-                    const originalRequest = error.config
+                    const originalRequest =
+                        error.config as CustomAxiosRequestConfig
 
-                    if (
-                        error.response &&
-                        error.response.status === 403 &&
-                        !refreshAuthMutation.isPending
-                    ) {
+                    const shouldRetry =
+                        error.response?.status === 401 &&
+                        originalRequest &&
+                        !originalRequest._retry
+
+                    if (shouldRetry) {
                         try {
-                            const newAccessToken = await new Promise(
-                                (resolve, reject) => {
-                                    refreshAuthMutation.mutate(undefined, {
-                                        onSuccess: (data) => {
-                                            resolve(data.accessToken)
-                                        },
-                                        onError: (error) => {
-                                            reject(error)
-                                        },
-                                    })
-                                }
-                            )
+                            originalRequest._retry = true
 
-                            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+                            const { accessToken } =
+                                await refreshAuthMutation.mutateAsync()
+
+                            originalRequest.headers.Authorization = `Bearer ${accessToken}`
 
                             return axiosPrivate(originalRequest)
-                        } catch (refreshError) {
-                            return Promise.reject(refreshError)
+                        } catch (error) {
+                            return Promise.reject(error)
                         }
                     }
 
@@ -70,7 +73,7 @@ const useAxiosPrivate = (): AxiosInstance => {
             axiosPrivate.interceptors.request.eject(requestInterceptor)
             axiosPrivate.interceptors.response.eject(responseInterceptor)
         }
-    }, [auth.accessToken, refreshAuthMutation])
+    }, [auth, refreshAuthMutation])
 
     return axiosPrivate
 }
