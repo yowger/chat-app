@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 
-import useAxiosPrivate from "@/hooks/useAxiosPrivate"
+import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { Profile } from "../types/User"
 import type { QueryConfig } from "@/lib/query"

@@ -30,6 +30,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
     const [searchedUser, setSearchedUser] = useDebounceValue("", 500)
     const {
         data,
+        // error,
         isError,
         isLoading,
         fetchNextPage,

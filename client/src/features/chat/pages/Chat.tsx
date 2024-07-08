@@ -16,14 +16,11 @@ const menuItems = [
 ]
 
 export default function Chat() {
-    // const [activeChat]
-
     return (
         <div className="flex">
             <ChatSidebar />
             <main className="flex-1 md:flex h-screen relative">
                 <ChatHeader />
-
                 <main className="flex-1 flex h-screen relative">
                     <div className="mt-16 flex flex-col w-full lg:w-[70%] bg-gray-300 justify-between">
                         <section className="space-y-4 px-4 py-4">

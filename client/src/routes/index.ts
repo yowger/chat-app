@@ -1,13 +1,14 @@
 import { useRoutes } from "react-router-dom"
 
+import CommonRoutes from "./Common"
 import PublicRoutes from "@/routes/Public"
 import PrivateRoutes from "@/routes/Private"
 
-import useAuthContext from "@/features/auth/hooks/useAuthContext"
-import CommonRoutes from "./Common"
+import useAuthStore from "@/features/auth/store/auth"
 
 export default function RootRoutes() {
-    const { auth } = useAuthContext()
+    const auth = useAuthStore.use.auth()
+    console.log("🚀 ~ RootRoutes ~ isAuthenticated:", auth)
 
     const routes = auth.isAuthenticated ? PrivateRoutes : PublicRoutes
 

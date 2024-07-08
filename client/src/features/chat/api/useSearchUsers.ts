@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 
-import useAxiosPrivate from "@/hooks/useAxiosPrivate"
+import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { AxiosInstance } from "axios"
 import type { Profile } from "../types/User"

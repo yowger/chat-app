@@ -1,40 +1,30 @@
-import { useEffect, useState } from "react"
-import { useCookies } from "react-cookie"
+import { useEffect } from "react"
 
-import useAuthContext from "@/features/auth/hooks/useAuthContext"
-import { useRefreshAuth } from "@/features/auth/api/useRefreshAuth"
+import { useRefreshAuth } from "../api/useRefreshAuth"
+
+import useAuthStore, { useHydration } from "../store/auth"
 
 import type { FC, PropsWithChildren } from "react"
 
 interface PersistAuthProps extends PropsWithChildren {}
 
 const PersistAuth: FC<PersistAuthProps> = ({ children }) => {
-    const { auth } = useAuthContext()
+    const { isLoggedIn } = useAuthStore.use.auth()
+    const hasHydrated = useHydration()
+
     const { mutate } = useRefreshAuth()
-    const [cookies] = useCookies(["is_logged_in"])
-    const [trueSuccess, setTrueSuccess] = useState(false)
 
     useEffect(() => {
-        const checkAndRefreshAuth = () => {
-            const hasPreviouslyLoggedIn =
-                cookies.is_logged_in && !auth.isAuthenticated
-
-            if (hasPreviouslyLoggedIn) {
-                mutate()
-            }
-
-            setTrueSuccess(true)
+        if (isLoggedIn) {
+            mutate()
         }
+    }, [isLoggedIn, mutate])
 
-        checkAndRefreshAuth()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    if (!trueSuccess) {
+    if (!hasHydrated) {
         return <div>Loading...</div>
+    } else {
+        return children
     }
-
-    return children
 }
 
 export default PersistAuth
