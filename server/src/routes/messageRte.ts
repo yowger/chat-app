@@ -5,9 +5,9 @@ import {
     getMessageByIdHandler,
     markMessageAsReadHandler,
     deleteMessageHandler,
-} from "@/controllers/message"
+} from "@/controllers/messageCtrl"
 
-import asyncHandler from "@/handlers/middleware/asyncHandler"
+import asyncHandler from "@/handlers/middleware/asyncHandlerMw"
 
 const router = Router()
 

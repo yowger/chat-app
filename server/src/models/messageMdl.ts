@@ -1,6 +1,6 @@
 import { prop, getModelForClass, Ref, modelOptions } from "@typegoose/typegoose"
 
-import { User } from "@/models/user"
+import { User } from "@/models/userMdl"
 
 export class Message {
     @prop({ required: true })

@@ -3,7 +3,7 @@ import {
     findMessageById,
     markMessageAsRead,
     deleteMessage,
-} from "@/services/message"
+} from "@/services/messageSvc"
 
 import { HTTP404Error } from "@/handlers/api/apiErrors"
 

@@ -5,9 +5,9 @@ import {
     logOutHandler,
     refreshTokenHandler,
     registerHandler,
-} from "@/controllers/auth"
+} from "@/controllers/authCtrl"
 
-import asyncHandler from "@/handlers/middleware/asyncHandler"
+import asyncHandler from "@/handlers/middleware/asyncHandlerMw"
 
 const router = Router()
 

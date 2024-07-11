@@ -1,4 +1,4 @@
-import MessageModel, { Message } from "@/models/message"
+import MessageModel, { Message } from "@/models/messageMdl"
 
 interface CreateMessageInput
     extends Pick<Message, "content" | "sender" | "recipient"> {}

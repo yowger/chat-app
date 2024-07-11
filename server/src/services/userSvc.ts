@@ -1,4 +1,4 @@
-import UserModel, { User } from "@/models/user"
+import UserModel, { User } from "@/models/userMdl"
 
 export const createUser = async (input: User) => {
     const createdUser = await UserModel.create(input)

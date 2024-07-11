@@ -3,7 +3,7 @@ import {
     findUserByEmail,
     updateUsername,
     findUsersWithPagination,
-} from "@/services/user"
+} from "@/services/userSvc"
 
 import { HTTP400Error, HTTP404Error } from "@/handlers/api/apiErrors"
 

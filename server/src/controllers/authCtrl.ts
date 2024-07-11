@@ -3,8 +3,8 @@ import { refreshTokenOptions } from "@/config/cookies"
 import { comparePassword, hashPassword } from "@/utils/bcrypt"
 import { verifyJwt } from "@/utils/jwt"
 
-import { createUser, findUserByEmail, findUserById } from "@/services/user"
-import { signAccessToken, signRefreshToken } from "@/services/auth"
+import { createUser, findUserByEmail, findUserById } from "@/services/userSvc"
+import { signAccessToken, signRefreshToken } from "@/services/authSvc"
 
 import {
     HTTP401Error,

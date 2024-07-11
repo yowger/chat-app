@@ -5,9 +5,9 @@ import express from "express"
 
 import corsOptions from "@/config/cors"
 
-import errorLogger from "@/handlers/middleware/errorLogger"
-import invalidPathHandler from "@/handlers/middleware/invalidPathHandler"
-import errorHandler from "@/handlers/middleware/errorHandler"
+import errorLogger from "@/handlers/middleware/errorLoggerMw"
+import invalidPathHandler from "@/handlers/middleware/invalidPathHandlerMw"
+import errorHandler from "@/handlers/middleware/errorHandlerMw"
 
 import routes from "@/routes"
 
