@@ -1,19 +1,22 @@
 import { prop, getModelForClass, Ref, modelOptions } from "@typegoose/typegoose"
 
+import { Chat } from "@/models/chatMdl"
 import { User } from "@/models/userMdl"
 
+@modelOptions({
+    schemaOptions: {
+        timestamps: true,
+    },
+})
 export class Message {
     @prop({ required: true })
-    public content!: string
+    content!: string
 
-    @prop({ ref: () => User, required: true })
-    public sender!: Ref<User>
+    @prop({ required: true, ref: () => User })
+    public sender!: Ref<Chat>
 
-    @prop({ ref: () => User, required: true })
+    @prop({ required: true, ref: () => User })
     public recipient!: Ref<User>
-
-    @prop({ default: Date.now })
-    public createdAt?: Date
 
     @prop({ default: null })
     public readAt?: Date | null

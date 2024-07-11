@@ -1,7 +1,8 @@
 import UserModel, { User } from "@/models/userMdl"
 
 export const createUser = async (input: User) => {
-    const createdUser = await UserModel.create(input)
+    const { username, email, password } = input
+    const createdUser = await UserModel.create({ username, email, password })
 
     return createdUser.toObject()
 }
@@ -28,6 +29,7 @@ export const findUsersWithPagination = async (
         .skip(skip)
         .limit(limit)
         .select("_id username")
+        .lean()
         .exec()
 
     const totalUsers = await UserModel.countDocuments({

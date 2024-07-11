@@ -1,12 +1,12 @@
-import { httpStatusCodes } from "@/enums/api/httpStatusCode"
+import { HttpStatusCodes } from "@/enums/api/httpStatusCode"
 
 class BaseError extends Error {
-    public readonly httpStatusCode: httpStatusCodes
+    public readonly httpStatusCode: HttpStatusCodes
     public readonly isOperational: boolean
 
     constructor(
         name: string,
-        httpStatusCode: httpStatusCodes,
+        httpStatusCode: HttpStatusCodes,
         isOperational: boolean,
         description: string
     ) {

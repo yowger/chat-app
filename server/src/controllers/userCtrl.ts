@@ -5,7 +5,7 @@ import {
     findUsersWithPagination,
 } from "@/services/userSvc"
 
-import { HTTP400Error, HTTP404Error } from "@/handlers/api/apiErrors"
+import { HTTP404Error } from "@/handlers/api/apiErrors"
 
 import type { ProtectedRequest } from "@/types/appRequest"
 import type { Request, Response } from "express"
@@ -24,7 +24,6 @@ export const searchUsersWithPaginationHandler = async (
     res: Response
 ) => {
     const { query } = req.query
-    console.log("🚀 ~ query:", query)
 
     const emptyQuery = query === undefined
     if (emptyQuery) {
@@ -40,7 +39,7 @@ export const searchUsersWithPaginationHandler = async (
     const limit = parseInt(req.query.limit as string, 10) || 10
 
     const result = await findUsersWithPagination(query as string, page, limit)
-    console.log("🚀 ~ result:", result)
+
     res.json(result)
 }
 

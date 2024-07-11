@@ -6,7 +6,6 @@ import {
     Severity,
 } from "@typegoose/typegoose"
 
-@index({ email: 1 })
 @index({ username: 1 })
 @modelOptions({
     schemaOptions: {
@@ -18,19 +17,13 @@ import {
 })
 export class User {
     @prop({ required: true })
-    public username!: string
+    username!: string
 
     @prop({ required: true })
-    password: string
+    password!: string
 
     @prop({ required: true, unique: true, lowercase: true })
-    public email!: string
-
-    @prop()
-    public createdAt?: Date
-
-    @prop()
-    public updatedAt?: Date
+    email!: string
 }
 
 const UserModel = getModelForClass(User)

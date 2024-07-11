@@ -12,6 +12,7 @@ export const createMessage = async (input: CreateMessageInput) => {
 export const findMessageById = async (messageId: string) => {
     const message = await MessageModel.findById(messageId)
         .populate("sender recipient")
+        .lean()
         .exec()
 
     return message
@@ -22,7 +23,9 @@ export const markMessageAsRead = async (messageId: string) => {
         messageId,
         { readAt: new Date() },
         { new: true }
-    ).exec()
+    )
+        .lean()
+        .exec()
 
     return message
 }

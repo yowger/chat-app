@@ -1,18 +1,18 @@
 import BaseError from "@/handlers/BaseError"
 
-import { httpStatusCodes } from "@/enums/api/httpStatusCode"
+import { HttpStatusCodes } from "@/enums/api/httpStatusCode"
 
 export class HTTP400Error extends BaseError {
     constructor(
         description = "The request cannot be fulfilled due to bad syntax."
     ) {
-        super("BAD REQUEST", httpStatusCodes.BAD_REQUEST, true, description)
+        super("BAD REQUEST", HttpStatusCodes.BAD_REQUEST, true, description)
     }
 }
 
 export class HTTP401Error extends BaseError {
     constructor(description = "You are not authorized.") {
-        super("UNAUTHORIZED", httpStatusCodes.UNAUTHORIZED, true, description)
+        super("UNAUTHORIZED", HttpStatusCodes.UNAUTHORIZED, true, description)
     }
 }
 
@@ -20,13 +20,13 @@ export class HTTP403Error extends BaseError {
     constructor(
         description = "You don't have permission to access the requested resource."
     ) {
-        super("FORBIDDEN", httpStatusCodes.FORBIDDEN, true, description)
+        super("FORBIDDEN", HttpStatusCodes.FORBIDDEN, true, description)
     }
 }
 
 export class HTTP404Error extends BaseError {
     constructor(description = "The requested resource could not be found.") {
-        super("NOT FOUND", httpStatusCodes.NOT_FOUND, true, description)
+        super("NOT FOUND", HttpStatusCodes.NOT_FOUND, true, description)
     }
 }
 
@@ -34,7 +34,7 @@ export class HTTP409Error extends BaseError {
     constructor(
         description = "The request could not be completed because of a conflict in the request."
     ) {
-        super("CONFLICT", httpStatusCodes.CONFLICT, true, description)
+        super("CONFLICT", HttpStatusCodes.CONFLICT, true, description)
     }
 }
 
@@ -44,7 +44,7 @@ export class HTTP500Error extends BaseError {
     ) {
         super(
             "INTERNAL SERVER ERROR",
-            httpStatusCodes.INTERNAL_SERVER_ERROR,
+            HttpStatusCodes.INTERNAL_SERVER_ERROR,
             true,
             description
         )
