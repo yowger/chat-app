@@ -16,20 +16,21 @@ export const createMessageHandler = async (req: Request, res: Response) => {
 
 export const getMessageByIdHandler = async (req: Request, res: Response) => {
     const message = await findMessageById(req.params.id)
-    if (message) {
-        res.json(message)
-    } else {
+
+    if (!message) {
         throw new HTTP404Error("Message not found")
     }
+
+    res.json(message)
 }
 
 export const markMessageAsReadHandler = async (req: Request, res: Response) => {
     const message = await markMessageAsRead(req.params.id)
-    if (message) {
-        res.json(message)
-    } else {
+    if (!message) {
         throw new HTTP404Error("Message not found")
     }
+
+    res.json(message)
 }
 
 export const deleteMessageHandler = async (req: Request, res: Response) => {

@@ -11,8 +11,9 @@ export const createSingleChatHandler = async (
     const userId = req.userId
 
     const chat = await createSingleChat(userId, participant)
+    const { groupAdmin, ...restChat } = chat
 
-    res.status(201).json(chat)
+    res.status(201).json(restChat)
 }
 
 export const CreateGroupChatHandler = async (

@@ -12,11 +12,12 @@ import type { Request, Response } from "express"
 
 export const getUserByIdHandler = async (req: Request, res: Response) => {
     const user = await findUserById(req.params.id)
-    if (user) {
-        res.json(user)
-    } else {
+
+    if (!user) {
         throw new HTTP404Error("User not found")
     }
+
+    res.json(user)
 }
 
 export const searchUsersWithPaginationHandler = async (
@@ -46,27 +47,29 @@ export const searchUsersWithPaginationHandler = async (
 export const getMeHandler = async (req: ProtectedRequest, res: Response) => {
     const user = await findUserById(req.userId)
 
-    if (user) {
-        res.json(user)
-    } else {
+    if (!user) {
         throw new HTTP404Error("User not found")
     }
+
+    res.json(user)
 }
 
 export const getUserByEmailHandler = async (req: Request, res: Response) => {
     const user = await findUserByEmail(req.params.email)
+
     if (user) {
-        res.json(user)
-    } else {
         throw new HTTP404Error("User not found")
     }
+
+    res.json(user)
 }
 
 export const updateUsernameHandler = async (req: Request, res: Response) => {
     const updatedUser = await updateUsername(req.params.id, req.body.username)
-    if (updatedUser) {
-        res.json(updatedUser)
-    } else {
+
+    if (!updatedUser) {
         throw new HTTP404Error("User not found")
     }
+
+    res.json(updatedUser)
 }

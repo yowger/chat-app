@@ -16,6 +16,14 @@ export const findUserById = async (id: string) => {
     return user
 }
 
+export const checkIfUsersExist = async (
+    userIds: string[]
+): Promise<boolean> => {
+    const participants = await UserModel.find({ _id: { $in: userIds } })
+
+    return participants.length === userIds.length
+}
+
 export const findUsersWithPagination = async (
     query: string,
     page: number,
