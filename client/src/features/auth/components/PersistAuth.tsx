@@ -2,7 +2,9 @@ import { useEffect } from "react"
 
 import { useRefreshAuth } from "../api/useRefreshAuth"
 
-import useAuthStore, { useHydration } from "../store/auth"
+import useAuthStore from "../store/auth"
+
+import { useHydration } from "../hooks/useHydration"
 
 import type { FC, PropsWithChildren } from "react"
 
@@ -15,16 +17,20 @@ const PersistAuth: FC<PersistAuthProps> = ({ children }) => {
     const { mutate } = useRefreshAuth()
 
     useEffect(() => {
-        if (isLoggedIn) {
-            mutate()
+        const refreshIfHasLoggedIn = () => {
+            if (isLoggedIn) {
+                mutate()
+            }
         }
+
+        refreshIfHasLoggedIn()
     }, [isLoggedIn, mutate])
 
     if (!hasHydrated) {
         return <div>Loading...</div>
-    } else {
-        return children
     }
+
+    return children
 }
 
 export default PersistAuth

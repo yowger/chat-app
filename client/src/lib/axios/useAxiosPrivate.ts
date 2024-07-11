@@ -4,7 +4,7 @@ import { axiosPrivate } from "@/lib/axios/private"
 
 import { useRefreshAuth } from "@/features/auth/api/useRefreshAuth"
 
-import useAuthContext from "@/features/auth/hooks/useAuthContext"
+import useAuthStore from "@/features/auth/store/auth"
 
 import type {
     AxiosError,
@@ -17,14 +17,14 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const useAxiosPrivate = (): AxiosInstance => {
-    const { auth } = useAuthContext()
+    const { accessToken } = useAuthStore.use.auth()
     const refreshAuthMutation = useRefreshAuth()
 
     useEffect(() => {
         const requestInterceptor = axiosPrivate.interceptors.request.use(
             async (config) => {
                 if (!config.headers["Authorization"]) {
-                    config.headers.Authorization = `Bearer ${auth.accessToken}`
+                    config.headers.Authorization = `Bearer ${accessToken}`
                 }
                 return config
             },
@@ -42,12 +42,12 @@ const useAxiosPrivate = (): AxiosInstance => {
                     const originalRequest =
                         error.config as CustomAxiosRequestConfig
 
-                    const shouldRetry =
+                    const shouldRetryOriginalRequest =
                         error.response?.status === 401 &&
                         originalRequest &&
                         !originalRequest._retry
 
-                    if (shouldRetry) {
+                    if (shouldRetryOriginalRequest) {
                         try {
                             originalRequest._retry = true
 
@@ -73,7 +73,7 @@ const useAxiosPrivate = (): AxiosInstance => {
             axiosPrivate.interceptors.request.eject(requestInterceptor)
             axiosPrivate.interceptors.response.eject(responseInterceptor)
         }
-    }, [auth, refreshAuthMutation])
+    }, [accessToken, refreshAuthMutation])
 
     return axiosPrivate
 }

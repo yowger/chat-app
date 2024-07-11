@@ -5,13 +5,13 @@ import { QueryClientProvider } from "@tanstack/react-query"
 
 import { queryClient } from "@/lib/query"
 
-import { AuthContextProvider } from "@/features/auth/context/Auth"
-
-import { Button } from "@/components/ui/button/Button"
 import PersistAuth from "@/features/auth/components/PersistAuth"
 
+import { Button } from "@/components/ui/button/Button"
+
+import { refreshPage } from "@/utils/refreshPage"
+
 import type { FC, PropsWithChildren } from "react"
-import { CookiesProvider } from "react-cookie"
 
 const ErrorFallback = () => {
     return (
@@ -20,10 +20,7 @@ const ErrorFallback = () => {
             role="alert"
         >
             <h2 className="text-lg font-semibold">Something went wrong.</h2>
-            <Button
-                className="mt-4"
-                onClick={() => window.location.assign(window.location.origin)}
-            >
+            <Button className="mt-4" onClick={refreshPage}>
                 Refresh
             </Button>
         </div>
@@ -38,11 +35,7 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <QueryClientProvider client={queryClient}>
                     <BrowserRouter>
-                        <CookiesProvider>
-                            <AuthContextProvider>
-                                <PersistAuth>{children}</PersistAuth>
-                            </AuthContextProvider>
-                        </CookiesProvider>
+                        <PersistAuth>{children}</PersistAuth>
                     </BrowserRouter>
                 </QueryClientProvider>
             </ErrorBoundary>

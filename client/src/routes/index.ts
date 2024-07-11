@@ -8,7 +8,6 @@ import useAuthStore from "@/features/auth/store/auth"
 
 export default function RootRoutes() {
     const auth = useAuthStore.use.auth()
-    console.log("🚀 ~ RootRoutes ~ isAuthenticated:", auth)
 
     const routes = auth.isAuthenticated ? PrivateRoutes : PublicRoutes
 

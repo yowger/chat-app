@@ -2,12 +2,10 @@ import { useMutation } from "@tanstack/react-query"
 
 import { axiosPublic } from "@/lib/axios/public"
 
-// import useEndSession from "../hooks/useEndSession"
+import useAuthStore from "../store/auth"
 
 import type { AxiosError } from "axios"
 import type { MutateConfig } from "@/lib/query"
-import useAuthStore from "../store/auth"
-import { useEffect } from "react"
 
 export type LogoutResponse = {
     message: string
@@ -28,19 +26,10 @@ type UseLogoutOptions = {
 }
 
 export const useLogout = ({ config }: UseLogoutOptions = {}) => {
-    // const endSession = useEndSession()
-
-    const auth = useAuthStore.use.auth()
     const clearSession = useAuthStore.use.clearSession()
-
-    useEffect(() => {
-        console.log("new auth: ", auth)
-    }, [auth])
 
     return useMutation<LogoutResponse, AxiosError>({
         onSuccess: () => {
-            // endSession()
-            console.log("session clear")
             clearSession()
         },
         ...config,
