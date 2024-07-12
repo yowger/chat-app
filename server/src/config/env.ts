@@ -3,10 +3,10 @@ import path from "path"
 
 const env = process.env.NODE_ENV || "development"
 
+const envPath = path.resolve(__dirname, `../../config/${env}.env`)
+
 const dotEnvConfig: dotenv.DotenvConfigOptions | undefined =
-    env === "production"
-        ? undefined
-        : { path: path.resolve(__dirname, `../../config/${env}.env`) }
+    env === "production" ? undefined : { path: envPath }
 
 dotenv.config(dotEnvConfig)
 
