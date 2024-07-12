@@ -1,6 +1,11 @@
-import UserModel, { User } from "@/models/userMdl"
+import { User } from "@/models/userMdl"
 
-export const createUser = async (input: User) => {
+import { UserModel } from "@/models"
+import { Pagination } from "@/types/common"
+
+interface CreateUserInput extends Omit<User, "comparePassword"> {}
+
+export const createUser = async (input: CreateUserInput) => {
     const { username, email, password } = input
     const createdUser = await UserModel.create({ username, email, password })
 
@@ -9,7 +14,13 @@ export const createUser = async (input: User) => {
 
 export const findUserById = async (id: string) => {
     const user = await UserModel.findById(id)
-        .select("_id username email createdAt updatedAt")
+        .select({
+            _id: 1,
+            username: 1,
+            email: 1,
+            createdAt: 1,
+            updatedAt: 1,
+        })
         .lean()
         .exec()
 
@@ -24,19 +35,36 @@ export const checkIfUsersExist = async (
     return participants.length === userIds.length
 }
 
+interface findUsersWithPagination extends Pagination {
+    query?: string | undefined
+}
+
 export const findUsersWithPagination = async (
-    query: string,
-    page: number,
-    limit: number
+    input: findUsersWithPagination
 ) => {
+    const { query, page = 1, limit = 10 } = input
+
+    if (query === undefined || query.trim() === "") {
+        return {
+            users: [],
+            totalUsers: 0,
+            totalPages: 0,
+            currentPage: 1,
+        }
+    }
+
     const skip = (page - 1) * limit
 
     const users = await UserModel.find({
         username: { $regex: query, $options: "i" },
     })
+        .sort({ username: 1 })
         .skip(skip)
         .limit(limit)
-        .select("_id username")
+        .select({
+            id: 1,
+            username: 1,
+        })
         .lean()
         .exec()
 
@@ -53,7 +81,16 @@ export const findUsersWithPagination = async (
 }
 
 export const findUserByEmail = async (email: string) => {
-    const user = await UserModel.findOne({ email }).lean().exec()
+    const user = await UserModel.findOne({ email })
+        .select({
+            _id: 1,
+            username: 1,
+            password: 1,
+            email: 1,
+            createdAt: 1,
+            updatedAt: 1,
+        })
+        .exec()
 
     return user
 }

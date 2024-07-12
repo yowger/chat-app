@@ -1,39 +1,86 @@
 import {
-    createMessage,
-    findMessageById,
-    markMessageAsRead,
-    deleteMessage,
+    countMessages,
+    getMessagesWithWithPagination,
+    // createMessage,
+    // findMessageById,
+    // markMessageAsRead,
+    // deleteMessage,
+    sendMessage,
 } from "@/services/messageSvc"
 
 import { HTTP404Error } from "@/handlers/api/apiErrors"
 
-import type { Request, Response } from "express"
+import type { ProtectedRequest } from "@/types/appRequest"
+import type { Response } from "express"
 
-export const createMessageHandler = async (req: Request, res: Response) => {
-    const message = await createMessage(req.body)
+export const sendMessageHandler = async (
+    req: ProtectedRequest,
+    res: Response
+) => {
+    const { chatId, content } = req.body
+    const userId = req.userId
+
+    const message = await sendMessage({ chatId, senderId: userId, content })
+
     res.status(201).json(message)
 }
 
-export const getMessageByIdHandler = async (req: Request, res: Response) => {
-    const message = await findMessageById(req.params.id)
+export const getMessageWithPaginationHandler = async (
+    req: ProtectedRequest,
+    res: Response
+) => {
+    const { chatId } = req.body
+    const { query } = req.query
 
-    if (!message) {
-        throw new HTTP404Error("Message not found")
-    }
+    const page = parseInt(req.query.page as string, 10) || 1
+    const limit = parseInt(req.query.limit as string, 10) || 10
 
-    res.json(message)
+    const messages = await getMessagesWithWithPagination({
+        chatId: chatId as string,
+        page,
+        limit,
+        query: query as unknown as string,
+    })
+    const totalMessages = await countMessages(chatId as string)
+
+    const totalPages = Math.ceil(totalMessages / limit)
+
+    res.json({
+        messages,
+        pagination: {
+            page,
+            limit,
+            totalPages,
+            totalMessages,
+        },
+    })
 }
 
-export const markMessageAsReadHandler = async (req: Request, res: Response) => {
-    const message = await markMessageAsRead(req.params.id)
-    if (!message) {
-        throw new HTTP404Error("Message not found")
-    }
+// export const createMessageHandler = async (req: Request, res: Response) => {
+//     const message = await createMessage(req.body)
+//     res.status(201).json(message)
+// }
 
-    res.json(message)
-}
+// export const getMessageByIdHandler = async (req: Request, res: Response) => {
+//     const message = await findMessageById(req.params.id)
 
-export const deleteMessageHandler = async (req: Request, res: Response) => {
-    await deleteMessage(req.params.id)
-    res.status(204).send()
-}
+//     if (!message) {
+//         throw new HTTP404Error("Message not found")
+//     }
+
+//     res.json(message)
+// }
+
+// export const markMessageAsReadHandler = async (req: Request, res: Response) => {
+//     const message = await markMessageAsRead(req.params.id)
+//     if (!message) {
+//         throw new HTTP404Error("Message not found")
+//     }
+
+//     res.json(message)
+// }
+
+// export const deleteMessageHandler = async (req: Request, res: Response) => {
+//     await deleteMessage(req.params.id)
+//     res.status(204).send()
+// }

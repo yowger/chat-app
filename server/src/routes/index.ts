@@ -9,7 +9,7 @@ const router = Router()
 
 router.use("/", authRouter)
 router.use("/chat", chatRouter)
-router.use("/messages", messageRoutes)
-router.use("/users", userRoutes)
+router.use("/message", messageRoutes)
+router.use("/user", userRoutes)
 
 export default router

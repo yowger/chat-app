@@ -1,6 +1,8 @@
+import { ChatType } from "@/enums/chat/chat"
+
 import { HTTP404Error } from "@/handlers/api/apiErrors"
 
-import ChatModel, { ChatType } from "@/models/chatMdl"
+import { ChatModel } from "@/models"
 
 import { checkIfUsersExist, findUserById } from "@/services/userSvc"
 
@@ -59,5 +61,35 @@ export const createGroupChat = async (
 }
 
 export const findChatById = async (chatId: string) => {
-    const chat = await ChatModel.findById(chatId).populate("")
+    const chat = await ChatModel.findById(chatId)
+        .select({
+            type: 1,
+            participants: 1,
+            groupName: 1,
+            groupAdmin: 1,
+            createdAt: 1,
+        })
+        .lean()
+        .exec()
+
+    if (!chat) {
+        return null
+    }
+
+    return chat
+}
+
+export const updateChat = async (
+    chatId: string,
+    updateFields: Partial<Chat>
+) => {
+    const updatedChat = await ChatModel.findByIdAndUpdate(
+        chatId,
+        updateFields,
+        {
+            new: true,
+        }
+    )
+
+    return updatedChat
 }

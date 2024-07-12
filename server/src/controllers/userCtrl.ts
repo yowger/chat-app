@@ -26,20 +26,14 @@ export const searchUsersWithPaginationHandler = async (
 ) => {
     const { query } = req.query
 
-    const emptyQuery = query === undefined
-    if (emptyQuery) {
-        return res.json({
-            users: [],
-            totalUsers: 0,
-            totalPages: 0,
-            currentPage: 1,
-        })
-    }
-
     const page = parseInt(req.query.page as string, 10) || 1
     const limit = parseInt(req.query.limit as string, 10) || 10
 
-    const result = await findUsersWithPagination(query as string, page, limit)
+    const result = await findUsersWithPagination({
+        query: query as string,
+        page,
+        limit,
+    })
 
     res.json(result)
 }

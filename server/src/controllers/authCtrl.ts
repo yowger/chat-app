@@ -22,12 +22,10 @@ export const registerHandler = async (req: Request, res: Response) => {
         throw new HTTP409Error("User with this email address already exists")
     }
 
-    const hashedPassword = await hashPassword(password)
-
     const createdUser = await createUser({
         username,
         email,
-        password: hashedPassword,
+        password,
     })
 
     res.status(201).json(createdUser)
@@ -41,10 +39,7 @@ export const loginHandler = async (req: Request, res: Response) => {
         throw new HTTP404Error("User with this email address already exists")
     }
 
-    const isPasswordMatch = await comparePassword(
-        password,
-        existingUser.password
-    )
+    const isPasswordMatch = await existingUser.comparePassword(password)
     if (!isPasswordMatch) {
         throw new HTTP401Error("Invalid credentials")
     }

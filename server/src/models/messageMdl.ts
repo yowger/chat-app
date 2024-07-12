@@ -1,6 +1,7 @@
-import { prop, getModelForClass, Ref, modelOptions } from "@typegoose/typegoose"
+import { prop, Ref, modelOptions } from "@typegoose/typegoose"
 
 import { Chat } from "@/models/chatMdl"
+import { ReadBy } from "@/models/readByMdl"
 import { User } from "@/models/userMdl"
 
 @modelOptions({
@@ -12,16 +13,12 @@ export class Message {
     @prop({ required: true })
     content!: string
 
-    @prop({ required: true, ref: () => User })
-    public sender!: Ref<Chat>
+    @prop({ required: true, ref: () => Chat })
+    chat!: Ref<Chat>
 
     @prop({ required: true, ref: () => User })
-    public recipient!: Ref<User>
+    sender!: Ref<User>
 
-    @prop({ default: null })
-    public readAt?: Date | null
+    @prop({ default: [], type: () => ReadBy })
+    readAt?: ReadBy[]
 }
-
-const MessageModel = getModelForClass(Message)
-
-export default MessageModel
