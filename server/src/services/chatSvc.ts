@@ -7,6 +7,7 @@ import { ChatModel } from "@/models"
 import { checkIfUsersExist, findUserById } from "@/services/userSvc"
 
 import type { Chat } from "@/models/chatMdl"
+import type { Pagination } from "@/types/common"
 
 export const createSingleChat = async (userId: string, participant: string) => {
     const participantExist = await findUserById(participant)
@@ -58,6 +59,51 @@ export const createGroupChat = async (
     })
 
     return groupChat.toObject()
+}
+
+interface GetChatsWithPaginationOptions {
+    pagination?: Pagination
+}
+
+export const getChatsWithPagination = async (
+    userId: string,
+    options: GetChatsWithPaginationOptions
+) => {
+    const { pagination } = options
+    const { page = 1, limit = 10 } = pagination
+
+    const skip = (page - 1) * limit
+
+    const messages = await ChatModel.find({ participants: userId })
+        .select({
+            __v: 0,
+        })
+        .sort({
+            updatedAt: 1,
+        })
+        .skip(skip)
+        .limit(limit)
+        .populate({ path: "participants", select: "_id username" })
+        .populate({ path: "groupAdmin", select: "_id username" })
+        .populate({
+            path: "latestMessage",
+            select: "_id content createdAt",
+        })
+        .lean()
+        .exec()
+
+    return messages
+}
+
+export const countChats = async (
+    userId: string,
+    query?: string | undefined
+): Promise<number> => {
+    const total = await ChatModel.countDocuments({ participants: userId })
+        .lean()
+        .exec()
+
+    return total
 }
 
 export const findChatById = async (chatId: string) => {

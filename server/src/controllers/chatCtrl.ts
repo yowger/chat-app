@@ -1,4 +1,9 @@
-import { createGroupChat, createSingleChat } from "@/services/chatSvc"
+import {
+    countChats,
+    createGroupChat,
+    createSingleChat,
+    getChatsWithPagination,
+} from "@/services/chatSvc"
 
 import type { ProtectedRequest } from "@/types/appRequest"
 import type { Response } from "express"
@@ -26,4 +31,34 @@ export const CreateGroupChatHandler = async (
     const chat = await createGroupChat(userId, { groupName, participants })
 
     res.status(201).json(chat)
+}
+
+export const getChatsWithPaginationHandler = async (
+    req: ProtectedRequest,
+    res: Response
+) => {
+    const userId = req.userId
+
+    const page = parseInt(req.query.page as string, 10) || 1
+    const limit = parseInt(req.query.limit as string, 10) || 10
+
+    const messages = await getChatsWithPagination(userId, {
+        pagination: {
+            page,
+            limit,
+        },
+    })
+    const totalMessages = await countChats(userId)
+
+    const totalPages = Math.ceil(totalMessages / limit)
+
+    res.json({
+        messages,
+        pagination: {
+            page,
+            limit,
+            totalPages,
+            totalMessages,
+        },
+    })
 }

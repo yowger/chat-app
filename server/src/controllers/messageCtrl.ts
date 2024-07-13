@@ -8,8 +8,6 @@ import {
     sendMessage,
 } from "@/services/messageSvc"
 
-import { HTTP404Error } from "@/handlers/api/apiErrors"
-
 import type { ProtectedRequest } from "@/types/appRequest"
 import type { Response } from "express"
 
@@ -35,11 +33,12 @@ export const getMessageWithPaginationHandler = async (
     const page = parseInt(req.query.page as string, 10) || 1
     const limit = parseInt(req.query.limit as string, 10) || 10
 
-    const messages = await getMessagesWithWithPagination({
-        chatId: chatId as string,
-        page,
-        limit,
+    const messages = await getMessagesWithWithPagination(chatId as string, {
         query: query as unknown as string,
+        pagination: {
+            page,
+            limit,
+        },
     })
     const totalMessages = await countMessages(chatId as string)
 

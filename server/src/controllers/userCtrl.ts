@@ -1,7 +1,6 @@
 import {
     findUserById,
     findUserByEmail,
-    updateUsername,
     findUsersWithPagination,
 } from "@/services/userSvc"
 
@@ -31,8 +30,10 @@ export const searchUsersWithPaginationHandler = async (
 
     const result = await findUsersWithPagination({
         query: query as string,
-        page,
-        limit,
+        pagination: {
+            page,
+            limit,
+        },
     })
 
     res.json(result)
@@ -56,14 +57,4 @@ export const getUserByEmailHandler = async (req: Request, res: Response) => {
     }
 
     res.json(user)
-}
-
-export const updateUsernameHandler = async (req: Request, res: Response) => {
-    const updatedUser = await updateUsername(req.params.id, req.body.username)
-
-    if (!updatedUser) {
-        throw new HTTP404Error("User not found")
-    }
-
-    res.json(updatedUser)
 }

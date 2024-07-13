@@ -1,4 +1,4 @@
-import { prop, Ref } from "@typegoose/typegoose"
+import { modelOptions, prop, Ref } from "@typegoose/typegoose"
 
 import { ChatType } from "@/enums/chat/chat"
 
@@ -6,6 +6,11 @@ import { Message } from "@/models/messageMdl"
 import { ReadBy } from "@/models/readByMdl"
 import { User } from "@/models/userMdl"
 
+@modelOptions({
+    schemaOptions: {
+        timestamps: true,
+    },
+})
 export class Chat {
     @prop({ required: true, enum: ChatType })
     type: ChatType
@@ -31,7 +36,4 @@ export class Chat {
 
     @prop({ default: [], type: () => ReadBy })
     latestMessageReadBy?: ReadBy[]
-
-    @prop({ required: true, default: Date.now })
-    createdAt?: Date
 }

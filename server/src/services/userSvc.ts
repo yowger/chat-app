@@ -35,14 +35,16 @@ export const checkIfUsersExist = async (
     return participants.length === userIds.length
 }
 
-interface findUsersWithPagination extends Pagination {
+interface findUsersWithPaginationOptions {
     query?: string | undefined
+    pagination?: Pagination
 }
 
 export const findUsersWithPagination = async (
-    input: findUsersWithPagination
+    options: findUsersWithPaginationOptions
 ) => {
-    const { query, page = 1, limit = 10 } = input
+    const { query, pagination } = options
+    const { page = 1, limit = 10 } = pagination
 
     if (query === undefined || query.trim() === "") {
         return {
@@ -93,12 +95,4 @@ export const findUserByEmail = async (email: string) => {
         .exec()
 
     return user
-}
-
-export const updateUsername = async (id: string, username: string) => {
-    const updatedUser = await UserModel.findByIdAndUpdate(id, { username })
-        .lean()
-        .exec()
-
-    return updatedUser
 }

@@ -1,12 +1,11 @@
 import { HTTP403Error, HTTP404Error } from "@/handlers/api/apiErrors"
 
-import { Pagination } from "@/types/common"
-
 import { MessageModel } from "@/models"
 
 import { findChatById, updateChat } from "./chatSvc"
 
 import type { FilterQuery } from "mongoose"
+import type { Pagination } from "@/types/common"
 
 interface sendMessageInput {
     chatId: string
@@ -42,22 +41,24 @@ export const sendMessage = async (input: sendMessageInput) => {
     return createdMessage.toObject()
 }
 
-interface GetMessagesWithWithPagination extends Pagination {
-    chatId: string
+interface GetMessagesWithWithPaginationOptions {
     query?: string | undefined
+    pagination: Pagination
 }
 
 export const getMessagesWithWithPagination = async (
-    input: GetMessagesWithWithPagination
+    chatId: string,
+    options: GetMessagesWithWithPaginationOptions
 ) => {
-    const { chatId, query, page = 1, limit = 10 } = input
+    const { query, pagination } = options
+    const { page = 1, limit = 10 } = pagination
 
     const skip = (page - 1) * limit
 
     const defaultQuery = { chat: chatId }
     const messageQuery: FilterQuery<typeof MessageModel> =
         query && query.trim() !== ""
-            ? { ...defaultQuery, content: { $regex: new RegExp(query, "i") } }
+            ? { ...defaultQuery, content: { $regex: query, options: "i" } }
             : defaultQuery
 
     const messages = await MessageModel.find(messageQuery)

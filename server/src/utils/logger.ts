@@ -57,14 +57,6 @@ const fileTransports = {
         maxSize: "50m",
         maxFiles: "7d",
     }),
-    dailyErrorFile: new DailyRotateFile({
-        level: "error",
-        filename: "logs/errors/error-%DATE%.log",
-        datePattern: datePattern,
-        zippedArchive: true,
-        maxSize: "20m",
-        maxFiles: "14d",
-    }),
     dailyFatalFile: new DailyRotateFile({
         level: "fatal",
         filename: "logs/fatal/fatal-%DATE%.log",
