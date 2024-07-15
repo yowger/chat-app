@@ -27,11 +27,16 @@ const ErrorFallback = () => {
     )
 }
 
+// todo
+const FullPageLoading = () => {
+    return <div>Loading...</div>
+}
+
 interface AppProviderProps extends PropsWithChildren {}
 
 const AppProvider: FC<AppProviderProps> = ({ children }) => {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<FullPageLoading />}>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <QueryClientProvider client={queryClient}>
                     <BrowserRouter>

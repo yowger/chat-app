@@ -8,6 +8,7 @@ import { ChatBubbleProvider } from "../components/chatBubble/context/ChatBubbleC
 import ChatInput from "../components/ChatInput"
 import ChatHeader from "../components/ChatHeader"
 import ChatSidebar from "../components/chatSidebar/ChatSidebar"
+import { useGetChats } from "../api/useGetChats"
 
 const menuItems = [
     { label: "Reply", onClick: () => console.log("Reply clicked") },
@@ -16,6 +17,9 @@ const menuItems = [
 ]
 
 export default function Chat() {
+    const { data, isLoading, isError, error } = useGetChats()
+    console.log("🚀 ~ Chat ~ data:", data)
+
     return (
         <div className="flex">
             <ChatSidebar />

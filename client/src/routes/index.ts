@@ -6,7 +6,7 @@ import PrivateRoutes from "@/routes/Private"
 
 import useAuthStore from "@/features/auth/store/auth"
 
-export default function RootRoutes() {
+const RootRoutes = () => {
     const auth = useAuthStore.use.auth()
 
     const routes = auth.isAuthenticated ? PrivateRoutes : PublicRoutes
@@ -15,3 +15,5 @@ export default function RootRoutes() {
 
     return element
 }
+
+export default RootRoutes
