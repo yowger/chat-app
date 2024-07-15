@@ -23,3 +23,6 @@ Thumbs.db
 
 # my notes
 notes.txt
+
+# test coverage
+coverage/
