@@ -7,7 +7,7 @@ import type { InfiniteQueryConfig } from "@/lib/query"
 import type { ChatType } from "../types/Chat"
 import type { ChatUser } from "../types/User"
 
-interface Chat {
+export interface Chat {
     _id: string
     type: ChatType
     participants: ChatUser[]
@@ -22,7 +22,7 @@ interface Chat {
     }
 }
 
-interface Pagination {
+export interface Pagination {
     page: number
     limit: number
     totalPages: number
@@ -30,7 +30,7 @@ interface Pagination {
 }
 
 export interface FetchChatsResponse {
-    messages: Chat[]
+    chats: Chat[]
     pagination: Pagination
 }
 

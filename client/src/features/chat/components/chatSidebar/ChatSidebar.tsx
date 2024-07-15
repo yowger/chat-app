@@ -1,4 +1,6 @@
-import { useState } from "react"
+import { Fragment, useState } from "react"
+
+import { useGetChats } from "../../api/useGetChats"
 
 import { Button } from "@/components/ui/button/Button"
 import { IconEdit } from "@tabler/icons-react"
@@ -13,6 +15,9 @@ import NewChatDialog from "../newChat/NewChatDialog"
 import { useLogout } from "@/features/auth/api/useLogout"
 
 export default function ChatSidebar() {
+    const { data, isLoading, isError, error } = useGetChats()
+    // console.log("🚀 ~ Chat ~ data:", data)
+
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const handleOpenModal = () => {
@@ -55,7 +60,46 @@ export default function ChatSidebar() {
                 </section>
 
                 <section className="px-1.5">
-                    <ContactPreviewContainer>
+                    {isLoading && <p>Loading...</p>}
+                    {isError && <p>Error: {error.message}</p>}
+                    {data?.pages.map((page, pageIndex) => (
+                        <Fragment key={pageIndex}>
+                            {page.chats.map((chat) => {
+                                console.log(
+                                    "🚀 ~ {page.messages.map ~ messages:",
+                                    chat
+                                )
+                                return (
+                                    <ContactPreviewContainer key={chat._id}>
+                                        <ContactPreviewAvatar
+                                            src="https://picsum.photos/200/300"
+                                            isOnline={true}
+                                        />
+                                        <ContactPreviewInfo>
+                                            <ContactPreviewUserName>
+                                                {chat.groupName}
+                                            </ContactPreviewUserName>
+                                            <ContactPreviewMessage>
+                                                {chat.latestMessage
+                                                    ? chat.latestMessage.content
+                                                    : "No messages yet"}
+                                            </ContactPreviewMessage>
+                                        </ContactPreviewInfo>
+                                    </ContactPreviewContainer>
+                                )
+                            })}
+                        </Fragment>
+                    ))}
+                </section>
+            </aside>
+
+            <NewChatDialog isOpen={isModalOpen} onClose={handleCloseModal} />
+        </>
+    )
+}
+
+{
+    /* <ContactPreviewContainer>
                         <ContactPreviewAvatar
                             src="https://picsum.photos/200/300"
                             isOnline={false}
@@ -106,11 +150,5 @@ export default function ChatSidebar() {
                                 earum iste id aut?
                             </ContactPreviewMessage>
                         </ContactPreviewInfo>
-                    </ContactPreviewContainer>
-                </section>
-            </aside>
-
-            <NewChatDialog isOpen={isModalOpen} onClose={handleCloseModal} />
-        </>
-    )
+                    </ContactPreviewContainer> */
 }
