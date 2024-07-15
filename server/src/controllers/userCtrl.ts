@@ -2,6 +2,7 @@ import {
     findUserById,
     findUserByEmail,
     findUsersWithPagination,
+    countUsers,
 } from "@/services/userSvc"
 
 import { HTTP404Error } from "@/handlers/api/apiErrors"
@@ -23,20 +24,33 @@ export const searchUsersWithPaginationHandler = async (
     req: Request,
     res: Response
 ) => {
-    const { query } = req.query
-
+    const { username } = req.query
     const page = parseInt(req.query.page as string, 10) || 1
     const limit = parseInt(req.query.limit as string, 10) || 10
 
-    const result = await findUsersWithPagination({
-        query: query as string,
+    const users = await findUsersWithPagination({
+        query: {
+            username: username as string,
+        },
         pagination: {
             page,
             limit,
         },
     })
 
-    res.json(result)
+    const totalUsers = await countUsers(username as string)
+
+    const totalPages = Math.ceil(totalUsers / limit)
+
+    res.json({
+        users,
+        pagination: {
+            totalItems: totalUsers,
+            page,
+            limit,
+            totalPages,
+        },
+    })
 }
 
 export const getMeHandler = async (req: ProtectedRequest, res: Response) => {

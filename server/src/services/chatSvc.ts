@@ -102,15 +102,12 @@ export const getChatsWithPagination = async (
     return messages
 }
 
-export const countChats = async (
-    userId: string,
-    query?: string | undefined
-): Promise<number> => {
-    const total = await ChatModel.countDocuments({ participants: userId })
+export const countChats = async (userId: string): Promise<number> => {
+    const totalItems = await ChatModel.countDocuments({ participants: userId })
         .lean()
         .exec()
 
-    return total
+    return totalItems
 }
 
 export const findChatById = async (chatId: string) => {

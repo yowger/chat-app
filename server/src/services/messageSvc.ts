@@ -58,7 +58,7 @@ export const getMessagesWithWithPagination = async (
     const defaultQuery = { chat: chatId }
     const messageQuery: FilterQuery<typeof MessageModel> =
         query && query.trim() !== ""
-            ? { ...defaultQuery, content: { $regex: query, options: "i" } }
+            ? { ...defaultQuery, content: { $regex: query, $options: "i" } }
             : defaultQuery
 
     const messages = await MessageModel.find(messageQuery)

@@ -48,17 +48,18 @@ export const getChatsWithPaginationHandler = async (
             limit,
         },
     })
-    const totalMessages = await countChats(userId)
 
-    const totalPages = Math.ceil(totalMessages / limit)
+    const totalChats = await countChats(userId)
+
+    const totalPages = Math.ceil(totalChats / limit)
 
     res.json({
         chats,
         pagination: {
+            totalItems: totalChats,
             page,
             limit,
             totalPages,
-            totalMessages,
         },
     })
 }

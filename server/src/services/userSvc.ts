@@ -3,6 +3,8 @@ import { User } from "@/models/userMdl"
 import { UserModel } from "@/models"
 import { Pagination } from "@/types/common"
 
+import type { FilterQuery } from "mongoose"
+
 interface CreateUserInput extends Omit<User, "comparePassword"> {}
 
 export const createUser = async (input: CreateUserInput) => {
@@ -36,7 +38,9 @@ export const checkIfUsersExist = async (
 }
 
 interface findUsersWithPaginationOptions {
-    query?: string | undefined
+    query?: {
+        username: string
+    }
     pagination?: Pagination
 }
 
@@ -44,22 +48,17 @@ export const findUsersWithPagination = async (
     options: findUsersWithPaginationOptions
 ) => {
     const { query, pagination } = options
+    const { username = "" } = query
     const { page = 1, limit = 10 } = pagination
-
-    if (query === undefined || query.trim() === "") {
-        return {
-            users: [],
-            totalUsers: 0,
-            totalPages: 0,
-            currentPage: 1,
-        }
-    }
 
     const skip = (page - 1) * limit
 
-    const users = await UserModel.find({
-        username: { $regex: query, $options: "i" },
-    })
+    const chatQuery: FilterQuery<typeof UserModel> =
+        username && username.trim() !== ""
+            ? { username: { $regex: username, $options: "i" } }
+            : {}
+
+    const users = await UserModel.find(chatQuery)
         .sort({ username: 1 })
         .skip(skip)
         .limit(limit)
@@ -70,16 +69,18 @@ export const findUsersWithPagination = async (
         .lean()
         .exec()
 
-    const totalUsers = await UserModel.countDocuments({
-        username: { $regex: query, $options: "i" },
-    }).exec()
+    return users
+}
 
-    return {
-        users,
-        totalUsers,
-        totalPages: Math.ceil(totalUsers / limit),
-        currentPage: page,
-    }
+export const countUsers = async (username?: string): Promise<number> => {
+    const chatQuery: FilterQuery<typeof UserModel> =
+        username && username.trim() !== ""
+            ? { username: { $regex: username, $options: "i" } }
+            : {}
+
+    const totalItems = await UserModel.countDocuments(chatQuery).lean().exec()
+
+    return totalItems
 }
 
 export const findUserByEmail = async (email: string) => {
