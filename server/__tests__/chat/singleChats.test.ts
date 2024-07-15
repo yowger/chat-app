@@ -28,8 +28,6 @@ afterEach(async () => {
     await clearDatabase()
 })
 
-const objectId = new Types.ObjectId()
-
 jest.setTimeout(30000)
 
 describe("Single route endpoints", () => {
@@ -54,12 +52,14 @@ describe("Single route endpoints", () => {
 
             const requestBody = { participant: userParticipant._id }
 
+            const chatId = new Types.ObjectId()
+
             const mockedCreateSingleChat = jest.mocked(createSingleChat)
             // @ts-ignore
             mockedCreateSingleChat.mockResolvedValue({
                 type: ChatType.SINGLE,
                 participants: [userHost._id, userParticipant._id],
-                _id: objectId,
+                _id: chatId,
                 latestMessageReadBy: [],
             })
 
@@ -76,7 +76,7 @@ describe("Single route endpoints", () => {
                         userHost._id.toString(),
                         userParticipant._id.toString(),
                     ]),
-                    _id: objectId.toString(),
+                    _id: chatId.toString(),
                     latestMessageReadBy: [],
                 })
             )

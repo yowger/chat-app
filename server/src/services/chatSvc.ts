@@ -76,7 +76,13 @@ export const getChatsWithPagination = async (
 
     const messages = await ChatModel.find({ participants: userId })
         .select({
-            __v: 0,
+            type: 1,
+            participants: 1,
+            groupName: 1,
+            groupAdmin: 1,
+            createdAt: 1,
+            latestMessage: 1,
+            latestMessageReadBy: 1,
         })
         .sort({
             updatedAt: 1,
@@ -87,7 +93,8 @@ export const getChatsWithPagination = async (
         .populate({ path: "groupAdmin", select: "_id username" })
         .populate({
             path: "latestMessage",
-            select: "_id content createdAt",
+            select: "_id content createdAt sender",
+            populate: { path: "sender", select: "_id username" },
         })
         .lean()
         .exec()
