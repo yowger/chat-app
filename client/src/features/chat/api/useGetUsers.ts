@@ -3,31 +3,33 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { AxiosInstance } from "axios"
-import type { Profile } from "../types/User"
 import type { InfiniteQueryConfig } from "@/lib/query"
+import type { Pagination, PaginationInput } from "../types/Pagination"
+import type { ChatUser } from "../types/User"
 
-type SearchedUsers = Pick<Profile, "_id" | "username">
-
-export interface SearchUsersResponse {
-    currentPage: number
-    totalPages: number
-    totalUsers: number
-    users: SearchedUsers[]
+export interface GetUsersResponse {
+    users: ChatUser[]
+    pagination: Pagination
 }
 
-interface FetchUserParams {
-    username: string
-    page?: number
-    limit?: number
+interface FetchUserOptions {
+    query: {
+        username: string
+    }
+    pagination: Partial<PaginationInput>
 }
 
-const fetchUsers = async (
+const getUsers = async (
     axios: AxiosInstance,
-    { username, page = 1, limit = 10 }: FetchUserParams
-): Promise<SearchUsersResponse> => {
-    const response = await axios.get("/api/users/search", {
+    options: FetchUserOptions
+): Promise<GetUsersResponse> => {
+    const { query, pagination } = options
+    const { username } = query
+    const { page = 0, limit = 10 } = pagination
+
+    const response = await axios.get("/api/user", {
         params: {
-            query: username,
+            username,
             page,
             limit,
         },
@@ -36,30 +38,41 @@ const fetchUsers = async (
     return response.data
 }
 
-interface UseSearchUsersOptions {
-    searchParams: {
+interface UseGetUsersOptions {
+    query: {
         username: string
     }
-    config?: InfiniteQueryConfig<SearchUsersResponse>
+    config?: InfiniteQueryConfig<GetUsersResponse>
 }
 
-export const useSearchUsers = ({
-    searchParams,
-    config,
-}: UseSearchUsersOptions) => {
-    const { username } = searchParams
+export const useGetUsers = (options: UseGetUsersOptions) => {
+    const { query, config } = options
+    const { username } = query
     const axiosPrivate = useAxiosPrivate()
 
-    return useInfiniteQuery<SearchUsersResponse, Error>({
-        queryKey: ["users", "search", username],
-        queryFn: ({ pageParam = 1 }) =>
-            fetchUsers(axiosPrivate, { username, page: pageParam as number }),
-        initialPageParam: 1,
-        getNextPageParam: (lastPage: SearchUsersResponse) => {
-            const nextPage = lastPage.currentPage + 1
-            return nextPage <= lastPage.totalPages ? nextPage : undefined
+    return useInfiniteQuery<GetUsersResponse, Error>({
+        queryKey: ["users", username],
+        queryFn: ({ pageParam = 1 }) => {
+            const fetchUsersOptions: FetchUserOptions = {
+                query: {
+                    username,
+                },
+                pagination: {
+                    page: pageParam as number,
+                },
+            }
+            return getUsers(axiosPrivate, fetchUsersOptions)
         },
-        enabled: !!username,
+        initialPageParam: 1,
+        getNextPageParam: (lastPage: GetUsersResponse) => {
+            const currentPage = lastPage.pagination.page
+            const totalPages = lastPage.pagination.totalPages
+            const nextPage = currentPage + 1
+
+            const hasNextPage = nextPage <= totalPages
+
+            return hasNextPage ? nextPage : undefined
+        },
         ...config,
     })
 }

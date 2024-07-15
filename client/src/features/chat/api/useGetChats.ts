@@ -3,9 +3,10 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { AxiosInstance } from "axios"
-import type { InfiniteQueryConfig } from "@/lib/query"
 import type { ChatType } from "../types/Chat"
 import type { ChatUser } from "../types/User"
+import type { InfiniteQueryConfig } from "@/lib/query"
+import type { Pagination, PaginationInput } from "../types/Pagination"
 
 export interface Chat {
     _id: string
@@ -22,23 +23,13 @@ export interface Chat {
     }
 }
 
-export interface Pagination {
-    page: number
-    limit: number
-    totalPages: number
-    totalMessages: number
-}
-
 export interface FetchChatsResponse {
     chats: Chat[]
     pagination: Pagination
 }
 
 interface FetchChatsOptions {
-    pagination: {
-        page?: number
-        limit?: number
-    }
+    pagination: Partial<PaginationInput>
 }
 
 const fetchChats = async (
@@ -57,30 +48,35 @@ const fetchChats = async (
     return response.data
 }
 
-interface UseSearchUsersOptions {
+interface UseGetChatsOptions {
     config?: InfiniteQueryConfig<FetchChatsResponse>
 }
 
-export const useGetChats = (options: UseSearchUsersOptions = {}) => {
-    const { config } = options
+export const useGetChats = (options: UseGetChatsOptions = {}) => {
     const axiosPrivate = useAxiosPrivate()
 
+    const { config } = options
+
     return useInfiniteQuery<FetchChatsResponse, Error>({
-        queryKey: ["users", "search"],
+        queryKey: ["chats"],
         queryFn: ({ pageParam = 1 }) => {
             const fetchChatsOptions: FetchChatsOptions = {
                 pagination: {
                     page: pageParam as number,
                 },
             }
+
             return fetchChats(axiosPrivate, fetchChatsOptions)
         },
         initialPageParam: 1,
         getNextPageParam: (lastPage: FetchChatsResponse) => {
-            const nextPage = lastPage.pagination.page + 1
-            return nextPage <= lastPage.pagination.totalPages
-                ? nextPage
-                : undefined
+            const currentPage = lastPage.pagination.page
+            const totalPages = lastPage.pagination.totalPages
+            const nextPage = currentPage + 1
+
+            const hasNextPage = nextPage <= totalPages
+
+            return hasNextPage ? nextPage : undefined
         },
         ...config,
     })

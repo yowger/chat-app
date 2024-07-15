@@ -9,21 +9,23 @@ import type { AxiosInstance } from "axios"
 
 export interface getMeResponse extends Profile {}
 
-interface UseGetProfileOptions {
-    config?: QueryConfig<getMeResponse>
-}
-
 const fetchMe = async (axios: AxiosInstance): Promise<getMeResponse> => {
     const response = await axios.get("/api/users/me")
 
     return response.data
 }
 
-export const useGetMe = ({ config }: UseGetProfileOptions = {}) => {
+interface UseGetProfileOptions {
+    config?: QueryConfig<getMeResponse>
+}
+
+export const useGetMe = (options: UseGetProfileOptions = {}) => {
     const axiosPrivate = useAxiosPrivate()
 
+    const { config } = options
+
     return useQuery<getMeResponse, Error>({
-        queryKey: ["profile", "me"],
+        queryKey: ["user", "me"],
         queryFn: () => fetchMe(axiosPrivate),
         ...config,
     })

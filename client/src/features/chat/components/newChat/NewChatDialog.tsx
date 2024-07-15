@@ -15,7 +15,7 @@ import ContactPreviewUserName from "../contactPreview/Name"
 
 import { useDebounceValue } from "@/hooks/useDebounceValue"
 
-import { useSearchUsers } from "../../api/useSearchUsers"
+import { useGetUsers } from "../../api/useGetUsers"
 
 import { type ChangeEvent, type FC } from "react"
 import { Button } from "@/components/ui/button/Button"
@@ -36,8 +36,8 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useSearchUsers({
-        searchParams: { username: searchedUser },
+    } = useGetUsers({
+        query: { username: searchedUser },
     })
 
     const handleSearchUser = (event: ChangeEvent<HTMLInputElement>) => {
