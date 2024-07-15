@@ -16,7 +16,6 @@ import { useLogout } from "@/features/auth/api/useLogout"
 
 export default function ChatSidebar() {
     const { data, isLoading, isError, error } = useGetChats()
-    // console.log("🚀 ~ Chat ~ data:", data)
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -65,10 +64,6 @@ export default function ChatSidebar() {
                     {data?.pages.map((page, pageIndex) => (
                         <Fragment key={pageIndex}>
                             {page.chats.map((chat) => {
-                                console.log(
-                                    "🚀 ~ {page.messages.map ~ messages:",
-                                    chat
-                                )
                                 return (
                                     <ContactPreviewContainer key={chat._id}>
                                         <ContactPreviewAvatar

@@ -2,10 +2,9 @@ import { useQuery } from "@tanstack/react-query"
 
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
+import type { AxiosInstance } from "axios"
 import type { Profile } from "../types/User"
 import type { QueryConfig } from "@/lib/query"
-
-import type { AxiosInstance } from "axios"
 
 export interface getMeResponse extends Profile {}
 
@@ -20,9 +19,9 @@ interface UseGetProfileOptions {
 }
 
 export const useGetMe = (options: UseGetProfileOptions = {}) => {
-    const axiosPrivate = useAxiosPrivate()
-
     const { config } = options
+
+    const axiosPrivate = useAxiosPrivate()
 
     return useQuery<getMeResponse, Error>({
         queryKey: ["user", "me"],

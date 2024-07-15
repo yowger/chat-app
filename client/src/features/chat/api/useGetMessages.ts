@@ -3,20 +3,29 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { AxiosInstance } from "axios"
+import type { ChatUser } from "../types/User"
 import type { InfiniteQueryConfig } from "@/lib/query"
 import type { Pagination, PaginationInput } from "../types/Pagination"
-import type { Profile } from "../types/User"
 
-type SearchedUsers = Pick<Profile, "_id" | "username">
+interface Message {
+    _id: string
+    content: string
+    chat: string
+    sender: ChatUser
+    readAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+}
 
 export interface getMessagesResponse {
-    users: SearchedUsers[]
+    messages: Message[]
     pagination: Pagination
 }
 
 interface getMessagesOptions {
     query: {
-        username: string
+        chatId: string
+        content?: string
     }
     pagination: Partial<PaginationInput>
 }
@@ -26,11 +35,13 @@ const fetchMessages = async (
     options: getMessagesOptions
 ): Promise<getMessagesResponse> => {
     const { query, pagination } = options
-    const { username } = query
+    const { chatId, content } = query
     const { page = 0, limit = 10 } = pagination
-    const response = await axios.get("/api/user", {
+
+    const response = await axios.get("/api/message", {
         params: {
-            username,
+            chatId,
+            content,
             page,
             limit,
         },
@@ -40,26 +51,26 @@ const fetchMessages = async (
 }
 
 interface UseSearchUsersOptions {
-    searchParams: {
-        username: string
+    query: {
+        chatId: string
+        content?: string
     }
     config?: InfiniteQueryConfig<getMessagesResponse>
 }
 
-export const useSearchUsers = ({
-    searchParams,
-    config,
-}: UseSearchUsersOptions) => {
+export const useGetMessages = (options: UseSearchUsersOptions) => {
+    const { query, config } = options
+    const { chatId, content } = query
+
     const axiosPrivate = useAxiosPrivate()
 
-    const { username } = searchParams
-
     return useInfiniteQuery<getMessagesResponse, Error>({
-        queryKey: ["messages", "search", username],
+        queryKey: ["messages", content],
         queryFn: ({ pageParam = 1 }) => {
             const fetchMessagesOptions: getMessagesOptions = {
                 query: {
-                    username,
+                    chatId,
+                    content,
                 },
                 pagination: {
                     page: pageParam as number,

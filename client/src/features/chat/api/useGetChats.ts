@@ -38,6 +38,7 @@ const fetchChats = async (
 ): Promise<FetchChatsResponse> => {
     const { pagination } = options
     const { page = 0, limit = 10 } = pagination
+
     const response = await axios.get("/api/chat", {
         params: {
             page,
@@ -53,9 +54,9 @@ interface UseGetChatsOptions {
 }
 
 export const useGetChats = (options: UseGetChatsOptions = {}) => {
-    const axiosPrivate = useAxiosPrivate()
-
     const { config } = options
+
+    const axiosPrivate = useAxiosPrivate()
 
     return useInfiniteQuery<FetchChatsResponse, Error>({
         queryKey: ["chats"],

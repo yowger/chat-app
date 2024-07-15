@@ -48,6 +48,7 @@ interface UseGetUsersOptions {
 export const useGetUsers = (options: UseGetUsersOptions) => {
     const { query, config } = options
     const { username } = query
+
     const axiosPrivate = useAxiosPrivate()
 
     return useInfiniteQuery<GetUsersResponse, Error>({
@@ -61,6 +62,7 @@ export const useGetUsers = (options: UseGetUsersOptions) => {
                     page: pageParam as number,
                 },
             }
+
             return getUsers(axiosPrivate, fetchUsersOptions)
         },
         initialPageParam: 1,
