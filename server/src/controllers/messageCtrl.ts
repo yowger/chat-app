@@ -27,8 +27,7 @@ export const getMessageWithPaginationHandler = async (
     req: ProtectedRequest,
     res: Response
 ) => {
-    const { chatId } = req.body
-    const { query } = req.query
+    const { chatId, query } = req.query
 
     const page = parseInt(req.query.page as string, 10) || 1
     const limit = parseInt(req.query.limit as string, 10) || 10

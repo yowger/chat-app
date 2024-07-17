@@ -1,7 +1,9 @@
+import { HTTP404Error } from "@/handlers/api/apiErrors"
 import {
     countChats,
     createGroupChat,
     createSingleChat,
+    findChatByParticipants,
     getChatsWithPagination,
 } from "@/services/chatSvc"
 
@@ -62,4 +64,21 @@ export const getChatsWithPaginationHandler = async (
             totalPages,
         },
     })
+}
+
+export const findChatByParticipantsHandler = async (
+    req: ProtectedRequest,
+    res: Response
+) => {
+    const { participants } = req.body
+    const userId = req.userId
+
+    const chat = await findChatByParticipants([userId, ...participants])
+    console.log("🚀 ~ chat:", chat)
+
+    if (!chat) {
+        throw new HTTP404Error("chat not found")
+    }
+
+    res.json(chat)
 }

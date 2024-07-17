@@ -122,9 +122,34 @@ export const findChatById = async (chatId: string) => {
         .lean()
         .exec()
 
-    if (!chat) {
-        return null
-    }
+    return chat
+}
+
+export const findChatByParticipants = async (participantIds: string[]) => {
+    const chat = await ChatModel.findOne({
+        participants: {
+            $all: participantIds,
+            $size: participantIds.length,
+        },
+    })
+        .select({
+            type: 1,
+            participants: 1,
+            groupName: 1,
+            groupAdmin: 1,
+            createdAt: 1,
+            latestMessage: 1,
+            latestMessageReadBy: 1,
+        })
+        .populate({ path: "participants", select: "_id username" })
+        .populate({ path: "groupAdmin", select: "_id username" })
+        .populate({
+            path: "latestMessage",
+            select: "_id content createdAt sender",
+            populate: { path: "sender", select: "_id username" },
+        })
+        .lean()
+        .exec()
 
     return chat
 }
