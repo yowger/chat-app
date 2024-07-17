@@ -14,8 +14,8 @@ import asyncHandler from "@/handlers/middleware/asyncHandlerMw"
 const router = Router()
 
 router.get("/", authenticate, asyncHandler(getChatsWithPaginationHandler))
-router.get("/find", authenticate, asyncHandler(findChatByParticipantsHandler))
 router.post("/", authenticate, asyncHandler(createSingleChatHandler))
+router.post("/find", authenticate, asyncHandler(findChatByParticipantsHandler))
 router.post("/group", authenticate, asyncHandler(CreateGroupChatHandler))
 
 export default router
