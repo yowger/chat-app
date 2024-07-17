@@ -3,6 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { AxiosInstance } from "axios"
+import type { ChatId } from "../types/Chat"
 import type { ChatUser } from "../types/User"
 import type { InfiniteQueryConfig } from "@/lib/query"
 import type { Pagination, PaginationInput } from "../types/Pagination"
@@ -24,7 +25,7 @@ export interface getMessagesResponse {
 
 interface getMessagesOptions {
     query: {
-        chatId: string
+        chatId: ChatId
         content?: string
     }
     pagination: Partial<PaginationInput>
@@ -52,7 +53,7 @@ const fetchMessages = async (
 
 interface UseSearchUsersOptions {
     query: {
-        chatId: string
+        chatId: ChatId
         content?: string
     }
     config?: InfiniteQueryConfig<getMessagesResponse>
@@ -65,7 +66,7 @@ export const useGetMessages = (options: UseSearchUsersOptions) => {
     const axiosPrivate = useAxiosPrivate()
 
     return useInfiniteQuery<getMessagesResponse, Error>({
-        queryKey: ["messages", content],
+        queryKey: ["messages", chatId, content],
         queryFn: ({ pageParam = 1 }) => {
             const fetchMessagesOptions: getMessagesOptions = {
                 query: {
@@ -89,6 +90,7 @@ export const useGetMessages = (options: UseSearchUsersOptions) => {
 
             return hasNextPage ? nextPage : undefined
         },
+        enabled: !!chatId,
         ...config,
     })
 }

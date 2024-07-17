@@ -1,6 +1,9 @@
 import Avatar from "@/components/ui/Avatar"
+import useUserStore from "../store/user"
 
 function ChatHeader() {
+    const user = useUserStore.use.user()
+
     return (
         <div className="px-4 bg-red-200 absolute h-16 w-full flex justify-between items-center">
             <div className="flex items-center gap-4">
@@ -11,7 +14,7 @@ function ChatHeader() {
                 />
 
                 <div className="font-medium">
-                    <div>John Doe</div>
+                    <div>{user?.username}</div>
                 </div>
             </div>
 

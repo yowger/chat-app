@@ -1,9 +1,9 @@
-export interface Profile {
+export interface User {
     _id: string
-    username: string
     email: string
-    createdAt: Date
-    updatedAt: Date
+    username: string
+    createdAt: string
+    updatedAt: string
 }
 
-export type ChatUser = Pick<Profile, "_id" | "username">
+export interface ChatUser extends Pick<User, "_id" | "username"> {}

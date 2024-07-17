@@ -1,25 +1,28 @@
 import { Outlet } from "react-router-dom"
 
-// import { useGetMe } from "../../chat/api/useGetMe"
+import { useGetMe } from "@/features/chat/api/useGetMe"
 
-// import useEndSession from "../hooks/useEndSession"
+import useAuthStore from "@/features/auth/store/auth"
+import useUserStore from "@/features/chat/store/user"
 
 const RequireUser = () => {
-    // const { data, isLoading, isError } = useGetMe()
-    // const endSession = useEndSession()
+    const clearSession = useAuthStore.use.clearSession()
+    const setUser = useUserStore.use.setUser()
 
-    // if (isLoading) {
-    //     return <div>loading...</div>
-    // }
+    const { data, isLoading, isError } = useGetMe()
 
-    // if (isError) {
-    //     endSession()
-    // }
+    if (isLoading) {
+        return <div>loading...</div>
+    }
 
-    // if (data) {
-    //     return <Outlet />
-    // }
-    return <Outlet />
+    if (isError) {
+        clearSession()
+    }
+
+    if (data) {
+        setUser(data)
+        return <Outlet />
+    }
 }
 
 export default RequireUser

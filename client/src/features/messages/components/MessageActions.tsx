@@ -6,7 +6,7 @@ import {
     Transition,
 } from "@headlessui/react"
 
-import { useChatBubbleContext } from "./hooks/useChatBubbleContext"
+// import { useChatBubbleContext } from "./hooks/useChatBubbleContext"
 
 import type { FC } from "react"
 
@@ -21,7 +21,7 @@ interface ChatBubbleActionsProps {
 }
 
 const ChatBubbleActions: FC<ChatBubbleActionsProps> = ({ items }) => {
-    const { reverse } = useChatBubbleContext()
+    // const { reverse } = useChatBubbleContext()
 
     return (
         <Menu>
@@ -45,7 +45,7 @@ const ChatBubbleActions: FC<ChatBubbleActionsProps> = ({ items }) => {
                 leaveTo="opacity-0 scale-95"
             >
                 <MenuItems
-                    anchor={reverse ? "bottom end" : "bottom start"}
+                    // anchor={reverse ? "bottom end" : "bottom start"}
                     className="mt-1.5 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700 dark:divide-gray-600"
                 >
                     <div className="py-2 text-sm text-gray-700 dark:text-gray-200">

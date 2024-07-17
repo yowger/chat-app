@@ -3,19 +3,19 @@ import { useQuery } from "@tanstack/react-query"
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { AxiosInstance } from "axios"
-import type { Profile } from "../types/User"
+import type { User } from "../types/User"
 import type { QueryConfig } from "@/lib/query"
 
-export interface getMeResponse extends Profile {}
+export interface GetMeResponse extends User {}
 
-const fetchMe = async (axios: AxiosInstance): Promise<getMeResponse> => {
-    const response = await axios.get("/api/users/me")
+const fetchMe = async (axios: AxiosInstance): Promise<GetMeResponse> => {
+    const response = await axios.get("/api/user/me")
 
     return response.data
 }
 
 interface UseGetProfileOptions {
-    config?: QueryConfig<getMeResponse>
+    config?: QueryConfig<GetMeResponse>
 }
 
 export const useGetMe = (options: UseGetProfileOptions = {}) => {
@@ -23,7 +23,7 @@ export const useGetMe = (options: UseGetProfileOptions = {}) => {
 
     const axiosPrivate = useAxiosPrivate()
 
-    return useQuery<getMeResponse, Error>({
+    return useQuery<GetMeResponse, Error>({
         queryKey: ["user", "me"],
         queryFn: () => fetchMe(axiosPrivate),
         ...config,

@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button/Button"
 import { IconSend2 } from "@tabler/icons-react"
 import ReactTextareaAutosize from "react-textarea-autosize"
+
+import { Button } from "@/components/ui/button/Button"
 
 export default function ChatInput() {
     return (
