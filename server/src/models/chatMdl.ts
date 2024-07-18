@@ -19,7 +19,6 @@ export class Chat {
     participants!: Ref<User>[]
 
     @prop({
-        required: true,
         conditional: (chat: Chat) => chat.type === ChatType.GROUP,
     })
     groupName!: string

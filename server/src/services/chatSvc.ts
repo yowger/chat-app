@@ -11,6 +11,7 @@ import type { Pagination } from "@/types/common"
 
 export const createSingleChat = async (userId: string, participant: string) => {
     const participantExist = await findUserById(participant)
+    console.log("🚀 ~ createSingleChat ~ participantExist:", participantExist)
 
     if (!participantExist) {
         throw new HTTP404Error("participant does not exist")
@@ -22,10 +23,11 @@ export const createSingleChat = async (userId: string, participant: string) => {
     })
 
     if (existingChat) {
+        console.log("🚀 ~ createSingleChat ~ existingChat:", existingChat)
         return existingChat.toObject()
     }
 
-    const singleChat = new ChatModel({
+    const singleChat = await ChatModel.create({
         type: ChatType.SINGLE,
         participants: [userId, participant],
     })
@@ -74,7 +76,7 @@ export const getChatsWithPagination = async (
 
     const skip = (page - 1) * limit
 
-    const messages = await ChatModel.find({ participants: userId })
+    const chats = await ChatModel.find({ participants: userId })
         .select({
             type: 1,
             participants: 1,
@@ -99,7 +101,7 @@ export const getChatsWithPagination = async (
         .lean()
         .exec()
 
-    return messages
+    return chats
 }
 
 export const countChats = async (userId: string): Promise<number> => {
