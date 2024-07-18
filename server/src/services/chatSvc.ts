@@ -41,7 +41,7 @@ export const createGroupChat = async (
     userId: string,
     input: createGroupChatInput
 ) => {
-    const { participants, groupName } = input
+    const { participants, name } = input
 
     const uniqueParticipants = new Set([...participants, userId])
 
@@ -56,7 +56,7 @@ export const createGroupChat = async (
     const groupChat = await ChatModel.create({
         type: ChatType.GROUP,
         participants: Array.from(uniqueParticipants),
-        groupName,
+        name,
         groupAdmin: [userId],
     })
 
@@ -80,7 +80,7 @@ export const getChatsWithPagination = async (
         .select({
             type: 1,
             participants: 1,
-            groupName: 1,
+            name: 1,
             groupAdmin: 1,
             createdAt: 1,
             latestMessage: 1,
@@ -117,7 +117,7 @@ export const findChatById = async (chatId: string) => {
         .select({
             type: 1,
             participants: 1,
-            groupName: 1,
+            name: 1,
             groupAdmin: 1,
             createdAt: 1,
         })
@@ -137,7 +137,7 @@ export const findChatByParticipants = async (participantIds: string[]) => {
         .select({
             type: 1,
             participants: 1,
-            groupName: 1,
+            name: 1,
             groupAdmin: 1,
             createdAt: 1,
             latestMessage: 1,

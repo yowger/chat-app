@@ -21,7 +21,7 @@ export class Chat {
     @prop({
         conditional: (chat: Chat) => chat.type === ChatType.GROUP,
     })
-    groupName!: string
+    name!: string
 
     @prop({
         required: true,
