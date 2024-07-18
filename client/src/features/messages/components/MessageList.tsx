@@ -2,7 +2,7 @@ import { format } from "date-fns"
 
 import { Fragment } from "react"
 
-import { useGetMessages } from "@/features/chat/api/useGetMessages"
+import { useGetMessages } from "@/features/messages/api/useGetMessages"
 
 import useUserStore from "@/features/chat/store/user"
 import useChatStore from "@/features/chat/store/chat"
@@ -27,6 +27,16 @@ const MessageList = () => {
         },
     })
 
+    const isEmptyMessage = data?.pages[0].messages.length === 0
+
+    if (!data) {
+        return <p>Start a conversation to see messages</p>
+    }
+
+    if (isEmptyMessage) {
+        return <p>Send a message to start the conversation</p>
+    }
+
     if (isLoading) {
         return <p>Loading...</p>
     }
@@ -34,13 +44,14 @@ const MessageList = () => {
     return (
         <ul className="space-y-4">
             {data?.pages.map((page, pageIndex) => (
-                <Fragment key={pageIndex}>
+                <Fragment key={`$message-list-${pageIndex}`}>
                     {page?.messages.map((message) => {
                         const isUser = user!._id === message.sender._id
                         const time = format(message.createdAt, "h:mm aaaaa'm'")
 
                         return (
                             <li
+                                key={`message-item-${message._id}`}
                                 className={mergeStyles(
                                     "relative flex items-start gap-2.5",
                                     isUser && "flex-row-reverse"
@@ -51,7 +62,6 @@ const MessageList = () => {
                                     size="small"
                                     alt={message.sender.username}
                                 />
-
                                 <div className="flex flex-col w-full max-w-[320px] overflow-hidden">
                                     <div
                                         className={mergeStyles(

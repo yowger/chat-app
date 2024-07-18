@@ -12,7 +12,7 @@ export interface Chat {
     _id: string
     type: ChatType
     participants: ChatUser[]
-    groupName: string
+    name: string
     groupAdmin: ChatUser
     createdAt: Date
     latestMessage?: {

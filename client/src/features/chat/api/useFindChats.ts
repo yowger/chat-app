@@ -1,49 +1,49 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
-import type { AxiosInstance } from "axios"
-import type { QueryConfig } from "@/lib/query"
+import type { AxiosError, AxiosInstance } from "axios"
+import type { MutateConfig } from "@/lib/query"
 
-export interface FetchChatsByParticipantsResponse {}
+interface FetchChatInput {
+    participants: string[]
+}
 
-interface fetchChatsByParticipantsOptions {
-    input: {
-        participants: string[]
-    }
+export interface FetchChatsByParticipantsResponse {
+    _id: string
+}
+
+interface FetchChatsByParticipantsOptions {
+    input: FetchChatInput
 }
 
 const fetchChatsByParticipants = async (
     axios: AxiosInstance,
-    options: fetchChatsByParticipantsOptions
+    options: FetchChatsByParticipantsOptions
 ): Promise<FetchChatsByParticipantsResponse> => {
     const { input } = options
+
     const response = await axios.post("/api/chat/find", input)
 
     return response.data
 }
 
-interface useFindChatsOptions {
-    input: {
-        participants: string[]
-    }
-    config?: QueryConfig<FetchChatsByParticipantsResponse>
+interface UseFindChatsOptions {
+    config?: MutateConfig<FetchChatsByParticipantsResponse>
 }
 
-export const useFindChats = (options: useFindChatsOptions) => {
-    const { input, config } = options
-    const { participants } = input
+export const useFindChats = (options: UseFindChatsOptions = {}) => {
+    const { config } = options
 
     const axiosPrivate = useAxiosPrivate()
 
-    return useQuery<FetchChatsByParticipantsResponse, Error>({
-        queryKey: ["chat", "find", participants],
-        queryFn: () =>
-            fetchChatsByParticipants(axiosPrivate, {
-                input: {
-                    participants,
-                },
-            }),
+    return useMutation<
+        FetchChatsByParticipantsResponse,
+        AxiosError,
+        FetchChatInput
+    >({
+        mutationFn: (input: FetchChatInput) =>
+            fetchChatsByParticipants(axiosPrivate, { input }),
         ...config,
     })
 }

@@ -7,3 +7,5 @@ export interface User {
 }
 
 export interface ChatUser extends Pick<User, "_id" | "username"> {}
+
+export interface Recipient extends Pick<User, "_id" | "username"> {}

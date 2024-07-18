@@ -21,6 +21,7 @@ export default function ChatSidebar() {
     const handleCloseModal = () => {
         setIsModalOpen(false)
     }
+
     const handleLogout = () => {
         mutate()
     }

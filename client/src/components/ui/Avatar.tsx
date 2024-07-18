@@ -7,9 +7,10 @@ interface AvatarProps extends Avatar {
 }
 
 const sizeClasses = {
-    small: "w-9 h-9",
-    medium: "w-10 h-10",
-    large: "w-12 h-12",
+    tiny: "size-7",
+    small: "size-9",
+    medium: "size-10",
+    large: "size-12",
 }
 
 const Avatar = ({

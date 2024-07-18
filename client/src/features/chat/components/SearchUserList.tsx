@@ -1,15 +1,20 @@
+import { Fragment } from "react"
+
 import { useGetUsers } from "../api/useGetUsers"
 
 import Avatar from "@/components/ui/Avatar"
 
-import { Fragment } from "react"
+import type { Recipient } from "../types/User"
+import { mergeStyles } from "@/utils/mergeStyles"
 
 interface SearchUserListProps {
     username: string
+    activeRecipients?: Array<Recipient>
+    onUserClick: (recipient: Recipient) => void
 }
 
 const SearchUserList = (props: SearchUserListProps) => {
-    const { username } = props
+    const { activeRecipients, username, onUserClick } = props
 
     const {
         data,
@@ -31,23 +36,43 @@ const SearchUserList = (props: SearchUserListProps) => {
     }
 
     return (
-        <ul>
+        <ul className="space-y-1">
             {data?.pages.map((page, pageIndex) => (
-                <Fragment key={pageIndex}>
-                    {page.users.map((user) => (
-                        <li className="flex items-center overflow-hidden hover:bg-gray-600/10 p-1.5 rounded-md cursor-pointer min-w-0">
-                            <Avatar
-                                src="https://picsum.photos/200/300?1"
-                                size="small"
-                                className="mr-3"
-                            />
-                            <div className="min-w-0">
-                                <p className="font-medium truncate text-sm">
-                                    {user.username}
-                                </p>
-                            </div>
-                        </li>
-                    ))}
+                <Fragment key={`search-list-${pageIndex}`}>
+                    {page.users.map((user) => {
+                        const isRecipientActive = !!activeRecipients?.some(
+                            (recipient) => recipient._id === user._id
+                        )
+
+                        return (
+                            <li
+                                key={`search-item-${user._id}`}
+                                onClick={() =>
+                                    onUserClick({
+                                        _id: user._id,
+                                        username: user.username,
+                                    })
+                                }
+                                className={mergeStyles(
+                                    "flex items-center overflow-hidden p-1.5 rounded-md cursor-pointer min-w-0",
+                                    isRecipientActive
+                                        ? "bg-blue-100"
+                                        : "hover:bg-gray-600/10"
+                                )}
+                            >
+                                <Avatar
+                                    src="https://picsum.photos/200/300?1"
+                                    size="small"
+                                    className="mr-3"
+                                />
+                                <div className="min-w-0">
+                                    <p className="font-medium truncate text-sm">
+                                        {user.username}
+                                    </p>
+                                </div>
+                            </li>
+                        )
+                    })}
                 </Fragment>
             ))}
         </ul>
