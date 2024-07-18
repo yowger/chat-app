@@ -3,15 +3,14 @@ import { useMutation } from "@tanstack/react-query"
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { AxiosError, AxiosInstance } from "axios"
+import type { Chat } from "../types/Chat"
 import type { MutateConfig } from "@/lib/query"
 
 interface FetchChatInput {
     participants: string[]
 }
 
-export interface FetchChatsByParticipantsResponse {
-    _id: string
-}
+export interface FetchChatsByParticipantsResponse extends Chat {}
 
 interface FetchChatsByParticipantsOptions {
     input: FetchChatInput
@@ -32,7 +31,7 @@ interface UseFindChatsOptions {
     config?: MutateConfig<FetchChatsByParticipantsResponse>
 }
 
-export const useFindChats = (options: UseFindChatsOptions = {}) => {
+export const useFindChat = (options: UseFindChatsOptions = {}) => {
     const { config } = options
 
     const axiosPrivate = useAxiosPrivate()
@@ -40,10 +39,13 @@ export const useFindChats = (options: UseFindChatsOptions = {}) => {
     return useMutation<
         FetchChatsByParticipantsResponse,
         AxiosError,
-        FetchChatInput
+        FetchChatsByParticipantsOptions
     >({
-        mutationFn: (input: FetchChatInput) =>
-            fetchChatsByParticipants(axiosPrivate, { input }),
+        mutationFn: (options: FetchChatsByParticipantsOptions) => {
+            const { input } = options
+
+            return fetchChatsByParticipants(axiosPrivate, { input })
+        },
         ...config,
     })
 }

@@ -8,7 +8,7 @@ import {
     DialogTitle,
 } from "@headlessui/react"
 
-import { useCreateChat } from "../../api/useCreateChat"
+// import { useCreateChat } from "../../api/useCreateChat"
 
 import { useDebounceValue } from "@/hooks/useDebounceValue"
 
@@ -18,21 +18,32 @@ import SearchUserList from "../SearchUserList"
 
 import type { FC } from "react"
 import type { Recipient } from "../../types/User"
+import { useFindChat } from "../../api/useFindChat"
+import useChatStore from "../../store/chat"
 
 interface NewChatProps {
     isOpen: boolean
     onClose: () => void
 }
 
-const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
-    const [username, setUsername] = useDebounceValue("", 500)
-    const [recipients, setRecipients] = useState<Array<Recipient>>([])
+const getChatType = (recipients: Recipient[]) => {
+    if (recipients.length === 0) {
+        return "empty"
+    } else if (recipients.length === 1) {
+        return "single"
+    } else {
+        return "group"
+    }
+}
 
-    const { mutate, isPending, isError, error, status } = useCreateChat()
-    console.log("🚀 ~ status:", status)
-    console.log("🚀 ~ error:", error)
-    console.log("🚀 ~ isError:", isError)
-    console.log("🚀 ~ isPending:", isPending)
+const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
+    const [recipients, setRecipients] = useState<Array<Recipient>>([])
+    const getCreateChatStatus = getChatType(recipients)
+    const [username, setUsername] = useDebounceValue("", 500)
+    const setActiveChatSessionId = useChatStore.use.setActiveChatSessionId()
+
+    // const { mutate, isPending, isError, error, status } = useCreateChat()
+    const { mutate, isPending } = useFindChat()
 
     const addRecipient = (recipient: Recipient) => {
         setRecipients((prevRecipients) => {
@@ -56,15 +67,25 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
         removeRecipient(recipient)
     }
 
-    const HandleCreateChat = () => {
-        const recipientIds = recipients.map((recipient) => recipient._id)
-
-        mutate({ input: { participants: recipientIds, name: "test" } })
-    }
-
     const handleOnClose = () => {
         setRecipients([])
         onClose()
+    }
+
+    const HandleCreateChat = () => {
+        const recipientIds = recipients.map((recipient) => recipient._id)
+
+        mutate(
+            { input: { participants: recipientIds } },
+            {
+                onSuccess: (response) => {
+                    setActiveChatSessionId(response._id)
+                    handleOnClose()
+                },
+            }
+        )
+
+        // mutate({ input: { participants: recipientIds, name: "test" } })
     }
 
     if (!isOpen) return null
@@ -123,7 +144,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                             </div>
                         </section>
 
-                        {recipients.length > 0 && (
+                        {getCreateChatStatus !== "empty" && (
                             <section className="px-6">
                                 <span className="block font-medium mb-1.5">
                                     To:
@@ -156,8 +177,11 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                                         onClick={HandleCreateChat}
                                         variant="default"
                                         size="small"
+                                        disabled={isPending}
                                     >
-                                        Create
+                                        {getCreateChatStatus === "single"
+                                            ? "Start chat"
+                                            : "Start group chat"}
                                     </Button>
                                 </div>
                             </section>

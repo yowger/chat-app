@@ -3,25 +3,9 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
 import type { AxiosInstance } from "axios"
-import type { ChatType } from "../types/Chat"
-import type { ChatUser } from "../types/User"
+import type { Chat } from "../types/Chat"
 import type { InfiniteQueryConfig } from "@/lib/query"
 import type { Pagination, PaginationInput } from "../types/Pagination"
-
-export interface Chat {
-    _id: string
-    type: ChatType
-    participants: ChatUser[]
-    name: string
-    groupAdmin: ChatUser
-    createdAt: Date
-    latestMessage?: {
-        _id: string
-        content: string
-        sender: ChatUser
-        createdAt: Date
-    }
-}
 
 export interface FetchChatsResponse {
     chats: Chat[]
