@@ -27,27 +27,16 @@ const ChatPreviewList = () => {
                         const latestMessage = chat.latestMessage?.content
                         const isCurrentChat = activeChatSessionId === chat._id
 
-                        let chatName
-                        switch (chat.type) {
-                            case "single":
-                                if (chat.name) {
-                                    chatName = chat.name
-                                } else {
-                                    const participant = chat.participants.find(
-                                        (participant) =>
-                                            participant._id !== user?._id
-                                    )
+                        let chatName = "Unknown"
 
-                                    chatName = participant?.username
-                                }
+                        if (chat.name) {
+                            chatName = chat.name
+                        } else if (chat.participants.length === 2) {
+                            const participant = chat.participants.find(
+                                (participant) => participant._id !== user?._id
+                            )
 
-                                break
-                            case "group":
-                                chatName = chat.name
-
-                                break
-                            default:
-                                chatName = "Unknown"
+                            chatName = participant!.username
                         }
 
                         return (
@@ -61,13 +50,12 @@ const ChatPreviewList = () => {
                                         : "hover:bg-gray-600/10"
                                 )}
                             >
-                                <div className="relative flex mr-2.5">
+                                <div className="relative flex flex-shrink-0 mr-2.5">
                                     <Avatar
                                         src={`https://picsum.photos/200/300?random=${chatIndex}`}
                                         alt="Profile picture"
                                         size="medium"
                                     />
-
                                     {chat.participants.length > 2 && (
                                         <div className="absolute bottom-0 -right-1.5">
                                             <a

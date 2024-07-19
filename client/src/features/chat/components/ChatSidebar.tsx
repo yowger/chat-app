@@ -5,9 +5,9 @@ import { IconEdit } from "@tabler/icons-react"
 import { useLogout } from "@/features/auth/api/useLogout"
 
 import { Button } from "@/components/ui/button/Button"
-
-import NewChatDialog from "./dialogs/NewChatDialog"
 import ChatPreviewList from "./ChatPreviewList"
+import NewChatDialog from "./dialogs/NewChatDialog"
+import NewChatPreview from "./NewChatPreview"
 
 export default function ChatSidebar() {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -53,7 +53,7 @@ export default function ChatSidebar() {
                 </section>
 
                 <section className="px-1.5">
-                    <div>nice</div>
+                    <NewChatPreview />
                     <ChatPreviewList />
                 </section>
             </aside>
