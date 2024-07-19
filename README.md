@@ -36,3 +36,13 @@
 -   **Logging**
     -   [x] Basic logging
     -   [ ] Save logs to database
+
+## Planned Future Features
+
+-   **Messaging Enhancements**
+
+    -   [ ] Send messages with pictures
+    -   [ ] Send messages with PDF attachments
+
+-   **Media Integration**
+    -   [ ] Watch YouTube videos directly within messages
