@@ -36,6 +36,9 @@
 -   **Logging**
     -   [x] Basic logging
     -   [ ] Save logs to database
+-   **Social**
+    -   [ ] Friend Management
+    -   [ ] Block users
 
 ## Planned Future Features
 
