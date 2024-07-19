@@ -23,16 +23,32 @@ const ChatPreviewList = () => {
         <ul>
             {data?.pages.map((page, pageIndex) => (
                 <Fragment key={`chat-preview-list-${pageIndex}`}>
-                    {page.chats.map((chat) => {
+                    {page.chats.map((chat, chatIndex) => {
                         const latestMessage = chat.latestMessage?.content
                         const isCurrentChat = activeChatSessionId === chat._id
-                        const chatName =
-                            chat.type === "group"
-                                ? chat.name
-                                : chat.participants.find(
-                                      (participant) =>
-                                          participant._id !== user?._id
-                                  )?.username || "Unknown"
+
+                        let chatName
+                        switch (chat.type) {
+                            case "single":
+                                if (chat.name) {
+                                    chatName = chat.name
+                                } else {
+                                    const participant = chat.participants.find(
+                                        (participant) =>
+                                            participant._id !== user?._id
+                                    )
+
+                                    chatName = participant?.username
+                                }
+
+                                break
+                            case "group":
+                                chatName = chat.name
+
+                                break
+                            default:
+                                chatName = "Unknown"
+                        }
 
                         return (
                             <li
@@ -45,11 +61,25 @@ const ChatPreviewList = () => {
                                         : "hover:bg-gray-600/10"
                                 )}
                             >
-                                <Avatar
-                                    src="https://picsum.photos/200/300"
-                                    size="medium"
-                                    className="mr-4"
-                                />
+                                <div className="relative flex mr-2.5">
+                                    <Avatar
+                                        src={`https://picsum.photos/200/300?random=${chatIndex}`}
+                                        alt="Profile picture"
+                                        size="medium"
+                                    />
+
+                                    {chat.participants.length > 2 && (
+                                        <div className="absolute bottom-0 -right-1.5">
+                                            <a
+                                                className="z-10 flex items-center justify-center size-7 text-xs font-medium text-white bg-zinc-600 border border-white rounded-full hover:bg-gray-600"
+                                                href="#"
+                                            >
+                                                +{chat.participants.length - 1}
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div className="min-w-0">
                                     <p className="font-medium truncate">
                                         {chatName}

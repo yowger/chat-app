@@ -1,6 +1,6 @@
 export interface Avatar {
     src: string
     alt?: string
-    size?: "small" | "medium" | "large"
+    size?: "tiny" | "small" | "medium" | "large"
     isOnline?: boolean
 }

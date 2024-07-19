@@ -42,7 +42,6 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
     const [username, setUsername] = useDebounceValue("", 500)
     const setActiveChatSessionId = useChatStore.use.setActiveChatSessionId()
 
-    // const { mutate, isPending, isError, error, status } = useCreateChat()
     const { mutate, isPending } = useFindChat()
 
     const addRecipient = (recipient: Recipient) => {

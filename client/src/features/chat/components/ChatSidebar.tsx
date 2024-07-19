@@ -53,6 +53,7 @@ export default function ChatSidebar() {
                 </section>
 
                 <section className="px-1.5">
+                    <div>nice</div>
                     <ChatPreviewList />
                 </section>
             </aside>
