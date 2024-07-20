@@ -4,8 +4,8 @@ import { Fragment } from "react"
 
 import { useGetMessages } from "@/features/messages/api/useGetMessages"
 
-import useUserStore from "@/features/chat/store/user"
-import useChatStore from "@/features/chat/store/chat"
+import useUserStore from "@/features/auth/store/user"
+import useChatStore from "@/features/chat/store"
 
 import { mergeStyles } from "@/utils/mergeStyles"
 
@@ -18,12 +18,12 @@ import Avatar from "@/components/ui/Avatar"
 // ]
 
 const MessageList = () => {
-    const activeChatSessionId = useChatStore.use.activeChatSessionId()
+    const activeChatId = useChatStore.use.activeChatId()
     const user = useUserStore.use.user()
 
     const { data, isLoading } = useGetMessages({
         query: {
-            chatId: activeChatSessionId,
+            chatId: activeChatId,
         },
     })
 

@@ -2,7 +2,7 @@ import { create } from "zustand"
 
 import createSelectors from "@/lib/zustand/selectors"
 
-import type { User } from "../types/User"
+import type { User } from "../../chat/types/User"
 
 interface UserState {
     user: User | null
@@ -15,7 +15,7 @@ interface userActions {
 
 type UserStore = UserState & userActions
 
-const initialState = {
+const initialState: UserState = {
     user: null,
 }
 

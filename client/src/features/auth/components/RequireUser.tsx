@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom"
 import { useGetMe } from "@/features/chat/api/useGetMe"
 
 import useAuthStore from "@/features/auth/store/auth"
-import useUserStore from "@/features/chat/store/user"
+import useUserStore from "@/features/auth/store/user"
 
 const RequireUser = () => {
     const clearSession = useAuthStore.use.clearSession()

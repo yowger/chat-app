@@ -8,7 +8,9 @@ import {
     DialogTitle,
 } from "@headlessui/react"
 
-// import { useCreateChat } from "../../api/useCreateChat"
+import { useFindChat } from "../../api/useFindChat"
+
+import useChatStore from "../../store"
 
 import { useDebounceValue } from "@/hooks/useDebounceValue"
 
@@ -18,8 +20,6 @@ import SearchUserList from "../SearchUserList"
 
 import type { FC } from "react"
 import type { Recipient } from "../../types/User"
-import { useFindChat } from "../../api/useFindChat"
-import useChatStore from "../../store/chat"
 
 interface NewChatProps {
     isOpen: boolean
@@ -40,7 +40,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
     const [recipients, setRecipients] = useState<Array<Recipient>>([])
     const getCreateChatStatus = getChatType(recipients)
     const [username, setUsername] = useDebounceValue("", 500)
-    const setActiveChatSessionId = useChatStore.use.setActiveChatSessionId()
+    const setActiveChatId = useChatStore.use.setActiveChatId()
 
     const { mutate, isPending } = useFindChat()
 
@@ -78,7 +78,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
             { input: { participants: recipientIds } },
             {
                 onSuccess: (response) => {
-                    setActiveChatSessionId(response._id)
+                    setActiveChatId(response._id)
                     handleOnClose()
                 },
             }

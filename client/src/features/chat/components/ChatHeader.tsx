@@ -1,5 +1,5 @@
 import Avatar from "@/components/ui/Avatar"
-import useUserStore from "../store/user"
+import useUserStore from "../../auth/store/user"
 
 function ChatHeader() {
     const user = useUserStore.use.user()

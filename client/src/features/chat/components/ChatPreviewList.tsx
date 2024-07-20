@@ -1,17 +1,18 @@
 import { Fragment } from "react"
 
-import useChatStore from "../store/chat"
-
 import { useGetChats } from "../api/useGetChats"
 
-import Avatar from "@/components/ui/Avatar"
-import useUserStore from "../store/user"
+import useChatStore from "../store"
+import useUserStore from "../../auth/store/user"
+
 import { mergeStyles } from "@/utils/mergeStyles"
+
+import Avatar from "@/components/ui/Avatar"
 
 const ChatPreviewList = () => {
     const user = useUserStore.use.user()
-    const activeChatSessionId = useChatStore.use.activeChatSessionId()
-    const setActiveChatSessionId = useChatStore.use.setActiveChatSessionId()
+    const activeChatId = useChatStore.use.activeChatId()
+    const setActiveChatId = useChatStore.use.setActiveChatId()
 
     const { data, isLoading } = useGetChats()
 
@@ -25,7 +26,7 @@ const ChatPreviewList = () => {
                 <Fragment key={`chat-preview-list-${pageIndex}`}>
                     {page.chats.map((chat, chatIndex) => {
                         const latestMessage = chat.latestMessage?.content
-                        const isCurrentChat = activeChatSessionId === chat._id
+                        const isCurrentChat = activeChatId === chat._id
 
                         let chatName = "Unknown"
 
@@ -42,7 +43,7 @@ const ChatPreviewList = () => {
                         return (
                             <li
                                 key={`chat-preview-item-${chat._id}`}
-                                onClick={() => setActiveChatSessionId(chat._id)}
+                                onClick={() => setActiveChatId(chat._id)}
                                 className={mergeStyles(
                                     "flex items-center overflow-hidden p-1.5 rounded-md cursor-pointer min-w-0",
                                     isCurrentChat
