@@ -10,9 +10,9 @@ import { mergeStyles } from "@/utils/mergeStyles"
 import Avatar from "@/components/ui/Avatar"
 
 const ChatPreviewList = () => {
-    const user = useUserStore.use.user()
     const activeChatId = useChatStore.use.activeChatId()
-    const setActiveChatId = useChatStore.use.setActiveChatId()
+    const user = useUserStore.use.user()
+    const setToActiveChat = useChatStore.use.setToActiveChat()
 
     const { data, isLoading } = useGetChats()
 
@@ -43,7 +43,7 @@ const ChatPreviewList = () => {
                         return (
                             <li
                                 key={`chat-preview-item-${chat._id}`}
-                                onClick={() => setActiveChatId(chat._id)}
+                                onClick={() => setToActiveChat(chat._id)}
                                 className={mergeStyles(
                                     "flex items-center overflow-hidden p-1.5 rounded-md cursor-pointer min-w-0",
                                     isCurrentChat

@@ -4,6 +4,7 @@ import type { StateCreator } from "zustand"
 export interface NewChatState {
     recipients: Recipient[]
     isCreatingChat: boolean
+    isCreatingChatSelected: boolean
 }
 
 export interface NewChatActions {
@@ -11,6 +12,7 @@ export interface NewChatActions {
     removeRecipient: (recipientId: string) => void
     clearRecipients: () => void
     setIsCreatingChat: (isCreating: boolean) => void
+    setIsCreatingChatSelected: (isSelected: boolean) => void
     resetNewChat: () => void
 }
 
@@ -19,6 +21,7 @@ export type NewChatSlice = NewChatState & NewChatActions
 const initialState: NewChatState = {
     recipients: [],
     isCreatingChat: false,
+    isCreatingChatSelected: false,
 }
 
 const createNewChatSlice: StateCreator<NewChatSlice> = (set) => ({
@@ -44,6 +47,8 @@ const createNewChatSlice: StateCreator<NewChatSlice> = (set) => ({
     clearRecipients: () => set({ recipients: [] }),
     setIsCreatingChat: (isCreating: boolean) =>
         set({ isCreatingChat: isCreating }),
+    setIsCreatingChatSelected: (isSelected: boolean) =>
+        set({ isCreatingChatSelected: isSelected }),
     resetNewChat: () => set(initialState),
 })
 

@@ -8,7 +8,8 @@ import type { Recipient } from "../types/User"
 
 const NewChatPreview = () => {
     const participants = useChatStore.use.recipients()
-    const isActive = true
+    const isCreatingChatSelected = useChatStore.use.isCreatingChatSelected()
+    const setToCreatingChat = useChatStore.use.setToCreatingChat()
 
     const generatePreviewMessage = (participants: Recipient[]): string => {
         if (participants.length === 0) {
@@ -36,9 +37,10 @@ const NewChatPreview = () => {
 
     return (
         <div
+            onClick={setToCreatingChat}
             className={mergeStyles(
                 "flex items-center overflow-hidden p-1.5 rounded-md cursor-pointer min-w-0",
-                isActive ? "bg-blue-100" : "hover:bg-gray-600/10"
+                isCreatingChatSelected ? "bg-blue-100" : "hover:bg-gray-600/10"
             )}
         >
             <div className="relative flex-shrink-0 mr-2.5">

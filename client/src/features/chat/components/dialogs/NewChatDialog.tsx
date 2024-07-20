@@ -15,6 +15,7 @@ import { useDebounceValue } from "@/hooks/useDebounceValue"
 import { Button } from "@/components/ui/button/Button"
 import { Input } from "@/components/ui/Input"
 import SearchUserList from "../SearchUserList"
+import RecipientSelector from "../RecipientSelector"
 
 import type { FC } from "react"
 import type { Recipient } from "../../types/User"
@@ -52,10 +53,6 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
         recipientExists
             ? removeRecipient(recipient._id)
             : addRecipient(recipient)
-    }
-
-    const handleRemoveRecipient = (recipientId: string) => {
-        removeRecipient(recipientId)
     }
 
     const handleOnClose = () => {
@@ -148,34 +145,19 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                         </section>
 
                         {getCreateChatStatus !== "empty" && (
-                            <section className="px-6">
-                                <span className="block font-medium mb-1.5">
-                                    To:
-                                </span>
+                            <>
+                                <div className="px-6">
+                                    <span className="block font-medium mb-1.5">
+                                        To:
+                                    </span>
 
-                                <div className="flex flex-wrap gap-2 mb-2">
-                                    {[...recipients].map((recipient) => (
-                                        <span
-                                            key={`recipients-item-${recipient._id}`}
-                                            id="badge-dismiss-default"
-                                            className="text-nowrap inline-flex items-center px-2 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded cursor-pointer"
-                                        >
-                                            {recipient.username}
-                                            <button
-                                                onClick={() =>
-                                                    handleRemoveRecipient(
-                                                        recipient._id
-                                                    )
-                                                }
-                                                className="inline-flex items-center p-1 ms-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900"
-                                            >
-                                                <IconX size={15} />
-                                            </button>
-                                        </span>
-                                    ))}
+                                    <RecipientSelector
+                                        recipients={recipients}
+                                        onRemoveRecipient={removeRecipient}
+                                    />
                                 </div>
 
-                                <div className="flex justify-end">
+                                <div className="px-6 flex justify-end">
                                     <Button
                                         onClick={HandleCreateChat}
                                         variant="default"
@@ -187,7 +169,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                                             : "Start group chat"}
                                     </Button>
                                 </div>
-                            </section>
+                            </>
                         )}
                     </DialogPanel>
                 </div>
