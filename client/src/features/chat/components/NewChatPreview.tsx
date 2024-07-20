@@ -1,21 +1,16 @@
+import useChatStore from "../store"
+
 import { mergeStyles } from "@/utils/mergeStyles"
+
 import Avatar from "@/components/ui/Avatar"
 
-type Participant = {
-    _id: string
-    username: string
-}
-
-const participants: Participant[] = [
-    { _id: "123", username: "Roger" },
-    { _id: "124", username: "John" },
-    { _id: "125", username: "Doe" },
-]
+import type { Recipient } from "../types/User"
 
 const NewChatPreview = () => {
+    const participants = useChatStore.use.recipients()
     const isActive = true
 
-    const generatePreviewMessage = (participants: Participant[]): string => {
+    const generatePreviewMessage = (participants: Recipient[]): string => {
         if (participants.length === 0) {
             return "No participants"
         }

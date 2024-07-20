@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 import { IconX } from "@tabler/icons-react"
 import {
     Dialog,
@@ -37,37 +35,36 @@ const getChatType = (recipients: Recipient[]) => {
 }
 
 const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
-    const [recipients, setRecipients] = useState<Array<Recipient>>([])
+    const recipients = useChatStore.use.recipients()
+    const addRecipient = useChatStore.use.addRecipient()
+    const isCreatingChat = useChatStore.use.isCreatingChat()
+    const createNewChat = useChatStore.use.setIsCreatingChat()
+    const removeRecipient = useChatStore.use.removeRecipient()
+    const setActiveChatId = useChatStore.use.setActiveChatId()
     const getCreateChatStatus = getChatType(recipients)
     const [username, setUsername] = useDebounceValue("", 500)
-    const setActiveChatId = useChatStore.use.setActiveChatId()
 
     const { mutate, isPending } = useFindChat()
-
-    const addRecipient = (recipient: Recipient) => {
-        setRecipients((prevRecipients) => {
-            return [...prevRecipients, recipient]
-        })
-    }
-
-    const removeRecipient = (recipient: Recipient) => {
-        setRecipients((prevRecipients) =>
-            prevRecipients.filter((r) => r._id !== recipient._id)
-        )
-    }
 
     const handleAddRecipient = (recipient: Recipient) => {
         const recipientExists = recipients.some((r) => r._id === recipient._id)
 
-        recipientExists ? removeRecipient(recipient) : addRecipient(recipient)
+        recipientExists
+            ? removeRecipient(recipient._id)
+            : addRecipient(recipient)
     }
 
-    const handleRemoveRecipient = (recipient: Recipient) => {
-        removeRecipient(recipient)
+    const handleRemoveRecipient = (recipientId: string) => {
+        removeRecipient(recipientId)
     }
 
     const handleOnClose = () => {
-        setRecipients([])
+        const isEmptyChat = recipients.length === 0 && isCreatingChat
+
+        if (isEmptyChat) {
+            createNewChat(false)
+        }
+
         onClose()
     }
 
@@ -79,12 +76,19 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
             {
                 onSuccess: (response) => {
                     setActiveChatId(response._id)
-                    handleOnClose()
+                    createNewChat(false)
+                    onClose()
+                },
+                onError: (error) => {
+                    const chatNotFound = error.response?.status === 404
+
+                    if (chatNotFound) {
+                        createNewChat(true)
+                        onClose()
+                    }
                 },
             }
         )
-
-        // mutate({ input: { participants: recipientIds, name: "test" } })
     }
 
     if (!isOpen) return null
@@ -160,7 +164,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                                             <button
                                                 onClick={() =>
                                                     handleRemoveRecipient(
-                                                        recipient
+                                                        recipient._id
                                                     )
                                                 }
                                                 className="inline-flex items-center p-1 ms-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900"

@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button/Button"
 import ChatPreviewList from "./ChatPreviewList"
 import NewChatDialog from "./dialogs/NewChatDialog"
 import NewChatPreview from "./NewChatPreview"
+import useChatStore from "../store"
 
 export default function ChatSidebar() {
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const isCreatingChat = useChatStore.use.isCreatingChat()
 
     const { mutate, isPending } = useLogout()
 
@@ -53,7 +55,7 @@ export default function ChatSidebar() {
                 </section>
 
                 <section className="px-1.5">
-                    <NewChatPreview />
+                    {isCreatingChat ? <NewChatPreview /> : null}
                     <ChatPreviewList />
                 </section>
             </aside>

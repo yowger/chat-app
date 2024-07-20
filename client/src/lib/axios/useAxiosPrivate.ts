@@ -29,6 +29,7 @@ const useAxiosPrivate = (): AxiosInstance => {
                 return config
             },
             (error) => {
+                console.log("🚀 ~ useEffect ~ error:", error)
                 return Promise.reject(error)
             }
         )
@@ -61,11 +62,11 @@ const useAxiosPrivate = (): AxiosInstance => {
                             return Promise.reject(error)
                         }
                     }
-
-                    return Promise.reject(error)
                 }
 
                 getNewAccessToken()
+
+                return Promise.reject(error)
             }
         )
 
