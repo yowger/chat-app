@@ -28,6 +28,7 @@
     -   [ ] Search chats
     -   [ ] Send messages
     -   [ ] Search messages
+    -   [ ] Scrollable Messages
 -   **Real-Time Features**
     -   [ ] Online status
     -   [ ] Real-time messaging
@@ -36,9 +37,6 @@
 -   **Logging**
     -   [x] Basic logging
     -   [ ] Save logs to database
--   **Social**
-    -   [ ] Friend Management
-    -   [ ] Block users
 
 ## Planned Future Features
 
@@ -49,3 +47,6 @@
 
 -   **Media Integration**
     -   [ ] Watch YouTube videos directly within messages
+-   **Social**
+    -   [ ] Friend Management
+    -   [ ] Block users
