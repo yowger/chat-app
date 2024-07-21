@@ -29,6 +29,8 @@
     -   [ ] Send messages
     -   [ ] Search messages
     -   [ ] Scrollable Messages
+-   **events**
+    -   [ ] Save events in chat, such as join, leave, etc.
 -   **Real-Time Features**
     -   [ ] Online status
     -   [ ] Real-time messaging
