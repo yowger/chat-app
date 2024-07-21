@@ -12,9 +12,11 @@ import useChatStore from "../../store"
 
 import { useDebounceValue } from "@/hooks/useDebounceValue"
 
+import { getChatType } from "../../utils"
+
 import { Button } from "@/components/ui/button/Button"
 import { Input } from "@/components/ui/Input"
-import SearchUserList from "../SearchUserList"
+import SearchUserList from "../lists/SearchUserList"
 import RecipientSelector from "../RecipientSelector"
 
 import type { FC } from "react"
@@ -25,25 +27,16 @@ interface NewChatProps {
     onClose: () => void
 }
 
-const getChatType = (recipients: Recipient[]) => {
-    if (recipients.length === 0) {
-        return "empty"
-    } else if (recipients.length === 1) {
-        return "single"
-    } else {
-        return "group"
-    }
-}
-
 const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
+    const [username, setUsername] = useDebounceValue("", 500)
     const recipients = useChatStore.use.recipients()
-    const addRecipient = useChatStore.use.addRecipient()
     const isCreatingChat = useChatStore.use.isCreatingChat()
+    const chatType = getChatType(recipients)
+    const addRecipient = useChatStore.use.addRecipient()
     const createNewChat = useChatStore.use.setIsCreatingChat()
     const removeRecipient = useChatStore.use.removeRecipient()
-    const setActiveChatId = useChatStore.use.setActiveChatId()
-    const getCreateChatStatus = getChatType(recipients)
-    const [username, setUsername] = useDebounceValue("", 500)
+    const setActiveChat = useChatStore.use.setToActiveChat()
+    const setToCreatingChat = useChatStore.use.setToCreatingChat()
 
     const { mutate, isPending } = useFindChat()
 
@@ -72,7 +65,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
             { input: { participants: recipientIds } },
             {
                 onSuccess: (response) => {
-                    setActiveChatId(response._id)
+                    setActiveChat(response._id)
                     createNewChat(false)
                     onClose()
                 },
@@ -81,6 +74,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
 
                     if (chatNotFound) {
                         createNewChat(true)
+                        setToCreatingChat()
                         onClose()
                     }
                 },
@@ -144,7 +138,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                             </div>
                         </section>
 
-                        {getCreateChatStatus !== "empty" && (
+                        {chatType !== "empty" && (
                             <>
                                 <div className="px-6">
                                     <span className="block font-medium mb-1.5">
@@ -164,7 +158,7 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                                         size="small"
                                         disabled={isPending}
                                     >
-                                        {getCreateChatStatus === "single"
+                                        {chatType === "single"
                                             ? "Start chat"
                                             : "Start group chat"}
                                     </Button>

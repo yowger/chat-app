@@ -11,6 +11,7 @@ import type {
 const queryConfig: DefaultOptions = {
     queries: {
         refetchOnWindowFocus: false,
+        retry: 1,
     },
 }
 

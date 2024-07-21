@@ -2,38 +2,15 @@ import useChatStore from "../store"
 
 import { mergeStyles } from "@/utils/mergeStyles"
 
-import Avatar from "@/components/ui/Avatar"
+import { generatePreviewName } from "../utils"
 
-import type { Recipient } from "../types/User"
+import Avatar from "@/components/ui/Avatar"
 
 const NewChatPreview = () => {
     const participants = useChatStore.use.recipients()
     const isCreatingChatSelected = useChatStore.use.isCreatingChatSelected()
+    const previewMessage = generatePreviewName(participants)
     const setToCreatingChat = useChatStore.use.setToCreatingChat()
-
-    const generatePreviewMessage = (participants: Recipient[]): string => {
-        if (participants.length === 0) {
-            return "No participants"
-        }
-
-        if (participants.length === 1) {
-            return `New message to ${participants[0].username}`
-        }
-
-        const usernames = participants
-            .slice(0, 2)
-            .map((participant) => participant.username)
-            .join(", ")
-        const otherParticipantsCount = participants.length - 2
-
-        return `New message to ${usernames}${
-            otherParticipantsCount > 0
-                ? `, and ${otherParticipantsCount} others`
-                : ""
-        }`
-    }
-
-    const previewMessage = generatePreviewMessage(participants)
 
     return (
         <div

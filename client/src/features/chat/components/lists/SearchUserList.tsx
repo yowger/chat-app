@@ -1,10 +1,10 @@
 import { Fragment } from "react"
 
-import { useGetUsers } from "../api/useGetUsers"
+import { useGetUsers } from "../../api/useGetUsers"
 
 import Avatar from "@/components/ui/Avatar"
 
-import type { Recipient } from "../types/User"
+import type { Recipient } from "../../types/User"
 import { mergeStyles } from "@/utils/mergeStyles"
 
 interface SearchUserListProps {

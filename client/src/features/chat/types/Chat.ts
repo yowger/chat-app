@@ -1,16 +1,16 @@
-import { ChatUser } from "./User"
+import { ChatUser, Recipient } from "./User"
 
 export interface Chat {
     _id: string
     type: ChatType
-    participants: ChatUser[]
+    participants: Recipient[]
     name: string
     groupAdmin: ChatUser
     createdAt: Date
     latestMessage?: {
         _id: string
         content: string
-        sender: ChatUser
+        sender: Recipient
         createdAt: Date
     }
 }

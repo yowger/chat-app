@@ -2,7 +2,13 @@ import ChatInput from "../components/ChatInput"
 import ChatHeader from "../components/ChatHeader"
 import ChatSidebar from "../components/ChatSidebar"
 
+import { useCreateChat } from "../api/useCreateChat"
+
 import MessageList from "@/features/messages/components/MessageList"
+
+import // formatParticipantsList,
+// generatePreviewName,
+"../utils"
 
 import RecipientSelector from "../components/RecipientSelector"
 import useChatStore from "../store"
@@ -12,6 +18,26 @@ export default function Chat() {
     const isCreatingChatSelected = useChatStore.use.isCreatingChatSelected()
     const recipients = useChatStore.use.recipients()
     const removeRecipient = useChatStore.use.removeRecipient()
+
+    const { mutate, isPending } = useCreateChat()
+
+    const handleSendMessage = (text: string) => {
+        const shouldCreateNewChat: boolean =
+            isCreatingChat && isCreatingChatSelected && recipients.length > 0
+
+        if (shouldCreateNewChat) {
+            const recipientIds = recipients.map((recipient) => recipient._id)
+
+            mutate(
+                { input: { participants: recipientIds } },
+                {
+                    onSuccess: (data) => {
+                        console.log("🚀 ~ handleSendMessage ~ data:", data)
+                    },
+                }
+            )
+        }
+    }
 
     return (
         <div className="flex">
@@ -34,7 +60,10 @@ export default function Chat() {
                         <MessageList />
                     </section>
 
-                    <ChatInput />
+                    <ChatInput
+                        onClick={handleSendMessage}
+                        disabled={isPending}
+                    />
                 </div>
 
                 <div className="p-6 hidden mt-16 lg:flex lg:w-[30%] bg-gray-400 min-h-[45%]">

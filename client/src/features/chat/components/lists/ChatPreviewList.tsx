@@ -1,10 +1,11 @@
 import { Fragment } from "react"
 
-import { useGetChats } from "../api/useGetChats"
+import { useGetChats } from "../../api/useGetChats"
 
-import useChatStore from "../store"
-import useUserStore from "../../auth/store/user"
+import useChatStore from "../../store"
+import useUserStore from "../../../auth/store/user"
 
+import { formatParticipantsList } from "../../utils"
 import { mergeStyles } from "@/utils/mergeStyles"
 
 import Avatar from "@/components/ui/Avatar"
@@ -28,17 +29,14 @@ const ChatPreviewList = () => {
                         const latestMessage = chat.latestMessage?.content
                         const isCurrentChat = activeChatId === chat._id
 
-                        let chatName = "Unknown"
-
-                        if (chat.name) {
-                            chatName = chat.name
-                        } else if (chat.participants.length === 2) {
-                            const participant = chat.participants.find(
+                        const participantsWithoutUser =
+                            chat.participants.filter(
                                 (participant) => participant._id !== user?._id
                             )
 
-                            chatName = participant!.username
-                        }
+                        const chatName =
+                            formatParticipantsList(participantsWithoutUser) ||
+                            "Unknown"
 
                         return (
                             <li

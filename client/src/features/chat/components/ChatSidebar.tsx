@@ -5,7 +5,7 @@ import { IconEdit } from "@tabler/icons-react"
 import { useLogout } from "@/features/auth/api/useLogout"
 
 import { Button } from "@/components/ui/button/Button"
-import ChatPreviewList from "./ChatPreviewList"
+import ChatPreviewList from "./lists/ChatPreviewList"
 import NewChatDialog from "./dialogs/NewChatDialog"
 import NewChatPreview from "./NewChatPreview"
 import useChatStore from "../store"
