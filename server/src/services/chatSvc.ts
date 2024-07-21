@@ -11,7 +11,6 @@ import type { Pagination } from "@/types/common"
 
 export const createSingleChat = async (userId: string, participant: string) => {
     const participantExist = await findUserById(participant)
-    console.log("🚀 ~ createSingleChat ~ participantExist:", participantExist)
 
     if (!participantExist) {
         throw new HTTP404Error("participant does not exist")
@@ -39,9 +38,9 @@ interface createGroupChatInput extends Omit<Chat, "type" | "groupAdmin"> {}
 
 export const createGroupChat = async (
     userId: string,
-    input: createGroupChatInput
+    input: Partial<createGroupChatInput>
 ) => {
-    const { participants, name } = input
+    const { participants } = input
 
     const uniqueParticipants = new Set([...participants, userId])
 
@@ -56,7 +55,6 @@ export const createGroupChat = async (
     const groupChat = await ChatModel.create({
         type: ChatType.GROUP,
         participants: Array.from(uniqueParticipants),
-        name,
         groupAdmin: [userId],
     })
 

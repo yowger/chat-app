@@ -7,6 +7,8 @@ import {
     getChatsWithPagination,
 } from "@/services/chatSvc"
 
+import { HTTP400Error } from "../handlers/api/apiErrors"
+
 import type { ProtectedRequest } from "@/types/appRequest"
 import type { Response } from "express"
 
@@ -14,15 +16,21 @@ export const createChatHandler = async (
     req: ProtectedRequest,
     res: Response
 ) => {
-    const { name, participants } = req.body
+    const { participants } = req.body
     const userId = req.userId
-    const isGroup = participants.length > 1
+    const chatType = participants.length === 1 ? "single" : "group"
 
-    const chat = isGroup
-        ? await createGroupChat(userId, { name, participants })
-        : await createSingleChat(userId, participants[0])
-
-    console.log("🚀 ~ chat:", chat)
+    let chat
+    switch (chatType) {
+        case "single":
+            chat = await createSingleChat(userId, participants[0])
+            break
+        case "group":
+            chat = await createGroupChat(userId, { participants })
+            break
+        default:
+            throw new HTTP400Error("Participants needed to create chat")
+    }
 
     res.status(201).json(chat)
 }
@@ -47,7 +55,6 @@ export const getChatsWithPaginationHandler = async (
 
     const totalPages = Math.ceil(totalChats / limit)
 
-    console.log("🚀 ~ chats:", chats)
     res.json({
         chats,
         pagination: {
