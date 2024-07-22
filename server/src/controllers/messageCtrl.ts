@@ -1,3 +1,4 @@
+import { updateChat } from "@/services/chatSvc"
 import {
     countMessages,
     getMessagesWithWithPagination,
@@ -20,6 +21,10 @@ export const sendMessageHandler = async (
 
     const message = await sendMessage({ chatId, senderId: userId, content })
 
+    await updateChat(chatId, {
+        latestMessage: message._id,
+    })
+
     res.status(201).json(message)
 }
 
@@ -40,6 +45,7 @@ export const getMessageWithPaginationHandler = async (
         },
     })
 
+    console.log("🚀 ~ messages:", messages)
     const totalMessages = await countMessages(chatId as string)
 
     const totalPages = Math.ceil(totalMessages / limit)

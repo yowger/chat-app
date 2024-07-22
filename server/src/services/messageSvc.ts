@@ -7,11 +7,29 @@ import { findChatById, updateChat } from "./chatSvc"
 import type { FilterQuery } from "mongoose"
 import type { Pagination } from "@/types/common"
 
-interface sendMessageInput {
+interface MessageInput {
     chatId: string
     senderId: string
     content: string
 }
+
+interface CreateMessageInput extends MessageInput {}
+
+export const createMessage = async ({
+    chatId,
+    senderId,
+    content,
+}: CreateMessageInput) => {
+    const createdMessage = await MessageModel.create({
+        chat: chatId,
+        sender: senderId,
+        content: content,
+    })
+
+    return createdMessage.toObject()
+}
+
+interface sendMessageInput extends MessageInput {}
 
 export const sendMessage = async (input: sendMessageInput) => {
     const { chatId, senderId, content } = input
@@ -28,17 +46,13 @@ export const sendMessage = async (input: sendMessageInput) => {
         throw new HTTP403Error("User is not a participant of the chat")
     }
 
-    const createdMessage = await MessageModel.create({
-        chat: chatId,
-        sender: senderId,
+    const createdMessage = await createMessage({
+        chatId: chatId,
+        senderId: senderId,
         content: content,
     })
 
-    await updateChat(chatId, {
-        latestMessage: createdMessage._id,
-    })
-
-    return createdMessage.toObject()
+    return createdMessage
 }
 
 interface GetMessagesWithWithPaginationOptions {

@@ -5,9 +5,9 @@ import {
     createSingleChat,
     findChatByParticipants,
     getChatsWithPagination,
+    updateChat,
 } from "@/services/chatSvc"
-
-import { HTTP400Error } from "../handlers/api/apiErrors"
+import { sendMessage } from "@/services/messageSvc"
 
 import type { ProtectedRequest } from "@/types/appRequest"
 import type { Response } from "express"
@@ -16,20 +16,32 @@ export const createChatHandler = async (
     req: ProtectedRequest,
     res: Response
 ) => {
-    const { participants } = req.body
+    const { content, participants } = req.body
     const userId = req.userId
     const chatType = participants.length === 1 ? "single" : "group"
 
     let chat
+
     switch (chatType) {
         case "single":
             chat = await createSingleChat(userId, participants[0])
             break
         case "group":
             chat = await createGroupChat(userId, { participants })
-            break
-        default:
-            throw new HTTP400Error("Participants needed to create chat")
+    }
+
+    if (content) {
+        const chatId = chat._id as unknown as string
+
+        const message = await sendMessage({
+            chatId,
+            senderId: userId,
+            content,
+        })
+
+        chat = await updateChat(chatId, {
+            latestMessage: message._id,
+        })
     }
 
     res.status(201).json(chat)

@@ -8,6 +8,7 @@ import { checkIfUsersExist, findUserById } from "@/services/userSvc"
 
 import type { Chat } from "@/models/chatMdl"
 import type { Pagination } from "@/types/common"
+import type { Message } from "@/models/messageMdl"
 
 export const createSingleChat = async (userId: string, participant: string) => {
     const participantExist = await findUserById(participant)
@@ -85,7 +86,7 @@ export const getChatsWithPagination = async (
             latestMessageReadBy: 1,
         })
         .sort({
-            updatedAt: 1,
+            updatedAt: -1,
         })
         .skip(skip)
         .limit(limit)
@@ -165,6 +166,7 @@ export const updateChat = async (
             new: true,
         }
     )
+    console.log("🚀 ~ updatedChat:", updatedChat)
 
-    return updatedChat
+    return updatedChat.toObject()
 }

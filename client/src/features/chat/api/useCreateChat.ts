@@ -14,6 +14,7 @@ export interface CreateChatResponse extends Chat {}
 
 interface CreateChatInput {
     name?: string
+    content?: string
     participants: string[]
 }
 

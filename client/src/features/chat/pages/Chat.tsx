@@ -34,7 +34,7 @@ export default function Chat() {
             const recipientIds = recipients.map((recipient) => recipient._id)
 
             mutateChat(
-                { input: { participants: recipientIds } },
+                { input: { content: text, participants: recipientIds } },
                 {
                     onSuccess: (data) => {
                         resetNewChat()
