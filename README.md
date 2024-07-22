@@ -26,7 +26,7 @@
 -   **Chat Functionality**
     -   [x] Create single/group chats
     -   [ ] Search chats
-    -   [ ] Send messages
+    -   [x] Send messages
     -   [ ] Search messages
     -   [ ] Scrollable Messages
 -   **events**
