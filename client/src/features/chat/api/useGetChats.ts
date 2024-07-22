@@ -9,7 +9,7 @@ import type { Chat } from "../types/Chat"
 import type { InfiniteQueryConfig } from "@/lib/query"
 import type { Pagination, PaginationInput } from "../types/Pagination"
 
-export interface FetchChatsResponse {
+export interface GetChatsResponse {
     chats: Chat[]
     pagination: Pagination
 }
@@ -21,7 +21,7 @@ interface FetchChatsOptions {
 const fetchChats = async (
     axios: AxiosInstance,
     options: FetchChatsOptions
-): Promise<FetchChatsResponse> => {
+): Promise<GetChatsResponse> => {
     const { pagination } = options
     const { page = 0, limit = 10 } = pagination
 
@@ -36,7 +36,7 @@ const fetchChats = async (
 }
 
 interface UseGetChatsOptions {
-    config?: InfiniteQueryConfig<FetchChatsResponse>
+    config?: InfiniteQueryConfig<GetChatsResponse>
 }
 
 export const useGetChats = (options: UseGetChatsOptions = {}) => {
@@ -44,7 +44,7 @@ export const useGetChats = (options: UseGetChatsOptions = {}) => {
 
     const axiosPrivate = useAxiosPrivate()
 
-    return useInfiniteQuery<FetchChatsResponse, Error>({
+    return useInfiniteQuery<GetChatsResponse, Error>({
         queryKey: [chatKey],
         queryFn: ({ pageParam = 1 }) => {
             const fetchChatsOptions: FetchChatsOptions = {
@@ -56,7 +56,7 @@ export const useGetChats = (options: UseGetChatsOptions = {}) => {
             return fetchChats(axiosPrivate, fetchChatsOptions)
         },
         initialPageParam: 1,
-        getNextPageParam: (lastPage: FetchChatsResponse) => {
+        getNextPageParam: (lastPage: GetChatsResponse) => {
             const currentPage = lastPage.pagination.page
             const totalPages = lastPage.pagination.totalPages
             const nextPage = currentPage + 1

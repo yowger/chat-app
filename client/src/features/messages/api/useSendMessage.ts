@@ -13,6 +13,8 @@ import { messageKey } from "./keys"
 import type { AxiosError, AxiosInstance } from "axios"
 import type { GetMessagesResponse } from "./useGetMessages"
 import type { MutateConfig } from "@/lib/query"
+import { chatKey } from "@/features/chat/api/keys"
+import { GetChatsResponse } from "@/features/chat/api/useGetChats"
 
 export interface SendMessageResponse {
     chat: string
@@ -63,15 +65,22 @@ export const useSendMessage = (options: UseSendMessageOptions = {}) => {
             })
         },
         onMutate: async (options) => {
-            const chatId = options.input.chatId
+            const { chatId, content } = options.input
 
             await queryClient.cancelQueries({
                 queryKey: [messageKey, chatId],
                 exact: true,
             })
+            await queryClient.cancelQueries({
+                queryKey: [chatKey],
+                exact: true,
+            })
 
             const previousMessages =
-                queryClient.getQueryData<GetMessagesResponse>([messageKey])
+                queryClient.getQueryData<GetMessagesResponse>([
+                    messageKey,
+                    chatId,
+                ])
 
             queryClient.setQueryData<InfiniteData<GetMessagesResponse>>(
                 [messageKey, chatId],
@@ -80,8 +89,6 @@ export const useSendMessage = (options: UseSendMessageOptions = {}) => {
 
                     if (draft.pages.length > 0) {
                         const tempId = Date.now().toString()
-                        const chatId = options.input.chatId
-                        const content = options.input.content
 
                         const newMessage = {
                             _id: tempId,
@@ -101,19 +108,57 @@ export const useSendMessage = (options: UseSendMessageOptions = {}) => {
                 })
             )
 
-            return { previousMessages }
+            const previousChats = queryClient.getQueryData<GetChatsResponse>([
+                chatKey,
+            ])
+
+            queryClient.setQueryData<InfiniteData<GetChatsResponse>>(
+                [chatKey],
+                produce((draft) => {
+                    if (!draft) return
+
+                    draft.pages.forEach((page) => {
+                        const chatIndex = page.chats.findIndex(
+                            (chat) => chat._id === chatId
+                        )
+
+                        if (chatIndex !== -1) {
+                            page.chats[chatIndex].latestMessage = {
+                                _id: Date.now().toString(),
+                                content,
+                                sender: {
+                                    _id: user!._id,
+                                    username: user!.username,
+                                },
+                                createdAt: new Date(),
+                            }
+
+                            // Move updated chat to top
+                            const updatedChat = page.chats.splice(
+                                chatIndex,
+                                1
+                            )[0]
+                            page.chats.unshift(updatedChat)
+                        }
+                    })
+                })
+            )
+
+            return { previousMessages, previousChats }
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (_error, options, context: any) => {
             const previousMessages = context?.previousMessages
+            const previousChats = context?.previousChats
 
             if (previousMessages) {
                 const chatId = options.input.chatId
 
-                queryClient.setQueryData(
-                    [messageKey, chatId],
-                    context.previousMessages
-                )
+                queryClient.setQueryData([messageKey, chatId], previousMessages)
+            }
+
+            if (previousChats) {
+                queryClient.setQueryData([chatKey], previousChats)
             }
 
             // todo display alert notification error
@@ -123,6 +168,10 @@ export const useSendMessage = (options: UseSendMessageOptions = {}) => {
 
             queryClient.invalidateQueries({
                 queryKey: [messageKey, chatId],
+                exact: true,
+            })
+            queryClient.invalidateQueries({
+                queryKey: [chatKey],
                 exact: true,
             })
         },
