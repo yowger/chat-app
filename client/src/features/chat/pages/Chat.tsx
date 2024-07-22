@@ -3,35 +3,59 @@ import ChatHeader from "../components/ChatHeader"
 import ChatSidebar from "../components/ChatSidebar"
 
 import { useCreateChat } from "../api/useCreateChat"
+import { useSendMessage } from "@/features/messages/api/useSendMessage"
 
-import MessageList from "@/features/messages/components/MessageList"
-
-import // formatParticipantsList,
-// generatePreviewName,
-"../utils"
-
-import RecipientSelector from "../components/RecipientSelector"
 import useChatStore from "../store"
 
+import MessageList from "@/features/messages/components/MessageList"
+import RecipientSelector from "../components/RecipientSelector"
+
 export default function Chat() {
+    const activeChatId = useChatStore.use.activeChatId()
+    const recipients = useChatStore.use.recipients()
     const isCreatingChat = useChatStore.use.isCreatingChat()
     const isCreatingChatSelected = useChatStore.use.isCreatingChatSelected()
-    const recipients = useChatStore.use.recipients()
+    const setActiveChat = useChatStore.use.setToActiveChat()
     const removeRecipient = useChatStore.use.removeRecipient()
+    const resetNewChat = useChatStore.use.resetNewChat()
 
-    const { mutate, isPending } = useCreateChat()
+    const { mutate: mutateChat, isPending: isChatPending } = useCreateChat()
+    const { mutate: mutateMessage, isPending: isMessagePending } =
+        useSendMessage()
 
     const handleSendMessage = (text: string) => {
         const shouldCreateNewChat: boolean =
-            isCreatingChat && isCreatingChatSelected && recipients.length > 0
+            recipients.length > 0 &&
+            isCreatingChat &&
+            isCreatingChatSelected &&
+            !activeChatId
 
         if (shouldCreateNewChat) {
             const recipientIds = recipients.map((recipient) => recipient._id)
 
-            mutate(
+            mutateChat(
                 { input: { participants: recipientIds } },
                 {
                     onSuccess: (data) => {
+                        resetNewChat()
+                        setActiveChat(data._id)
+                    },
+                }
+            )
+
+            return
+        }
+
+        if (activeChatId) {
+            mutateMessage(
+                {
+                    input: {
+                        chatId: activeChatId,
+                        content: text,
+                    },
+                },
+                {
+                    onSettled: (data) => {
                         console.log("🚀 ~ handleSendMessage ~ data:", data)
                     },
                 }
@@ -62,7 +86,7 @@ export default function Chat() {
 
                     <ChatInput
                         onClick={handleSendMessage}
-                        disabled={isPending}
+                        disabled={isChatPending || isMessagePending}
                     />
                 </div>
 

@@ -1,11 +1,16 @@
 import { useMutation } from "@tanstack/react-query"
 
+import { queryClient } from "@/lib/query"
+
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
+
+import { chatKey } from "./keys"
 
 import type { AxiosError, AxiosInstance } from "axios"
 import type { MutateConfig } from "@/lib/query"
+import type { Chat } from "../types/Chat"
 
-export interface CreateChatResponse {}
+export interface CreateChatResponse extends Chat {}
 
 interface CreateChatInput {
     name?: string
@@ -43,6 +48,18 @@ export const useCreateChat = (options: UseCreateChatOptions = {}) => {
             return createChat(axiosPrivate, {
                 input,
             })
+        },
+        onMutate: async () => {
+            await queryClient.cancelQueries({
+                queryKey: [chatKey],
+                exact: true,
+            })
+        },
+        onError: (_error, _chat, _context) => {
+            // todo display alert notification error
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: [chatKey], exact: true })
         },
         ...config,
     })

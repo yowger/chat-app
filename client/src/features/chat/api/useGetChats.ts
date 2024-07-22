@@ -2,6 +2,8 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
+import { chatKey } from "./keys"
+
 import type { AxiosInstance } from "axios"
 import type { Chat } from "../types/Chat"
 import type { InfiniteQueryConfig } from "@/lib/query"
@@ -43,7 +45,7 @@ export const useGetChats = (options: UseGetChatsOptions = {}) => {
     const axiosPrivate = useAxiosPrivate()
 
     return useInfiniteQuery<FetchChatsResponse, Error>({
-        queryKey: ["chats"],
+        queryKey: [chatKey],
         queryFn: ({ pageParam = 1 }) => {
             const fetchChatsOptions: FetchChatsOptions = {
                 pagination: {

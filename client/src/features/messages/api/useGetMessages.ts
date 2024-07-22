@@ -2,28 +2,30 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 
 import useAxiosPrivate from "@/lib/axios/useAxiosPrivate"
 
-import type { AxiosInstance } from "axios"
-import type { ChatId } from "../types/Chat"
-import type { ChatUser } from "../types/User"
-import type { InfiniteQueryConfig } from "@/lib/query"
-import type { Pagination, PaginationInput } from "../types/Pagination"
+import { messageKey } from "./keys"
 
-interface Message {
+import type { AxiosInstance } from "axios"
+import type { ChatId } from "@/features/chat/types/Chat"
+import type { InfiniteQueryConfig } from "@/lib/query"
+import { Pagination, PaginationInput } from "@/features/chat/types/Pagination"
+import type { Recipient } from "@/features/chat/types/User"
+
+export interface Message {
     _id: string
     content: string
     chat: string
-    sender: ChatUser
+    sender: Recipient
     readAt: Date | null
     createdAt: Date
     updatedAt: Date
 }
 
-export interface getMessagesResponse {
+export interface GetMessagesResponse {
     messages: Message[]
     pagination: Pagination
 }
 
-interface getMessagesOptions {
+interface GetMessagesOptions {
     query: {
         chatId: ChatId
         content?: string
@@ -33,8 +35,8 @@ interface getMessagesOptions {
 
 const fetchMessages = async (
     axios: AxiosInstance,
-    options: getMessagesOptions
-): Promise<getMessagesResponse> => {
+    options: GetMessagesOptions
+): Promise<GetMessagesResponse> => {
     const { query, pagination } = options
     const { chatId, content } = query
     const { page = 0, limit = 10 } = pagination
@@ -56,7 +58,7 @@ interface UseSearchUsersOptions {
         chatId: ChatId
         content?: string
     }
-    config?: InfiniteQueryConfig<getMessagesResponse>
+    config?: InfiniteQueryConfig<GetMessagesResponse>
 }
 
 export const useGetMessages = (options: UseSearchUsersOptions) => {
@@ -65,10 +67,10 @@ export const useGetMessages = (options: UseSearchUsersOptions) => {
 
     const axiosPrivate = useAxiosPrivate()
 
-    return useInfiniteQuery<getMessagesResponse, Error>({
-        queryKey: ["messages", chatId, content],
+    return useInfiniteQuery<GetMessagesResponse, Error>({
+        queryKey: [messageKey, chatId],
         queryFn: ({ pageParam = 1 }) => {
-            const fetchMessagesOptions: getMessagesOptions = {
+            const fetchMessagesOptions: GetMessagesOptions = {
                 query: {
                     chatId,
                     content,
@@ -81,7 +83,7 @@ export const useGetMessages = (options: UseSearchUsersOptions) => {
             return fetchMessages(axiosPrivate, fetchMessagesOptions)
         },
         initialPageParam: 1,
-        getNextPageParam: (lastPage: getMessagesResponse) => {
+        getNextPageParam: (lastPage: GetMessagesResponse) => {
             const currentPage = lastPage.pagination.page
             const totalPages = lastPage.pagination.totalPages
             const nextPage = currentPage + 1
