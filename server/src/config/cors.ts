@@ -1,16 +1,12 @@
 import cors from "cors"
 
-import config from "@/config/env"
-
 import logger from "@/utils/logger"
 
-const allowedOriginsSet = new Set(
-    config.allowedOrigins?.split(",").map((origin) => origin.trim()) || []
-)
+import { allowedOriginsArray } from "@/utils/origin"
 
 const corsOptions: cors.CorsOptions = {
     origin: (origin, callback) => {
-        if (allowedOriginsSet.has(origin) || !origin) {
+        if (allowedOriginsArray.includes(origin) || !origin) {
             callback(null, true)
         } else {
             const errorMessage = `Origin '${origin}' not allowed by CORS`

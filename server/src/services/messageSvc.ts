@@ -80,7 +80,7 @@ export const getMessagesWithWithPagination = async (
             __v: 0,
         })
         .sort({
-            createdAt: 1,
+            createdAt: -1,
         })
         .skip(skip)
         .limit(limit)

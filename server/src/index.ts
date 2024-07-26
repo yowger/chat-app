@@ -2,14 +2,31 @@ import "module-alias/register"
 
 import app from "@/app"
 
+import { connectSocket } from "@/sockets"
+
 import { isOperationalError } from "@/handlers/utils/error"
 
 import connectDb from "@/utils/connectDb"
 import logger from "@/utils/logger"
 
+import config from "@/config/env"
+
 const startServer = async () => {
-    process.on("UnhandledRejection", (error) => {
-        throw error
+    await connectDb()
+
+    const port = config.port || 8000
+    const server = app.listen(8000, () => {
+        logger.log("info", "Server started", { port })
+    })
+
+    connectSocket(server)
+
+    process.on("unhandledRejection", (error) => {
+        logger.log("error", "unhandled rejection", error)
+
+        if (!isOperationalError) {
+            process.exit(1)
+        }
     })
 
     process.on("uncaughtException", (error) => {
@@ -19,21 +36,6 @@ const startServer = async () => {
             process.exit(1)
         }
     })
-
-    await connectDb()
-
-    app.set("port", 8000)
-    const port = app.get("port")
-    const server = app
-        .listen(port, () => {
-            const address = server.address()
-            if (typeof address !== "string") {
-                logger.log("info", "Server started", { port: address?.port })
-            }
-        })
-        .on("error", (error) => {
-            logger.log("error", "Error connecting to server", error)
-        })
 }
 
 startServer()
