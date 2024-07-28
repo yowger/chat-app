@@ -1,4 +1,5 @@
-import { prop, Ref, modelOptions } from "@typegoose/typegoose"
+import { prop, Ref, modelOptions, index } from "@typegoose/typegoose"
+import { v4 as uuidv4 } from "uuid"
 
 import { Chat } from "@/models/chatMdl"
 import { ReadBy } from "@/models/readByMdl"
@@ -9,7 +10,9 @@ import { User } from "@/models/userMdl"
         timestamps: true,
     },
 })
+@index({ createdAt: 1 })
 export class Message {
+    @prop({ type: String, required: true, default: () => uuidv4() })
     @prop({ required: true })
     content!: string
 

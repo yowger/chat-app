@@ -1,6 +1,5 @@
-import { refreshTokenOptions } from "@/config/cookies"
+import { refreshTokenCookieOptions } from "@/config/cookies"
 
-import { comparePassword, hashPassword } from "@/utils/bcrypt"
 import { verifyJwt } from "@/utils/jwt"
 
 import { createUser, findUserByEmail, findUserById } from "@/services/userSvc"
@@ -46,7 +45,8 @@ export const loginHandler = async (req: Request, res: Response) => {
 
     const accessToken = signAccessToken(existingUser._id)
     const refreshToken = signRefreshToken(existingUser._id)
-    res.cookie("refreshToken", refreshToken, refreshTokenOptions)
+
+    res.cookie("refreshToken", refreshToken, refreshTokenCookieOptions)
 
     res.status(200).json({
         accessToken,

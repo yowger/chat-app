@@ -1,6 +1,7 @@
 import { updateChat } from "@/services/chatSvc"
 import {
     countMessages,
+    getMessagesByCursor,
     getMessagesWithWithPagination,
     // createMessage,
     // findMessageById,
@@ -16,10 +17,15 @@ export const sendMessageHandler = async (
     req: ProtectedRequest,
     res: Response
 ) => {
-    const { chatId, content } = req.body
+    const { _id, chatId, content } = req.body
     const userId = req.userId
 
-    const message = await sendMessage({ chatId, senderId: userId, content })
+    const message = await sendMessage({
+        _id,
+        chatId,
+        senderId: userId,
+        content,
+    })
 
     await updateChat(chatId, {
         latestMessage: message._id,
@@ -45,7 +51,6 @@ export const getMessageWithPaginationHandler = async (
         },
     })
 
-    console.log("🚀 ~ messages:", messages)
     const totalMessages = await countMessages(chatId as string)
 
     const totalPages = Math.ceil(totalMessages / limit)
@@ -59,6 +64,20 @@ export const getMessageWithPaginationHandler = async (
             totalPages,
         },
     })
+}
+
+export const getMessagesByCursorHandler = async (
+    req: ProtectedRequest,
+    res: Response
+) => {
+    const { limit = 10, lastId } = req.query
+
+    const messages = await getMessagesByCursor({
+        limit: Number(limit),
+        lastId: lastId as string,
+    })
+
+    res.status(200).json(messages)
 }
 
 // export const createMessageHandler = async (req: Request, res: Response) => {

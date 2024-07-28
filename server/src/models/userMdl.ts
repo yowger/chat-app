@@ -9,7 +9,6 @@ import {
 
 import { comparePassword, hashPassword } from "@/utils/bcrypt"
 
-@index({ username: 1 })
 @modelOptions({
     schemaOptions: {
         timestamps: true,
@@ -18,6 +17,7 @@ import { comparePassword, hashPassword } from "@/utils/bcrypt"
         allowMixed: Severity.ALLOW,
     },
 })
+@index({ username: 1 })
 @pre<User>("save", async function (next) {
     if (this.isModified || this.isNew) {
         this.password = await hashPassword(this.password)

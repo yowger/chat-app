@@ -2,7 +2,7 @@ import "module-alias/register"
 
 import app from "@/app"
 
-import { connectSocket } from "@/sockets"
+import { initSocket } from "@/sockets"
 
 import { isOperationalError } from "@/handlers/utils/error"
 
@@ -15,11 +15,11 @@ const startServer = async () => {
     await connectDb()
 
     const port = config.port || 8000
-    const server = app.listen(8000, () => {
+    const server = app.listen(port, () => {
         logger.log("info", "Server started", { port })
     })
 
-    connectSocket(server)
+    initSocket(server)
 
     process.on("unhandledRejection", (error) => {
         logger.log("error", "unhandled rejection", error)

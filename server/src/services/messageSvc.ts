@@ -8,6 +8,7 @@ import type { FilterQuery } from "mongoose"
 import type { Pagination } from "@/types/common"
 
 interface MessageInput {
+    _id?: string
     chatId: string
     senderId: string
     content: string
@@ -32,7 +33,7 @@ export const createMessage = async ({
 interface sendMessageInput extends MessageInput {}
 
 export const sendMessage = async (input: sendMessageInput) => {
-    const { chatId, senderId, content } = input
+    const { _id, chatId, senderId, content } = input
 
     const chatExist = await findChatById(chatId)
     if (!chatExist) {
@@ -47,6 +48,7 @@ export const sendMessage = async (input: sendMessageInput) => {
     }
 
     const createdMessage = await createMessage({
+        _id,
         chatId: chatId,
         senderId: senderId,
         content: content,
@@ -97,6 +99,24 @@ export const countMessages = async (chatId: string): Promise<number> => {
         .exec()
 
     return total
+}
+
+interface GetMessagesByCursor {
+    limit: number
+    lastId?: string
+}
+
+export const getMessagesByCursor = async ({
+    limit,
+    lastId,
+}: GetMessagesByCursor) => {
+    const query = lastId ? { _id: { $lt: lastId } } : {}
+
+    const messages = await MessageModel.find(query)
+        .sort({ _id: -1 })
+        .limit(limit)
+
+    return messages
 }
 
 // export const findMessageById = async (messageId: string) => {

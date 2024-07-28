@@ -1,6 +1,7 @@
 import { Router } from "express"
 
 import {
+    getMessagesByCursorHandler,
     getMessageWithPaginationHandler,
     // createMessageHandler,
     // getMessageByIdHandler,
@@ -15,6 +16,7 @@ import asyncHandler from "@/handlers/middleware/asyncHandlerMw"
 const router = Router()
 
 router.get("/", authenticate, asyncHandler(getMessageWithPaginationHandler))
+router.get("/cursor", authenticate, asyncHandler(getMessagesByCursorHandler))
 router.post("/", authenticate, asyncHandler(sendMessageHandler))
 
 // router.get("/messages/:id", asyncHandler(getMessageByIdHandler))

@@ -8,6 +8,8 @@ import { verifyJwt } from "@/utils/jwt"
 import type { Server as HttpServer } from "http"
 import type { Request } from "express"
 import type { Socket } from "socket.io"
+import { sendMessage } from "@/services/messageSvc"
+import { updateChat } from "@/services/chatSvc"
 
 interface ChatUser {
     id: string
@@ -19,7 +21,19 @@ interface SocketRequest extends Request, ChatUser {
     user: ChatUser
 }
 
-export const connectSocket = (server: HttpServer) => {
+interface Message {
+    _id: string
+    chatId: string
+    recipientIds: string[]
+    content: string
+}
+
+interface TypingData {
+    chatId: string
+    user: ChatUser
+}
+
+export const initSocket = (server: HttpServer) => {
     console.log("connect socket")
 
     const io = new SocketIOServer(server, {
@@ -67,27 +81,56 @@ export const connectSocket = (server: HttpServer) => {
         next()
     })
 
-    // todo set up handle error middleware
+    io.on("connect", (socket: Socket) => {
+        console.log("socket connected: ", socket.id)
 
-    const setupSocketHandlers = () => {
-        io.on("connect", (socket: Socket) => {
-            const req = socket.request as Request & { user: ChatUser }
+        const req = socket.request as Request & { user: ChatUser }
+        const userId = req.user.id
 
-            console.log(`socket connected ${socket.id}`)
+        socket.join(`user:${userId}`)
 
-            console.log("socket user: ", req.user.username)
-
-            socket.on("new_message", async (messageData: string) => {
-                socket.broadcast.emit("new_message", messageData)
-            })
-
-            socket.on("disconnect", () => {
-                console.log(`socket disconnected ${socket.id}`)
-            })
+        socket.on("join_chat_room", (chatId: string) => {
+            socket.join(`chat:${chatId}`)
+            console.log(`User ${socket.id} joined room: ${chatId}`)
         })
-    }
 
-    setupSocketHandlers()
+        socket.on("leave_chat_room", (chatId: string) => {
+            socket.leave(`chat:${chatId}`)
+            console.log(`User ${socket.id} left room: ${chatId}`)
+        })
+
+        socket.on("new_message", async (message: Message) => {
+            console.log("🚀 ~ socket.on ~ message:", message)
+            const { _id, recipientIds, chatId, content } = message
+
+            const sentMessage = await sendMessage({
+                _id,
+                chatId,
+                senderId: userId,
+                content,
+            })
+
+            await updateChat(chatId, {
+                latestMessage: sentMessage._id,
+            })
+
+            for (const recipientId of recipientIds) {
+                io.to(`user:${recipientId}`).emit("new_message", sentMessage)
+            }
+        })
+
+        socket.on("typing", async (data: TypingData) => {
+            console.log("typing data: ", data)
+        })
+
+        socket.on("disconnect", () => {
+            console.log(`socket disconnected ${socket.id}`)
+        })
+
+        // socket.onAny((event, ...args) => {
+        //     console.log("event: ", event, args)
+        // })
+    })
 
     return io
 }
