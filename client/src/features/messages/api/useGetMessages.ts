@@ -69,6 +69,7 @@ export const useGetMessages = (options: UseSearchUsersOptions) => {
 
     return useInfiniteQuery<GetMessagesResponse, Error>({
         queryKey: [messageKey, chatId],
+        initialPageParam: 1,
         queryFn: ({ pageParam = 1 }) => {
             const fetchMessagesOptions: GetMessagesOptions = {
                 query: {
@@ -82,7 +83,10 @@ export const useGetMessages = (options: UseSearchUsersOptions) => {
 
             return fetchMessages(axiosPrivate, fetchMessagesOptions)
         },
-        initialPageParam: 1,
+        select: (data) => ({
+            pages: [...data.pages].reverse(),
+            pageParams: [...data.pageParams].reverse(),
+        }),
         getNextPageParam: (lastPage: GetMessagesResponse) => {
             const currentPage = lastPage.pagination.page
             const totalPages = lastPage.pagination.totalPages

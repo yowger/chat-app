@@ -9,6 +9,7 @@ interface AuthState {
 
 interface AuthActions {
     updateSession: (accessToken: AuthState["auth"]["accessToken"]) => void
+
     clearSession: () => void
 }
 

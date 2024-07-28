@@ -1,24 +1,53 @@
-import { Fragment } from "react"
+import { Fragment, useEffect, useRef } from "react"
 
 import { useGetChats } from "../../api/useGetChats"
 
 import useChatStore from "../../store"
 import useUserStore from "../../../auth/store/user"
 
+import useSocketContext from "@/features/socket/contexts/useSocketContext"
+
 import { formatParticipantsList } from "../../utils"
 import { mergeStyles } from "@/utils/mergeStyles"
 
 import Avatar from "@/components/ui/Avatar"
 
+import type { Recipient } from "../../types/User"
+
 const ChatPreviewList = () => {
     const activeChatId = useChatStore.use.activeChatId()
     const user = useUserStore.use.user()
     const setToActiveChat = useChatStore.use.setToActiveChat()
+    const setRecipients = useChatStore.use.setRecipients()
+
+    const { socket } = useSocketContext()
+    const prevChatIdRef = useRef<string | null>(null)
+
+    useEffect(() => {
+        if (!socket) return
+
+        if (prevChatIdRef.current) {
+            console.log("leaving room")
+            socket.emit("leave_chat_room", prevChatIdRef.current)
+        }
+
+        if (activeChatId) {
+            console.log("joining room")
+            socket.emit("join_chat_room", activeChatId)
+        }
+
+        prevChatIdRef.current = activeChatId
+    }, [socket, activeChatId])
 
     const { data, isLoading } = useGetChats()
 
     if (isLoading) {
         return <p>Loading...</p>
+    }
+
+    const handleClickChatItem = (chatId: string, recipients: Recipient[]) => {
+        setToActiveChat(chatId)
+        setRecipients(recipients)
     }
 
     return (
@@ -41,7 +70,12 @@ const ChatPreviewList = () => {
                         return (
                             <li
                                 key={`chat-preview-item-${chat._id}`}
-                                onClick={() => setToActiveChat(chat._id)}
+                                onClick={() =>
+                                    handleClickChatItem(
+                                        chat._id,
+                                        chat.participants
+                                    )
+                                }
                                 className={mergeStyles(
                                     "flex items-center overflow-hidden p-1.5 rounded-md cursor-pointer min-w-0",
                                     isCurrentChat

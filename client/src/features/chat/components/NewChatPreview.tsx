@@ -7,7 +7,7 @@ import { generatePreviewName } from "../utils"
 import Avatar from "@/components/ui/Avatar"
 
 const NewChatPreview = () => {
-    const participants = useChatStore.use.recipients()
+    const participants = useChatStore.use.createChatRecipients()
     const isCreatingChatSelected = useChatStore.use.isCreatingChatSelected()
     const previewMessage = generatePreviewName(participants)
     const setToCreatingChat = useChatStore.use.setToCreatingChat()

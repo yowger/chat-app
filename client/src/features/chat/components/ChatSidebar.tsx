@@ -55,7 +55,7 @@ export default function ChatSidebar() {
                 </section>
 
                 <section className="px-1.5">
-                    {isCreatingChat ? <NewChatPreview /> : null}
+                    {isCreatingChat && <NewChatPreview />}
                     <ChatPreviewList />
                 </section>
             </aside>

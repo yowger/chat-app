@@ -29,14 +29,15 @@ interface NewChatProps {
 
 const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
     const [username, setUsername] = useDebounceValue("", 500)
-    const recipients = useChatStore.use.recipients()
+    const recipients = useChatStore.use.createChatRecipients()
     const isCreatingChat = useChatStore.use.isCreatingChat()
-    const chatType = getChatType(recipients)
     const addRecipient = useChatStore.use.addRecipient()
     const createNewChat = useChatStore.use.setIsCreatingChat()
     const removeRecipient = useChatStore.use.removeRecipient()
     const setActiveChat = useChatStore.use.setToActiveChat()
     const setToCreatingChat = useChatStore.use.setToCreatingChat()
+
+    const chatType = getChatType(recipients)
 
     const { mutate, isPending } = useFindChat()
 

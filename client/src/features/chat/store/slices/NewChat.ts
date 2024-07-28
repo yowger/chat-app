@@ -2,7 +2,7 @@ import type { Recipient } from "../../types/User"
 import type { StateCreator } from "zustand"
 
 export interface NewChatState {
-    recipients: Recipient[]
+    createChatRecipients: Recipient[]
     isCreatingChat: boolean
     isCreatingChatSelected: boolean
 }
@@ -19,7 +19,7 @@ export interface NewChatActions {
 export type NewChatSlice = NewChatState & NewChatActions
 
 const initialState: NewChatState = {
-    recipients: [],
+    createChatRecipients: [],
     isCreatingChat: false,
     isCreatingChatSelected: false,
 }
@@ -28,23 +28,28 @@ const createNewChatSlice: StateCreator<NewChatSlice> = (set) => ({
     ...initialState,
     addRecipient: (recipient: Recipient) =>
         set((state) => {
-            const recipientExists = state.recipients.some(
+            const recipientExists = state.createChatRecipients.some(
                 (r) => r._id === recipient._id
             )
+
             if (recipientExists) {
                 return state
             }
+
             return {
-                recipients: [...state.recipients, recipient],
+                createChatRecipients: [
+                    ...state.createChatRecipients,
+                    recipient,
+                ],
             }
         }),
     removeRecipient: (recipientId: string) =>
         set((state) => ({
-            recipients: state.recipients.filter(
+            createChatRecipients: state.createChatRecipients.filter(
                 (recipient) => recipient._id !== recipientId
             ),
         })),
-    clearRecipients: () => set({ recipients: [] }),
+    clearRecipients: () => set({ createChatRecipients: [] }),
     setIsCreatingChat: (isCreating: boolean) =>
         set({ isCreatingChat: isCreating }),
     setIsCreatingChatSelected: (isSelected: boolean) =>

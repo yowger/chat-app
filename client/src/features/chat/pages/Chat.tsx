@@ -1,3 +1,6 @@
+import { useEffect, useRef, useState } from "react"
+import { v4 as uuidv4 } from "uuid"
+
 import ChatInput from "../components/ChatInput"
 import ChatHeader from "../components/ChatHeader"
 import ChatSidebar from "../components/ChatSidebar"
@@ -5,33 +8,97 @@ import ChatSidebar from "../components/ChatSidebar"
 import { useCreateChat } from "../api/useCreateChat"
 import { useSendMessage } from "@/features/messages/api/useSendMessage"
 
+import useSocketContext from "@/features/socket/contexts/useSocketContext"
 import useChatStore from "../store"
+import useUserStore from "@/features/auth/store/user"
 
 import MessageList from "@/features/messages/components/MessageList"
 import RecipientSelector from "../components/RecipientSelector"
 
+import type { Message } from "@/features/messages/api/useGetMessages"
+import { useDebounceCallback } from "@/hooks/useDebounceCallback"
+
+interface NewMessage {
+    _id: string
+    chatId: string
+    recipientIds: string[]
+    content: string
+}
+
 export default function Chat() {
+    const [messages, setMessages] = useState<Message[]>([])
+    const [isTyping, setIsTyping] = useState(false)
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+    const { socket, isConnected } = useSocketContext()
+    const user = useUserStore.use.user()
     const activeChatId = useChatStore.use.activeChatId()
-    const recipients = useChatStore.use.recipients()
+    const newRecipients = useChatStore.use.recipients()
+    const chatRecipients = useChatStore.use.recipients()
     const isCreatingChat = useChatStore.use.isCreatingChat()
     const isCreatingChatSelected = useChatStore.use.isCreatingChatSelected()
     const setActiveChat = useChatStore.use.setToActiveChat()
     const removeRecipient = useChatStore.use.removeRecipient()
     const resetNewChat = useChatStore.use.resetNewChat()
 
+    const isInCreateChatMode = isCreatingChat && isCreatingChatSelected
+    const isInActiveChat = activeChatId
+
     const { mutate: mutateChat, isPending: isChatPending } = useCreateChat()
     const { mutate: mutateMessage, isPending: isMessagePending } =
         useSendMessage()
 
-    const handleSendMessage = (text: string) => {
+    useEffect(() => {
+        if (!socket) return
+
+        const newMessage = (newMessage: Message) => {
+            setMessages((prevMessages) => [...prevMessages, newMessage])
+        }
+
+        const typingEvent = (data: {
+            chatId: string
+            user: {
+                _id: string
+                username: string
+            }
+        }) => {
+            // if (data.user._id === user!._id) return
+
+            setIsTyping(true)
+
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current)
+            }
+
+            typingTimeoutRef.current = setTimeout(() => {
+                setIsTyping(false)
+            }, 2000)
+        }
+
+        socket.on("new_message", newMessage)
+        socket.on("typing", typingEvent)
+
+        return () => {
+            socket.off("new_message", newMessage)
+            socket.off("typing", typingEvent)
+
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current)
+            }
+        }
+    }, [socket])
+
+    // socket test end
+
+    const handleOnClick = (text: string) => {
         const shouldCreateNewChat: boolean =
-            recipients.length > 0 &&
+            newRecipients.length > 0 &&
             isCreatingChat &&
             isCreatingChatSelected &&
             !activeChatId
 
         if (shouldCreateNewChat) {
-            const recipientIds = recipients.map((recipient) => recipient._id)
+            const recipientIds = newRecipients.map((recipient) => recipient._id)
 
             mutateChat(
                 { input: { content: text, participants: recipientIds } },
@@ -47,21 +114,99 @@ export default function Chat() {
         }
 
         if (activeChatId) {
-            mutateMessage(
-                {
-                    input: {
-                        chatId: activeChatId,
-                        content: text,
-                    },
+            const recipientIds = newRecipients
+                .filter((recipient) => recipient._id !== user!._id)
+                .map((recipient) => recipient._id)
+
+            const newMessage: NewMessage = {
+                _id: uuidv4(),
+                chatId: activeChatId,
+                recipientIds,
+                content: text,
+            }
+
+            const message: Message = {
+                _id: newMessage._id,
+                content: text,
+                chat: activeChatId,
+                sender: {
+                    _id: user!._id,
+                    username: user!.username,
                 },
-                {
-                    onSettled: (data) => {
-                        console.log("🚀 ~ handleSendMessage ~ data:", data)
-                    },
-                }
-            )
+                readAt: null,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+
+            setMessages((prevMessage) => [...prevMessage, message])
+
+            socket?.emit("new_message", newMessage)
+
+            // mutateMessage(
+            //     {
+            //         input: {
+            //             chatId: activeChatId,
+            //             content: text,
+            //         },
+            //     },
+            //     {
+            //         onSettled: (data) => {
+            //             console.log("🚀 ~ handleSendMessage ~ data:", data)
+            //         },
+            //     }
+            // )
         }
     }
+
+    const handleOnChange = () => {
+        debounced()
+        // if (!socket) return
+        // if (!isTyping === false) {
+        //     setIsTyping(true)
+        //     socket.emit("typing")
+        //     if (typingTimeoutRef.current) {
+        //         clearTimeout(typingTimeoutRef.current)
+        //     }
+        //     typingTimeoutRef.current = setTimeout(() => {
+        //         if (socket) {
+        //             socket.emit("stop_typing", {
+        //                 chatId: activeChatId,
+        //                 user: {
+        //                     _id: user!._id,
+        //                     username: user?.username,
+        //                 },
+        //             })
+        //         }
+        //     }, 2000)
+        // }
+        // if (isTyping === false) {
+        //     setIsTyping(true)
+        //     socket?.emit("typing")
+        //     if (typingTimeoutRef.current) {
+        //         clearTimeout(typingTimeoutRef.current)
+        //     }
+        // } else {
+        //     clearTimeout(timeout)
+        //     timeout = setTime
+        // }
+        // console.log("is typing...")
+    }
+
+    const handleTypingEvent = () => {
+        if (!socket || !isInActiveChat) return
+
+        const typingData = {
+            chatId: activeChatId,
+            user: {
+                _id: user!._id,
+                username: user?.username,
+            },
+        }
+
+        socket.emit("typing", typingData)
+    }
+
+    const debounced = useDebounceCallback(handleTypingEvent, 400)
 
     return (
         <div className="flex">
@@ -69,31 +214,47 @@ export default function Chat() {
             <main className="flex-1 md:flex h-screen relative">
                 <ChatHeader />
 
-                <div className="mt-16 flex flex-col w-full lg:w-[70%] bg-gray-300 justify-between">
-                    {isCreatingChat && isCreatingChatSelected && (
+                <section className="mt-16 flex flex-col w-full">
+                    {isInCreateChatMode && (
                         <div className="flex p-2">
                             <span className="block mr-2 text-sm mt-1">To:</span>
                             <RecipientSelector
-                                recipients={recipients}
+                                recipients={newRecipients}
                                 onRemoveRecipient={removeRecipient}
                             />
                         </div>
                     )}
 
-                    <section className="px-4 py-3 overflow-y-auto">
-                        <MessageList />
+                    <section className="px-4 py-3 flex-1 overflow-y-auto">
+                        <MessageList messages={messages} />
                     </section>
 
-                    <ChatInput
-                        onClick={handleSendMessage}
-                        disabled={isChatPending || isMessagePending}
-                    />
-                </div>
+                    {isInActiveChat && (
+                        <div>
+                            <div className="p-2">
+                                {isInActiveChat && isTyping
+                                    ? "is typing..."
+                                    : null}
+                            </div>
 
-                <div className="p-6 hidden mt-16 lg:flex lg:w-[30%] bg-gray-400 min-h-[45%]">
+                            <ChatInput
+                                onChange={handleOnChange}
+                                onClick={handleOnClick}
+                                disabled={
+                                    isChatPending ||
+                                    isMessagePending ||
+                                    !isConnected
+                                }
+                            />
+                        </div>
+                    )}
+                </section>
+
+                {/* for future content  */}
+                {/* <section className="mt-16 flex flex-col w-full lg:w-[70%] bg-gray-300 justify-between">  */}
+                {/* <div className="p-6 hidden mt-16 lg:flex lg:w-[30%] bg-gray-400 min-h-[45%]">
                     <p>other side</p>
-                </div>
-                {/* </main> */}
+                </div> */}
             </main>
         </div>
     )

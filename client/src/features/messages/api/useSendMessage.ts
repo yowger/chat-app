@@ -67,6 +67,20 @@ export const useSendMessage = (options: UseSendMessageOptions = {}) => {
         onMutate: async (options) => {
             const { chatId, content } = options.input
 
+            const tempId = Date.now().toString()
+            const newTempMessage = {
+                _id: tempId,
+                chat: chatId,
+                content,
+                sender: {
+                    _id: user!._id,
+                    username: user!.username,
+                },
+                readAt: null,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+
             await queryClient.cancelQueries({
                 queryKey: [messageKey, chatId],
                 exact: true,
@@ -88,22 +102,7 @@ export const useSendMessage = (options: UseSendMessageOptions = {}) => {
                     if (!draft) return
 
                     if (draft.pages.length > 0) {
-                        const tempId = Date.now().toString()
-
-                        const newMessage = {
-                            _id: tempId,
-                            chat: chatId,
-                            content,
-                            sender: {
-                                _id: user!._id,
-                                username: user!.username,
-                            },
-                            readAt: null,
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                        }
-
-                        draft.pages[0].messages.push(newMessage)
+                        draft.pages[0].messages.push(newTempMessage)
                     }
                 })
             )
@@ -123,22 +122,18 @@ export const useSendMessage = (options: UseSendMessageOptions = {}) => {
                         )
 
                         if (chatIndex !== -1) {
-                            page.chats[chatIndex].latestMessage = {
-                                _id: Date.now().toString(),
-                                content,
-                                sender: {
-                                    _id: user!._id,
-                                    username: user!.username,
-                                },
-                                createdAt: new Date(),
+                            page.chats[chatIndex].latestMessage = newTempMessage
+
+                            const updateChatAndShiftToTop = () => {
+                                const updatedChat = page.chats.splice(
+                                    chatIndex,
+                                    1
+                                )[0]
+
+                                page.chats.unshift(updatedChat)
                             }
 
-                            // Move updated chat to top
-                            const updatedChat = page.chats.splice(
-                                chatIndex,
-                                1
-                            )[0]
-                            page.chats.unshift(updatedChat)
+                            updateChatAndShiftToTop()
                         }
                     })
                 })
@@ -148,8 +143,7 @@ export const useSendMessage = (options: UseSendMessageOptions = {}) => {
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (_error, options, context: any) => {
-            const previousMessages = context?.previousMessages
-            const previousChats = context?.previousChats
+            const { previousChats, previousMessages } = context
 
             if (previousMessages) {
                 const chatId = options.input.chatId

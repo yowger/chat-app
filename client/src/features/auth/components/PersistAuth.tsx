@@ -12,19 +12,19 @@ interface PersistAuthProps extends PropsWithChildren {}
 
 const PersistAuth: FC<PersistAuthProps> = ({ children }) => {
     const { isLoggedIn } = useAuthStore.use.auth()
-    const hasHydrated = useHydration()
 
-    const { mutate } = useRefreshAuth()
+    const hasHydrated = useHydration()
+    const { mutate: refreshAuth } = useRefreshAuth()
 
     useEffect(() => {
         const refreshIfHasLoggedIn = () => {
             if (isLoggedIn) {
-                mutate()
+                refreshAuth()
             }
         }
 
         refreshIfHasLoggedIn()
-    }, [isLoggedIn, mutate])
+    }, [isLoggedIn, refreshAuth])
 
     if (!hasHydrated) {
         return <div>Loading...</div>

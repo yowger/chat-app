@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button/Button"
 import { refreshPage } from "@/utils/refreshPage"
 
 import type { FC, PropsWithChildren } from "react"
+import { SocketContextProvider } from "@/features/socket/contexts/SocketContext"
 
 const ErrorFallback = () => {
     return (
@@ -40,7 +41,11 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <QueryClientProvider client={queryClient}>
                     <BrowserRouter>
-                        <PersistAuth>{children}</PersistAuth>
+                        <PersistAuth>
+                            <SocketContextProvider>
+                                {children}
+                            </SocketContextProvider>
+                        </PersistAuth>
                     </BrowserRouter>
                 </QueryClientProvider>
             </ErrorBoundary>
