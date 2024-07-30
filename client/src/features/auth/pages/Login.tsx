@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom"
 
 import Label from "@/components/ui/Label"
 import LoginForm from "../components/forms/Login"
-import { API_URL } from "@/config/env"
 
 // import { Button } from "@/components/ui/Button"
 // import googleIcon from "@/assets/svg/googleIcon.svg"
