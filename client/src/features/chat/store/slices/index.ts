@@ -1,4 +1,5 @@
 import { ActiveChatSlice } from "./ActiveChat"
+import { CommonSlice } from "./common"
 import { NewChatSlice } from "./NewChat"
 
 import type { StateCreator } from "zustand"
@@ -12,7 +13,7 @@ export interface SharedChatSliceActions {
 export type SharedChatSlice = SharedChatSliceActions
 
 const createSharedChatSlice: StateCreator<
-    ActiveChatSlice & NewChatSlice,
+    ActiveChatSlice & NewChatSlice & CommonSlice,
     [],
     [],
     SharedChatSlice

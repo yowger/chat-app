@@ -1,11 +1,18 @@
 import MessagePreview from "./MessagePreview"
-// import NewChatDialog from "./dialogs/NewChatDialog"
+
+import NewChatDialog from "../dialogs/NewChatDialog"
 import NewMessagePreview from "./NewMessagePreview"
 import useChatStore from "../../store"
 import SidebarMenu from "./Menu"
 
 export default function ChatSidebar() {
     const isCreatingChat = useChatStore.use.isCreatingChat()
+    const isCreateChatModalOpen = useChatStore.use.isCreateChatModalOpen()
+    const setIsCreateChatModalOpen = useChatStore.use.setIsCreateChatModalOpen()
+
+    const handleCloseModal = () => {
+        setIsCreateChatModalOpen(false)
+    }
 
     return (
         <>
@@ -22,7 +29,10 @@ export default function ChatSidebar() {
                 </section>
             </aside>
 
-            {/* <NewChatDialog isOpen={isModalOpen} onClose={handleCloseModal} /> */}
+            <NewChatDialog
+                isOpen={isCreateChatModalOpen}
+                onClose={handleCloseModal}
+            />
         </>
     )
 }

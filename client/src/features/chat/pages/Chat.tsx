@@ -34,7 +34,7 @@ export default function Chat() {
     const user = useUserStore.use.user()
     const activeChatId = useChatStore.use.activeChatId()
     const newRecipients = useChatStore.use.recipients()
-    const chatRecipients = useChatStore.use.recipients()
+    // const chatRecipients = useChatStore.use.recipients()
     const isCreatingChat = useChatStore.use.isCreatingChat()
     const isCreatingChatSelected = useChatStore.use.isCreatingChatSelected()
     const setActiveChat = useChatStore.use.setToActiveChat()
@@ -45,8 +45,8 @@ export default function Chat() {
     const isInActiveChat = activeChatId
 
     const { mutate: mutateChat, isPending: isChatPending } = useCreateChat()
-    const { mutate: mutateMessage, isPending: isMessagePending } =
-        useSendMessage()
+    // const { mutate: mutateMessage, isPending: isMessagePending } =
+    const { isPending: isMessagePending } = useSendMessage()
 
     useEffect(() => {
         if (!socket) return

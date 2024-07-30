@@ -1,11 +1,10 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react"
 
-import { useState } from "react"
-
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline"
 
 import { useLogout } from "@/features/auth/api/useLogout"
 
+import useChatStore from "../../store"
 import useUserStore from "@/features/auth/store/user"
 
 import Avatar from "@/components/ui/Avatar"
@@ -13,15 +12,10 @@ import Avatar from "@/components/ui/Avatar"
 
 const SidebarMenu = () => {
     const user = useUserStore.use.user()
-
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const setIsCreateChatModalOpen = useChatStore.use.setIsCreateChatModalOpen()
 
     const handleOpenModal = () => {
-        setIsModalOpen(true)
-    }
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false)
+        setIsCreateChatModalOpen(true)
     }
 
     const { mutate, isPending } = useLogout()
@@ -51,7 +45,10 @@ const SidebarMenu = () => {
                     className="w-52 mt-2 origin-top-right shadow-sm rounded-md bg-white p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
                 >
                     <MenuItem>
-                        <button className="text-gray-900 group flex w-full items-center gap-3.5 rounded-lg py-1.5 px-3 data-[focus]:bg-blue-100">
+                        <button
+                            onClick={handleOpenModal}
+                            className="text-gray-900 group flex w-full items-center gap-3.5 rounded-lg py-1.5 px-3 data-[focus]:bg-blue-100"
+                        >
                             New convo
                         </button>
                     </MenuItem>
@@ -60,7 +57,7 @@ const SidebarMenu = () => {
                         <button
                             onClick={handleLogout}
                             disabled={isPending}
-                            className="text-gray-900 group flex w-full items-center gap-3.5 rounded-lg py-1.5 px-3 data-[focus]:bg-blue-100"
+                            className="text-gray-900 group flex w-full items-center gap-3.5 rounded-sm py-1.5 px-3 data-[focus]:bg-blue-100"
                         >
                             Logout
                         </button>
