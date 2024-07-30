@@ -11,6 +11,8 @@ export default function Login() {
     const location = useLocation()
     const message = location.state?.message
 
+    const envEntries = Object.entries(import.meta.env)
+
     return (
         <div className="bg-gray-100">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -44,9 +46,17 @@ export default function Login() {
 
                             <LoginForm />
 
+                            {/* test */}
+                            <ul>
+                                {envEntries.map(([key, value]) => (
+                                    <li key={key}>
+                                        <strong>{key}:</strong> {value}
+                                    </li>
+                                ))}
+                            </ul>
+                            {/* test */}
                             <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
-                                Don’t have an account yet?{" "}
-                                <p>API URL{API_URL}</p>
+                                Don’t have an account yet?
                                 <Link
                                     to="/register"
                                     className="font-medium text-primary hover:underline dark:text-primary"
