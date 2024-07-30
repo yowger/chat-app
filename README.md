@@ -33,7 +33,7 @@
     -   [ ] Save events in chat, such as join, leave, etc.
 -   **Real-Time Features**
     -   [ ] Online status
-    -   [ ] Real-time messaging
+    -   [x] Real-time messaging
 -   **User Configuration**
     -   [ ] User settings (hide online status, hidden from search results, etc.)
 -   **Logging**
