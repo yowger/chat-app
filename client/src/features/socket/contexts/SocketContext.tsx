@@ -3,6 +3,8 @@ import { io } from "socket.io-client"
 
 import useAuthStore from "@/features/auth/store/auth"
 
+import { API_URL } from "@/config/env"
+
 import type { ReactNode } from "react"
 import type { Socket } from "socket.io-client"
 
@@ -18,7 +20,7 @@ export const SocketContextProvider = ({
 }: {
     children: ReactNode
 }) => {
-    const socketUrl = "http://localhost:8000"
+    const socketUrl = API_URL
     const [isConnected, setIsConnected] = useState(false)
 
     const { accessToken } = useAuthStore.use.auth()
