@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom"
 
 import Label from "@/components/ui/Label"
 import LoginForm from "../components/forms/Login"
+import { API_URL } from "@/config/env"
 
 // import { Button } from "@/components/ui/Button"
 // import googleIcon from "@/assets/svg/googleIcon.svg"
@@ -45,6 +46,7 @@ export default function Login() {
 
                             <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet?{" "}
+                                <p>API URL{API_URL}</p>
                                 <Link
                                     to="/register"
                                     className="font-medium text-primary hover:underline dark:text-primary"
