@@ -62,7 +62,7 @@ export default function Chat() {
                 username: string
             }
         }) => {
-            // if (data.user._id === user!._id) return
+            if (data.user._id === user!._id) return
 
             setIsTyping(true)
 
@@ -144,36 +144,6 @@ export default function Chat() {
 
     const handleOnChange = () => {
         debounced()
-        // if (!socket) return
-        // if (!isTyping === false) {
-        //     setIsTyping(true)
-        //     socket.emit("typing")
-        //     if (typingTimeoutRef.current) {
-        //         clearTimeout(typingTimeoutRef.current)
-        //     }
-        //     typingTimeoutRef.current = setTimeout(() => {
-        //         if (socket) {
-        //             socket.emit("stop_typing", {
-        //                 chatId: activeChatId,
-        //                 user: {
-        //                     _id: user!._id,
-        //                     username: user?.username,
-        //                 },
-        //             })
-        //         }
-        //     }, 2000)
-        // }
-        // if (isTyping === false) {
-        //     setIsTyping(true)
-        //     socket?.emit("typing")
-        //     if (typingTimeoutRef.current) {
-        //         clearTimeout(typingTimeoutRef.current)
-        //     }
-        // } else {
-        //     clearTimeout(timeout)
-        //     timeout = setTime
-        // }
-        // console.log("is typing...")
     }
 
     const handleTypingEvent = () => {
@@ -196,9 +166,9 @@ export default function Chat() {
         <div className="flex">
             <ChatSidebar />
             <main className="flex-1 md:flex h-screen relative">
-                <ChatHeader />
+                <div className="w-full flex flex-col">
+                    {isInActiveChat && <ChatHeader />}
 
-                <section className="mt-16 flex flex-col w-full">
                     {isInCreateChatMode && (
                         <div className="flex p-2">
                             <span className="block mr-2 text-sm mt-1">To:</span>
@@ -209,7 +179,7 @@ export default function Chat() {
                         </div>
                     )}
 
-                    <section className="px-4 py-3 flex-1 overflow-y-auto">
+                    <section className="block  px-4 py-3 flex-1 overflow-y-auto">
                         <MessageList messages={messages} />
                     </section>
 
@@ -232,13 +202,7 @@ export default function Chat() {
                             />
                         </div>
                     )}
-                </section>
-
-                {/* for future content  */}
-                {/* <section className="mt-16 flex flex-col w-full lg:w-[70%] bg-gray-300 justify-between">  */}
-                {/* <div className="p-6 hidden mt-16 lg:flex lg:w-[30%] bg-gray-400 min-h-[45%]">
-                    <p>other side</p>
-                </div> */}
+                </div>
             </main>
         </div>
     )

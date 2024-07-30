@@ -1,6 +1,6 @@
 import { useRef } from "react"
 
-// import { IconSend2 } from "@tabler/icons-react"
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 import ReactTextareaAutosize from "react-textarea-autosize"
 
 import { Button } from "@/components/ui/button/Button"
@@ -47,7 +47,7 @@ export default function ChatInput(props: ChatInputProps) {
                         onClick={handleClick}
                         disabled={disabled}
                     >
-                        {/* <IconSend2 size={18} /> */}
+                        <PaperAirplaneIcon className="size-5 w-full" />
                     </Button>
                 </div>
             </div>

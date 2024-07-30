@@ -60,7 +60,7 @@ const SidebarMenu = () => {
                         <button
                             onClick={handleLogout}
                             disabled={isPending}
-                            className="text-gray-900 group flex w-full items-center gap-3.5 rounded-sm py-1.5 px-3 data-[focus]:bg-blue-500"
+                            className="text-gray-900 group flex w-full items-center gap-3.5 rounded-lg py-1.5 px-3 data-[focus]:bg-blue-100"
                         >
                             Logout
                         </button>

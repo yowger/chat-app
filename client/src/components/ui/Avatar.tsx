@@ -24,7 +24,7 @@ const Avatar = ({
         <div className="relative flex-shrink-0">
             <img
                 className={mergeStyles(
-                    "rounded-full border-2",
+                    "rounded-full border-white border-2",
                     className,
                     sizeClasses[size]
                 )}
@@ -32,7 +32,7 @@ const Avatar = ({
                 alt={alt}
             />
             {isOnline && (
-                <span className="top-0 left-7 absolute w-3.5 h-3.5 bg-green-400 border border-white dark:border-gray-800 rounded-full"></span>
+                <span className="top-0 left-7 absolute w-3.5 h-3.5 rounded-full"></span>
             )}
         </div>
     )
