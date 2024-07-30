@@ -86,7 +86,7 @@ export default function Chat() {
                 clearTimeout(typingTimeoutRef.current)
             }
         }
-    }, [socket])
+    }, [socket, user])
 
     const handleOnClick = (text: string) => {
         const shouldCreateNewChat: boolean =
@@ -183,7 +183,7 @@ export default function Chat() {
                         <MessageList messages={messages} />
                     </section>
 
-                    {isInActiveChat && (
+                    {(isInActiveChat || isInCreateChatMode) && (
                         <div>
                             <div className="p-2">
                                 {isInActiveChat && isTyping
