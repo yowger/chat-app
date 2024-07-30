@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import ChatInput from "../components/ChatInput"
 import ChatHeader from "../components/ChatHeader"
-import ChatSidebar from "../components/ChatSidebar"
+import ChatSidebar from "../components/sidebar"
 
 import { useCreateChat } from "../api/useCreateChat"
 import { useSendMessage } from "@/features/messages/api/useSendMessage"
@@ -88,8 +88,6 @@ export default function Chat() {
         }
     }, [socket])
 
-    // socket test end
-
     const handleOnClick = (text: string) => {
         const shouldCreateNewChat: boolean =
             newRecipients.length > 0 &&
@@ -141,20 +139,6 @@ export default function Chat() {
             setMessages((prevMessage) => [...prevMessage, message])
 
             socket?.emit("new_message", newMessage)
-
-            // mutateMessage(
-            //     {
-            //         input: {
-            //             chatId: activeChatId,
-            //             content: text,
-            //         },
-            //     },
-            //     {
-            //         onSettled: (data) => {
-            //             console.log("🚀 ~ handleSendMessage ~ data:", data)
-            //         },
-            //     }
-            // )
         }
     }
 

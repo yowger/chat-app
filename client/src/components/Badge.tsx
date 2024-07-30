@@ -1,4 +1,4 @@
-import { IconX } from "@tabler/icons-react"
+import { XMarkIcon } from "@heroicons/react/24/outline"
 
 import type { FC } from "react"
 
@@ -17,7 +17,7 @@ const Badge: FC<BadgeProps> = (props: BadgeProps) => {
                 onClick={onRemove}
                 className="inline-flex items-center p-1 ms-2  text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900"
             >
-                <IconX size={15} />
+                <XMarkIcon className="size-6 w-full" />
             </button>
         </span>
     )

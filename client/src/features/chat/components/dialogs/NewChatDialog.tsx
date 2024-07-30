@@ -1,4 +1,4 @@
-import { IconX } from "@tabler/icons-react"
+import { XMarkIcon } from "@heroicons/react/24/outline"
 import {
     Dialog,
     DialogBackdrop,
@@ -111,11 +111,12 @@ const NewChatDialog: FC<NewChatProps> = ({ isOpen, onClose }) => {
                                 New Conversation
                             </DialogTitle>
 
-                            <IconX
-                                size={18}
+                            <button
                                 onClick={handleOnClose}
                                 className="cursor-pointer text-gray-800"
-                            />
+                            >
+                                <XMarkIcon className="size-6 w-full" />
+                            </button>
                         </div>
 
                         <div className="px-6">

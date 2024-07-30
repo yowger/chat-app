@@ -1,12 +1,12 @@
-import useChatStore from "../store"
+import useChatStore from "../../store"
 
 import { mergeStyles } from "@/utils/mergeStyles"
 
-import { generatePreviewName } from "../utils"
+import { generatePreviewName } from "../../utils"
 
 import Avatar from "@/components/ui/Avatar"
 
-const NewChatPreview = () => {
+const NewMessagePreview = () => {
     const participants = useChatStore.use.createChatRecipients()
     const isCreatingChatSelected = useChatStore.use.isCreatingChatSelected()
     const previewMessage = generatePreviewName(participants)
@@ -45,4 +45,4 @@ const NewChatPreview = () => {
     )
 }
 
-export default NewChatPreview
+export default NewMessagePreview
