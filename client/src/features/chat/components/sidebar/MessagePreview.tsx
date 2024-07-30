@@ -78,7 +78,7 @@ const MessagePreviewList = () => {
                     <Avatar
                         src={`https://picsum.photos/200/300?random=${chatIndex}`}
                         alt="Profile picture"
-                        size="medium"
+                        size="large"
                     />
                     {chat.participants.length > 2 && (
                         <div className="absolute bottom-0 -right-1.5">
@@ -90,7 +90,7 @@ const MessagePreviewList = () => {
                 </div>
 
                 <div className="w-full overflow-hidden">
-                    <span className="font-medium text-sm truncate block">
+                    <span className="font-medium truncate block">
                         {chatName}
                     </span>
 
